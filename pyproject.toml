@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=68.0.0"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "saju"
+version = "0.1.0"
+description = "Python saju (四柱八字) calculation engine"
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic>=2.6.0",
+    "python-dateutil>=2.9.0",
+    "korean-lunar-calendar>=0.3.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-cov>=5.0.0",
+    "mypy>=1.8.0",
+    "ruff>=0.3.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=core --cov-report=term-missing"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]
+
+[tool.mypy]
+strict = true
+python_version = "3.11"
