@@ -74,3 +74,35 @@
 ### Fixed
 - Python 3.9 호환성 이슈 해결 (`str | None` 타입 오류)
 - uv sync --dev로 개발 의존성 완전 설치
+
+---
+
+## [0.2.0] - 2026-02-27
+
+### Added (SPEC-API-001: FastAPI REST API)
+
+#### FastAPI 애플리케이션
+- `app/main.py` — FastAPI 애플리케이션 팩토리, CORS 미들웨어
+- `app/config.py` — Pydantic BaseSettings 기반 설정 관리
+- `app/api/router.py` — API 라우터 통합
+- `app/api/deps.py` — 의존성 주입 (서비스 팩토리)
+
+#### REST API 엔드포인트
+- `GET /health` — 헬스 체크
+- `POST /api/v1/saju` — 사주팔자 계산
+- `POST /api/v1/calendar/convert` — 음양력 변환
+
+#### 서비스 레이어
+- `app/services/saju_service.py` — 사주 계산 비즈니스 로직
+- `app/services/calendar_service.py` — 음양력 변환 비즈니스 로직
+
+#### API 테스트
+- 10개 API 테스트 (pytest-asyncio)
+- `tests/test_api_health.py` — 헬스 체크 (2개)
+- `tests/test_api_saju.py` — 사주 계산 API (6개)
+- `tests/test_api_calendar.py` — 음양력 변환 API (2개)
+
+#### 기술 스택
+- FastAPI 0.115+ (REST API 프레임워크)
+- uvicorn[standard] (ASGI 서버)
+- pydantic-settings (설정 관리)
