@@ -53,10 +53,24 @@
 - `Dockerfile` — 컨테이너 실행 환경
 
 ### 기술 스택
-- Python 3.11+
+- Python 3.11+ (uv 가상환경으로 Python 3.11.12 지정)
 - Pydantic v2 (타입 안전 모델)
 - korean-lunar-calendar (음양력 변환)
 - uv (패키지 매니저)
 - pytest + pytest-cov (테스트)
 - ruff (lint/format)
 - mypy (타입 검사)
+
+---
+
+## [0.1.1] - 2026-02-27
+
+### Changed (Python 3.11 마이그레이션)
+- uv 가상환경을 Python 3.11로 명시적 지정 (`.venv` 생성)
+- `str | None` 유니온 타입 사용 (Python 3.10+ 문법)
+- pyproject.toml `requires-python = ">=3.11"` 명시
+- 241개 테스트 전체 통과 확인 (Python 3.11.12)
+
+### Fixed
+- Python 3.9 호환성 이슈 해결 (`str | None` 타입 오류)
+- uv sync --dev로 개발 의존성 완전 설치
