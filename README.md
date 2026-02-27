@@ -93,6 +93,49 @@ curl -X POST http://localhost:8000/api/v1/calendar/convert \
   }'
 ```
 
+### Streamlit 웹 UI
+
+웹 인터페이스 시작:
+
+```bash
+# UI 의존성 설치 (최초 1회)
+uv sync --extra ui
+
+# Streamlit 앱 실행
+uv run streamlit run streamlit_app.py
+```
+
+브라우저에서 `http://localhost:8501` 접속
+
+```bash
+# 헬스 체크
+curl http://localhost:8000/health
+
+# 사주 계산
+curl -X POST http://localhost:8000/api/v1/saju \
+  -H "Content-Type: application/json" \
+  -d '{
+    "birth_year": 1984,
+    "birth_month": 4,
+    "birth_day": 15,
+    "birth_hour": 12,
+    "is_lunar": false,
+    "is_leap_month": false,
+    "gender": "male"
+  }'
+
+# 음양력 변환
+curl -X POST http://localhost:8000/api/v1/calendar/convert \
+  -H "Content-Type: application/json" \
+  -d '{
+    "year": 1984,
+    "month": 3,
+    "day": 15,
+    "is_lunar": true,
+    "is_leap_month": false
+  }'
+```
+
 ## 개발
 
 ### 테스트 실행
