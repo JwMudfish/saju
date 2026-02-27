@@ -4,6 +4,8 @@ Based on manse_ori deun.js.
 Calculates the direction (banghyang), starting age (deun_su),
 and the 10 major fortune periods for a given birth chart.
 """
+from __future__ import annotations
+
 from datetime import datetime
 from typing import Literal
 

@@ -2,6 +2,8 @@
 
 Provides lunar <-> solar date conversion using the korean-lunar-calendar library.
 """
+from __future__ import annotations
+
 from korean_lunar_calendar import KoreanLunarCalendar
 
 from core.exceptions import InvalidLunarDateError

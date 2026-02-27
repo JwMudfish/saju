@@ -24,6 +24,8 @@ The mapping (based on manse_ori manse/ryeong/ryeong.js):
 
 Related: heuisin (희신) is derived from yongsin (dang_ryeong).
 """
+from __future__ import annotations
+
 from datetime import datetime
 
 
@@ -249,7 +251,6 @@ class TestCalcYongshin:
         """자월 중기 이후 출생 -> 당령 계."""
         # 자월(子月) = 12월, 중기는 소한 이전
         # 중기(대한) 이후인 출생을 테스트
-        birth_dt = datetime(1984, 1, 25, 10, 0, 0)  # 1월 = 이전년 자월
         # 자월이라면 is_before_junggi=False로 직접 테스트
         from core.yongshin import calc_dang_ryeong
         result = calc_dang_ryeong(month_ji="자", is_before_junggi=False)

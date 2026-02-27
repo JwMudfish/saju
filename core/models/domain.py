@@ -1,4 +1,5 @@
 """Domain models for saju calculation engine."""
+from __future__ import annotations
 
 from pydantic import BaseModel, model_validator
 
@@ -49,7 +50,7 @@ class OHangRatio(BaseModel):
     su: float  # 수 (Water)
 
     @model_validator(mode="after")
-    def check_total(self) -> "OHangRatio":
+    def check_total(self) -> OHangRatio:
         """오행 비율 합계가 100이어야 합니다."""
         total = self.mok + self.hwa + self.to + self.geum + self.su
         if abs(total - 100.0) >= 0.01:

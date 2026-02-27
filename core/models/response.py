@@ -1,4 +1,5 @@
 """Response models for saju calculation engine."""
+from __future__ import annotations
 
 from pydantic import BaseModel
 

@@ -17,6 +17,8 @@ The 12 solar terms correspond to months as follows:
   Index 10: 입동 -> month 11
   Index 11: 대설 -> month 12
 """
+from __future__ import annotations
+
 import json
 import pathlib
 from datetime import datetime

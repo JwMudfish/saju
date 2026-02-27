@@ -1,4 +1,5 @@
 """Custom exceptions for the saju calculation engine."""
+from __future__ import annotations
 
 
 class SajuError(Exception):

@@ -3,6 +3,8 @@
 Covers SPEC-CORE-001 acceptance criteria (AC-001 through AC-007) and
 additional reference cases from manse_ori.
 """
+from __future__ import annotations
+
 from datetime import datetime
 
 

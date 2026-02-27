@@ -8,6 +8,8 @@ The mid-solar-term (중기) data uses gubun=2 entries from julgi.json.
 
 Logic based on manse_ori manse/ryeong/ryeong.js smallJunggi() / bigJunggi().
 """
+from __future__ import annotations
+
 import json
 import pathlib
 from datetime import datetime

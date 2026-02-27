@@ -1,4 +1,6 @@
 """Tests for deun (대운, Major Fortune) calculation module - RED phase."""
+from __future__ import annotations
+
 from datetime import datetime
 
 

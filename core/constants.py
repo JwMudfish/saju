@@ -3,6 +3,7 @@
 Based on manse_ori reference implementation analysis.
 Korean terms are used for gan/ji/ohang names as per the original system.
 """
+from __future__ import annotations
 
 # 천간 (Ten Heavenly Stems) - 갑=0, 을=1, ..., 계=9
 GAN_LIST: tuple[str, ...] = ("갑", "을", "병", "정", "무", "기", "경", "신", "임", "계")

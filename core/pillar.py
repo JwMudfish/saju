@@ -3,6 +3,7 @@
 Based on manse_ori pillar calculation logic.
 Calculates the four pillars (년주, 월주, 일주, 시주) for a given birth date.
 """
+from __future__ import annotations
 
 from core.constants import (
     DAY_MONTH_SUM,

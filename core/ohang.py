@@ -2,6 +2,8 @@
 
 Based on manse_ori getSangSengSangGuk.js and umYang/oHang.js.
 """
+from __future__ import annotations
+
 from core.constants import GAN_OHANG, GAN_YANG, JI_OHANG
 
 

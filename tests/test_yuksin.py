@@ -1,4 +1,5 @@
 """Tests for yuksin (육신) calculation module - RED phase."""
+from __future__ import annotations
 
 
 class TestCalcYuksin:

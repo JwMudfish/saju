@@ -10,6 +10,7 @@ Detects pairwise relationships between Earthly Branches (지지):
 Note: 형 (Penalty) and 해 (Harm) are not included in the current manse_ori
       implementation scope, so they are omitted here.
 """
+from __future__ import annotations
 
 # 삼합 그룹 - manse_ori samhapWord.js getSamHap 기반
 # 인오술(화국), 해묘미(목국), 신자진(수국), 사유축(금국)
