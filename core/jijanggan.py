@@ -3,6 +3,7 @@
 Based on manse_ori getjijanggan.js.
 Maps each Earthly Branch to its three hidden stems.
 """
+
 from __future__ import annotations
 
 from core.models.domain import HiddenStems

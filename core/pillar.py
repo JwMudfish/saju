@@ -3,6 +3,7 @@
 Based on manse_ori pillar calculation logic.
 Calculates the four pillars (년주, 월주, 일주, 시주) for a given birth date.
 """
+
 from __future__ import annotations
 
 from core.constants import (
@@ -139,9 +140,7 @@ def _get_hour_index(hour: int, minute: int) -> int:
         return 11  # 해 (21:30~23:29)
 
 
-def calc_hour_pillar(
-    hour: int | None, minute: int | None, day_gan: str
-) -> GanJi | None:
+def calc_hour_pillar(hour: int | None, minute: int | None, day_gan: str) -> GanJi | None:
     """시주를 계산합니다.
 
     Args:
@@ -175,10 +174,7 @@ def calc_hour_pillar(
     return GanJi(gan=gan, ji=ji)
 
 
-def calc_day_pillar(
-    day: int, year: int, month: int,
-    hour: int | None, minute: int | None
-) -> GanJi:
+def calc_day_pillar(day: int, year: int, month: int, hour: int | None, minute: int | None) -> GanJi:
     """일주를 계산합니다.
 
     manse_ori daypillar.js 로직:
@@ -199,12 +195,7 @@ def calc_day_pillar(
     after_standard = year - 1900
     yun_count = after_standard // 4
 
-    total_number = (
-        after_standard * 5
-        + yun_count
-        + DAY_MONTH_SUM[month - 1]
-        + (day - 1)
-    )
+    total_number = after_standard * 5 + yun_count + DAY_MONTH_SUM[month - 1] + (day - 1)
 
     # Leap year correction for January/February
     if (month == 1 or month == 2) and (year % 4 == 0):

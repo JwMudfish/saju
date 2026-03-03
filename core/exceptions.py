@@ -1,4 +1,5 @@
 """Custom exceptions for the saju calculation engine."""
+
 from __future__ import annotations
 
 
@@ -32,6 +33,4 @@ class InvalidLunarDateError(SajuError):
         self.day = day
         self.is_leap = is_leap
         leap_str = " (leap month)" if is_leap else ""
-        super().__init__(
-            f"Invalid lunar date: {year}-{month:02d}-{day:02d}{leap_str}"
-        )
+        super().__init__(f"Invalid lunar date: {year}-{month:02d}-{day:02d}{leap_str}")

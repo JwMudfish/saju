@@ -1,4 +1,5 @@
 """Tests for hapchung (합충, Combinations and Conflicts) module - RED phase."""
+
 from __future__ import annotations
 
 
@@ -8,6 +9,7 @@ class TestSamhap:
     def test_in_o_sul_samhap(self) -> None:
         """인오술 삼합 - 화국."""
         from core.hapchung import is_samhap
+
         # 화국: 인오술 (any two)
         assert is_samhap("인", "오") is True
         assert is_samhap("오", "술") is True
@@ -17,6 +19,7 @@ class TestSamhap:
     def test_hae_myo_mi_samhap(self) -> None:
         """해묘미 삼합 - 목국."""
         from core.hapchung import is_samhap
+
         assert is_samhap("해", "묘") is True
         assert is_samhap("묘", "미") is True
         assert is_samhap("해", "미") is True
@@ -24,6 +27,7 @@ class TestSamhap:
     def test_sin_ja_jin_samhap(self) -> None:
         """신자진 삼합 - 수국."""
         from core.hapchung import is_samhap
+
         assert is_samhap("신", "자") is True
         assert is_samhap("자", "진") is True
         assert is_samhap("신", "진") is True
@@ -31,6 +35,7 @@ class TestSamhap:
     def test_sa_yu_chuk_samhap(self) -> None:
         """사유축 삼합 - 금국."""
         from core.hapchung import is_samhap
+
         assert is_samhap("사", "유") is True
         assert is_samhap("유", "축") is True
         assert is_samhap("사", "축") is True
@@ -38,12 +43,14 @@ class TestSamhap:
     def test_no_samhap_same_ji(self) -> None:
         """같은 지지끼리는 삼합 아님."""
         from core.hapchung import is_samhap
+
         assert is_samhap("인", "인") is False
         assert is_samhap("오", "오") is False
 
     def test_no_samhap_different_groups(self) -> None:
         """다른 그룹은 삼합 아님."""
         from core.hapchung import is_samhap
+
         assert is_samhap("인", "해") is False
         assert is_samhap("자", "오") is False
         assert is_samhap("축", "인") is False
@@ -51,6 +58,7 @@ class TestSamhap:
     def test_get_samhap_group(self) -> None:
         """삼합 그룹 반환 함수 테스트."""
         from core.hapchung import get_samhap_group
+
         # 화국: 인오술
         assert set(get_samhap_group("인")) == {"인", "오", "술"}
         assert set(get_samhap_group("오")) == {"인", "오", "술"}
@@ -72,6 +80,7 @@ class TestYukhap:
     def test_all_yukhap_pairs(self) -> None:
         """모든 육합 쌍 테스트."""
         from core.hapchung import is_yukhap
+
         pairs = [
             ("자", "축"),  # 자축합토
             ("인", "해"),  # 인해합목
@@ -87,11 +96,13 @@ class TestYukhap:
     def test_no_yukhap_same_ji(self) -> None:
         """같은 지지는 육합 아님."""
         from core.hapchung import is_yukhap
+
         assert is_yukhap("자", "자") is False
 
     def test_no_yukhap_non_pair(self) -> None:
         """육합 관계 아닌 쌍."""
         from core.hapchung import is_yukhap
+
         assert is_yukhap("자", "인") is False
         assert is_yukhap("인", "묘") is False
 
@@ -102,6 +113,7 @@ class TestChung:
     def test_all_chung_pairs(self) -> None:
         """모든 충 쌍 테스트."""
         from core.hapchung import is_chung
+
         pairs = [
             ("자", "오"),  # 자오충
             ("축", "미"),  # 축미충
@@ -117,11 +129,13 @@ class TestChung:
     def test_no_chung_same_ji(self) -> None:
         """같은 지지는 충 아님."""
         from core.hapchung import is_chung
+
         assert is_chung("자", "자") is False
 
     def test_no_chung_non_pair(self) -> None:
         """충 관계 아닌 쌍."""
         from core.hapchung import is_chung
+
         assert is_chung("자", "인") is False
         assert is_chung("인", "묘") is False
 
@@ -132,6 +146,7 @@ class TestBanghap:
     def test_dong_bang_banghap(self) -> None:
         """동방목 방합: 인묘진."""
         from core.hapchung import is_banghap
+
         # 자기 자신 포함 (방합은 같은 방향 모두)
         assert is_banghap("인", "묘") is True
         assert is_banghap("묘", "진") is True
@@ -141,6 +156,7 @@ class TestBanghap:
     def test_nam_bang_banghap(self) -> None:
         """남방화 방합: 사오미."""
         from core.hapchung import is_banghap
+
         assert is_banghap("사", "오") is True
         assert is_banghap("오", "미") is True
         assert is_banghap("사", "미") is True
@@ -148,6 +164,7 @@ class TestBanghap:
     def test_seo_bang_banghap(self) -> None:
         """서방금 방합: 신유술."""
         from core.hapchung import is_banghap
+
         assert is_banghap("신", "유") is True
         assert is_banghap("유", "술") is True
         assert is_banghap("신", "술") is True
@@ -155,6 +172,7 @@ class TestBanghap:
     def test_buk_bang_banghap(self) -> None:
         """북방수 방합: 해자축."""
         from core.hapchung import is_banghap
+
         assert is_banghap("해", "자") is True
         assert is_banghap("자", "축") is True
         assert is_banghap("해", "축") is True
@@ -162,6 +180,7 @@ class TestBanghap:
     def test_no_banghap_different_groups(self) -> None:
         """다른 방향 그룹은 방합 아님."""
         from core.hapchung import is_banghap
+
         assert is_banghap("인", "사") is False
         assert is_banghap("오", "신") is False
         assert is_banghap("술", "해") is False
@@ -173,25 +192,30 @@ class TestHapchungRelation:
     def test_samhap_relation(self) -> None:
         """삼합 관계 반환."""
         from core.hapchung import hapchung_relation
+
         assert hapchung_relation("인", "오") == "삼합"
 
     def test_yukhap_relation(self) -> None:
         """육합 관계 반환."""
         from core.hapchung import hapchung_relation
+
         assert hapchung_relation("자", "축") == "육합"
 
     def test_chung_relation(self) -> None:
         """충 관계 반환."""
         from core.hapchung import hapchung_relation
+
         assert hapchung_relation("자", "오") == "충"
 
     def test_banghap_relation(self) -> None:
         """방합 관계 반환."""
         from core.hapchung import hapchung_relation
+
         assert hapchung_relation("인", "묘") == "방합"
 
     def test_no_relation(self) -> None:
         """관계 없음 반환."""
         from core.hapchung import hapchung_relation
+
         # 자인은 아무 관계 없음
         assert hapchung_relation("자", "인") is None

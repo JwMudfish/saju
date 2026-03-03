@@ -3,6 +3,7 @@
 Based on manse_ori getYukSin.js.
 Calculates the relationship (육신) between the day master (일간) and a target stem (천간).
 """
+
 from __future__ import annotations
 
 from core.ohang import get_gan_ohang, is_yang, ohang_relation

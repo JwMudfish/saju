@@ -2,6 +2,7 @@
 
 Provides lunar <-> solar date conversion using the korean-lunar-calendar library.
 """
+
 from __future__ import annotations
 
 from korean_lunar_calendar import KoreanLunarCalendar
@@ -41,9 +42,7 @@ def lunar_to_solar(
     except InvalidLunarDateError:
         raise
     except Exception as exc:
-        raise InvalidLunarDateError(
-            year=year, month=month, day=day, is_leap=is_leap_month
-        ) from exc
+        raise InvalidLunarDateError(year=year, month=month, day=day, is_leap=is_leap_month) from exc
 
 
 def solar_to_lunar(
@@ -81,6 +80,4 @@ def solar_to_lunar(
     except InvalidLunarDateError:
         raise
     except Exception as exc:
-        raise InvalidLunarDateError(
-            year=year, month=month, day=day
-        ) from exc
+        raise InvalidLunarDateError(year=year, month=month, day=day) from exc

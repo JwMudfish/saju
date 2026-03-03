@@ -2,6 +2,7 @@
 
 Based on manse_ori getSangSengSangGuk.js and umYang/oHang.js.
 """
+
 from __future__ import annotations
 
 from core.constants import GAN_OHANG, GAN_YANG, JI_OHANG
@@ -70,33 +71,33 @@ def ohang_relation(base_ohang: str, target_ohang: str) -> str:
     relations: dict[str, dict[str, str]] = {
         "목": {
             "수": "shang_come",  # 수가 목을 생
-            "화": "shang_go",    # 목이 화를 생
-            "토": "geuk_go",     # 목이 토를 극
-            "금": "geuk_come",   # 금이 목을 극
+            "화": "shang_go",  # 목이 화를 생
+            "토": "geuk_go",  # 목이 토를 극
+            "금": "geuk_come",  # 금이 목을 극
         },
         "화": {
             "목": "shang_come",  # 목이 화를 생
-            "토": "shang_go",    # 화가 토를 생
-            "금": "geuk_go",     # 화가 금을 극
-            "수": "geuk_come",   # 수가 화를 극
+            "토": "shang_go",  # 화가 토를 생
+            "금": "geuk_go",  # 화가 금을 극
+            "수": "geuk_come",  # 수가 화를 극
         },
         "토": {
             "화": "shang_come",  # 화가 토를 생
-            "금": "shang_go",    # 토가 금을 생
-            "수": "geuk_go",     # 토가 수를 극
-            "목": "geuk_come",   # 목이 토를 극
+            "금": "shang_go",  # 토가 금을 생
+            "수": "geuk_go",  # 토가 수를 극
+            "목": "geuk_come",  # 목이 토를 극
         },
         "금": {
             "토": "shang_come",  # 토가 금을 생
-            "수": "shang_go",    # 금이 수를 생
-            "목": "geuk_go",     # 금이 목을 극
-            "화": "geuk_come",   # 화가 금을 극
+            "수": "shang_go",  # 금이 수를 생
+            "목": "geuk_go",  # 금이 목을 극
+            "화": "geuk_come",  # 화가 금을 극
         },
         "수": {
             "금": "shang_come",  # 금이 수를 생
-            "목": "shang_go",    # 수가 목을 생
-            "화": "geuk_go",     # 수가 화를 극
-            "토": "geuk_come",   # 토가 수를 극
+            "목": "shang_go",  # 수가 목을 생
+            "화": "geuk_go",  # 수가 화를 극
+            "토": "geuk_come",  # 토가 수를 극
         },
     }
 

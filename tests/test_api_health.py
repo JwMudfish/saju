@@ -1,4 +1,5 @@
 """API 헬스 체크 엔드포인트 테스트."""
+
 from __future__ import annotations
 
 import pytest

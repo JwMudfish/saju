@@ -1,4 +1,5 @@
 """Domain models for saju calculation engine."""
+
 from __future__ import annotations
 
 from pydantic import BaseModel, model_validator
@@ -56,3 +57,42 @@ class OHangRatio(BaseModel):
         if abs(total - 100.0) >= 0.01:
             raise ValueError(f"OHangRatio total must be 100.0, got {total}")
         return self
+
+
+class SibiUnsungItem(BaseModel):
+    """십이운성 결과 항목."""
+
+    pillar: str  # "year", "month", "day", "hour"
+    ji: str  # 해당 기둥의 지지
+    stage: str  # 십이운성 단계명 (장생, 목욕, ...)
+
+
+class ShinsalItem(BaseModel):
+    """신살 결과 항목."""
+
+    name: str  # 신살 이름 (역마살, 도화살, ...)
+    trigger_ji: str  # 해당 신살이 발동된 지지
+    description: str | None = None  # 신살 의미 (선택)
+
+
+class SewunItem(BaseModel):
+    """세운 결과 항목."""
+
+    year: int
+    ganji: GanJi
+    is_current: bool = False
+
+
+class PillarMeaning(BaseModel):
+    """기둥별 상징 의미."""
+
+    pillar: str  # "year", "month", "day", "hour"
+    label: str  # "년주", "월주", "일주", "시주"
+    meaning: str  # "조상/어린시절", ...
+
+
+class YuksinItem(BaseModel):
+    """육신(십성) 결과 항목."""
+
+    target: str  # 천간 또는 지지 대상
+    yuksin: str  # 육신명 (비견, 겁재, ...)

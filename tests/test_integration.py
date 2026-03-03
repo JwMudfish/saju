@@ -3,6 +3,7 @@
 Covers SPEC-CORE-001 acceptance criteria (AC-001 through AC-007) and
 additional reference cases from manse_ori.
 """
+
 from __future__ import annotations
 
 from datetime import datetime
@@ -213,15 +214,22 @@ class TestAC005Yuksin:
         from core.yuksin import calc_yuksin
 
         expected = {
-            "갑": "비견", "을": "겁재",  # 비겁 (木)
-            "병": "식신", "정": "상관",  # 식상 (火 - 木生火)
-            "무": "편재", "기": "정재",  # 재성 (土 - 木克土)
-            "경": "편관", "신": "정관",  # 관성 (金 - 金克木)
-            "임": "편인", "계": "정인",  # 인성 (水 - 水生木)
+            "갑": "비견",
+            "을": "겁재",  # 비겁 (木)
+            "병": "식신",
+            "정": "상관",  # 식상 (火 - 木生火)
+            "무": "편재",
+            "기": "정재",  # 재성 (土 - 木克土)
+            "경": "편관",
+            "신": "정관",  # 관성 (金 - 金克木)
+            "임": "편인",
+            "계": "정인",  # 인성 (水 - 水生木)
         }
         for target, yuksin in expected.items():
             result = calc_yuksin("갑", target)
-            assert result == yuksin, f"calc_yuksin('갑', '{target}') = '{result}', expected '{yuksin}'"
+            assert result == yuksin, (
+                f"calc_yuksin('갑', '{target}') = '{result}', expected '{yuksin}'"
+            )
 
 
 class TestAC006HapChung:
@@ -442,8 +450,12 @@ class TestFullPipelineIntegration:
             # (year, month, day, hour, gender): (year_pillar, month_pillar, day_pillar, hour_pillar)
             (
                 (1984, 4, 15, 10, "male"),
-                (GanJi(gan="갑", ji="자"), GanJi(gan="무", ji="진"),
-                 GanJi(gan="기", ji="묘"), GanJi(gan="기", ji="사")),
+                (
+                    GanJi(gan="갑", ji="자"),
+                    GanJi(gan="무", ji="진"),
+                    GanJi(gan="기", ji="묘"),
+                    GanJi(gan="기", ji="사"),
+                ),
             ),
             # 1990년 경오년
             (
@@ -485,7 +497,9 @@ class TestCalendarIntegration:
         for ly, lm, ld, leap, sy, sm, sd in cases:
             # 음력 -> 양력
             result = lunar_to_solar(ly, lm, ld, leap)
-            assert result == (sy, sm, sd), f"lunar_to_solar({ly},{lm},{ld}) = {result}, expected ({sy},{sm},{sd})"
+            assert result == (sy, sm, sd), (
+                f"lunar_to_solar({ly},{lm},{ld}) = {result}, expected ({sy},{sm},{sd})"
+            )
 
             # 양력 -> 음력 역방향
             back = solar_to_lunar(sy, sm, sd)

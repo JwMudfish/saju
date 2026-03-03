@@ -1,4 +1,5 @@
 """API 캘린더 변환 엔드포인트 테스트."""
+
 from __future__ import annotations
 
 import pytest

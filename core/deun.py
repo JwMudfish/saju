@@ -4,13 +4,14 @@ Based on manse_ori deun.js.
 Calculates the direction (banghyang), starting age (deun_su),
 and the 10 major fortune periods for a given birth chart.
 """
+
 from __future__ import annotations
 
 from datetime import datetime
 from typing import Literal
 
-from core.constants import YEAR_SKY_MAP
-from core.models.domain import DeunItem
+from core.constants import GAN_LIST, JI_LIST, YEAR_SKY_MAP
+from core.models.domain import DeunItem, GanJi, SewunItem
 from core.models.request import SajuRequest
 from core.models.response import DeunResult
 from core.ohang import is_yang
@@ -211,3 +212,28 @@ def calc_deun_full(request: SajuRequest) -> DeunResult:
         deun_su=deun_su,
         deun_list=deun_list,
     )
+
+
+def calc_sewun(current_year: int) -> list[SewunItem]:
+    """현재 연도 기준 +-5년(총 11개)의 세운 간지를 계산한다.
+
+    갑자(甲子)년이 기준 원점: 서기 4년이 갑자년이므로
+    (year - 4) % 10 으로 천간 인덱스,
+    (year - 4) % 12 로 지지 인덱스를 계산한다.
+
+    Args:
+        current_year: 기준 연도 (서버 현재 연도)
+
+    Returns:
+        11개 SewunItem 목록 (current_year-5 ~ current_year+5),
+        current_year에 해당하는 항목은 is_current=True
+    """
+    result: list[SewunItem] = []
+    for year in range(current_year - 5, current_year + 6):
+        gan_idx = (year - 4) % 10
+        ji_idx = (year - 4) % 12
+        gan = GAN_LIST[gan_idx]
+        ji = JI_LIST[ji_idx]
+        ganji = GanJi(gan=gan, ji=ji)
+        result.append(SewunItem(year=year, ganji=ganji, is_current=(year == current_year)))
+    return result
