@@ -1,9 +1,9 @@
 ---
 id: SPEC-UI-001
 version: 1.0.0
-status: planned
+status: completed
 created: 2026-03-03
-updated: 2026-03-03
+updated: 2026-03-04
 author: jw
 priority: medium
 depends_on: SPEC-CALC-001
@@ -252,3 +252,41 @@ streamlit_app.py
 | REQ-UI-030~035 | `render_tab_luck()` 함수  |
 | REQ-UI-040~047 | `render_tab_detail()` 함수 |
 | REQ-UI-050~053 | `safe_api_call()` 래퍼 함수 |
+
+---
+
+## 6. 구현 완료 노트
+
+### 6.1 구현 결과
+
+| 항목 | 계획 | 실제 |
+|------|------|------|
+| 구현 파일 | `streamlit_app.py` 전면 재작성 | 완료 (179 → 462 라인) |
+| 탭 수 | 4개 | 4개 (사주 원국·십성 분석·운의 흐름·세부 지표) |
+| 의존성 추가 | plotly | 완료 (`pyproject.toml` `ui` extra에 추가) |
+| mypy 타입 어노테이션 | 미정 | 완료 (`dict[str, Any]` 전면 적용, mypy strict 통과) |
+
+### 6.2 구현된 함수
+
+| 함수 | 구현 요구사항 | 비고 |
+|------|-------------|------|
+| `render_sidebar()` | REQ-UI-001~005 | `dict[str, Any] \| None` 반환 |
+| `safe_api_call()` | REQ-UI-050~053 | `requests` 오류 처리 완비 |
+| `render_tab_wonkuk()` | REQ-UI-010~015 | 4기둥 카드 + 상징 의미 |
+| `render_tab_yuksin()` | REQ-UI-020~024 | 십성 테이블 + 5그룹 expander |
+| `render_tab_luck()` | REQ-UI-030~035 | 대운/세운 테이블 + 현재 강조 |
+| `render_tab_detail()` | REQ-UI-040~047 | 지장간·십이운성·신살·오행 차트 |
+
+### 6.3 품질 게이트 결과
+
+- **테스트**: 351개 통과 (커버리지 95%) — UI 코드는 통합 테스트 범위 외
+- **ruff**: 0 오류 (I001 import 정렬 자동 수정 포함)
+- **mypy**: 0 오류 (`[[tool.mypy.overrides]]`로 streamlit·plotly·requests 스텁 예외 처리)
+- **TRUST 5**: 통과
+
+### 6.4 주요 기술 결정
+
+- **타입 스텁 처리**: `streamlit`, `plotly`, `requests`는 mypy 타입 스텁이 없으므로 `pyproject.toml`에 `[[tool.mypy.overrides]]` 섹션 추가
+- **오행 차트**: `plotly.graph_objects.Bar` 차트 사용 (Streamlit 네이티브 차트는 커스텀 색상 미지원)
+- **시주 미상 처리**: `None` 체크로 모든 탭에서 일관되게 "미상" 표시
+- **YUKSIN_GROUPS 상수**: 십성 5그룹 설명을 모듈 레벨 상수로 정의하여 재사용
