@@ -22,6 +22,7 @@ from core.ohang import get_gan_ohang, get_ji_ohang
 from core.pillar import calc_four_pillars
 from core.shinsal import calc_shinsal
 from core.sibiunsung import calc_all_sibiunsung
+from core.yongshin import calc_yongshin
 from core.yuksin import calc_yuksin
 
 # 기둥별 상징 의미 고정 매핑
@@ -93,6 +94,19 @@ class SajuService:
             # 사주 사기둥 계산
             pillars = calc_four_pillars(request)
 
+            # 용신(당령) 계산 - 실패 시 None 반환하여 메인 계산 보호
+            hour_for_dt = birth_hour if birth_hour is not None else 12
+            birth_dt = datetime(solar_year, solar_month, solar_day, hour_for_dt, 0)
+            try:
+                yongshin_result = calc_yongshin(
+                    birth_dt=birth_dt,
+                    month_ji=pillars.month_pillar.ji,
+                    month=solar_month,
+                    year=solar_year,
+                )
+            except Exception:
+                yongshin_result = None
+
             # 대운 계산
             deun_result = calc_deun_full(request)
 
@@ -120,6 +134,7 @@ class SajuService:
                 sewun=sewun,
                 pillar_meanings=pillar_meanings,
                 hapchung=hapchung,
+                yongshin=yongshin_result,
             )
         except SajuError as e:
             raise ValueError(str(e)) from e

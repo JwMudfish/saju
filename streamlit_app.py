@@ -1,4 +1,4 @@
-"""사주팔자 계산 Streamlit 앱 - 5탭 대시보드."""
+"""사주팔자 계산 Streamlit 앱 - 6탭 대시보드."""
 
 from __future__ import annotations
 
@@ -7,6 +7,8 @@ from typing import Any
 import pandas as pd
 import requests
 import streamlit as st
+
+from app.services.content_loader import get_ilgan_content, get_yongsin_content
 
 # API 엔드포인트
 API_BASE_URL = "http://localhost:8000"
@@ -468,6 +470,70 @@ def render_tab_detail(result: dict[str, Any]) -> None:
     _render_hapchung_section(hapchung_list)
 
 
+def render_tab_identity(result: dict[str, Any]) -> None:
+    """Tab 6: 나의 정체성 - 일간 캐릭터 카드 + 용신 재능 카드."""
+    st.subheader("나의 정체성 분석")
+
+    # 일간(日干) 추출 - dict 또는 Pydantic 모델 모두 지원
+    day_pillar = result.get("day_pillar", {})
+    if isinstance(day_pillar, dict):
+        gan = day_pillar.get("gan", "")
+    else:
+        gan = getattr(day_pillar, "gan", "")
+
+    # 용신(用神) 추출
+    yongshin = result.get("yongshin")
+    if yongshin is not None and not isinstance(yongshin, dict):
+        if hasattr(yongshin, "model_dump"):
+            yongshin = yongshin.model_dump()
+        elif hasattr(yongshin, "dict"):
+            yongshin = yongshin.dict()
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.markdown("#### 🌱 나의 일간 (日干)")
+        ilgan_content = get_ilgan_content(gan)
+        if ilgan_content:
+            ilgan_label = ilgan_content.get("ilgan", gan)
+            st.info(f"일간: {ilgan_label}")
+            title = ilgan_content.get("ilganDesciption", "")
+            if title:
+                st.markdown(f"**{title}**")
+            subtitle = ilgan_content.get("subtitle", "")
+            if subtitle:
+                st.caption(subtitle)
+            contents = ilgan_content.get("contents", "")
+            if contents:
+                with st.expander("자세히 보기", expanded=True):
+                    st.write(contents.replace("\\n", "\n"))
+        else:
+            st.info("일간 캐릭터 정보를 불러올 수 없습니다.")
+
+    with col2:
+        st.markdown("#### ✨ 나의 용신 재능 (用神)")
+        if yongshin:
+            dang_ryeong = yongshin.get("dang_ryeong", "")
+            heuisin = yongshin.get("heuisin", "")
+            yongsin_content = get_yongsin_content(dang_ryeong)
+            if yongsin_content:
+                st.info(f"용신: {dang_ryeong} / 희신: {heuisin}")
+                subtitle = yongsin_content.get("subtitle", "")
+                if subtitle:
+                    st.markdown(f"**{subtitle}**")
+                tag = yongsin_content.get("tag", "")
+                if tag:
+                    st.caption(tag)
+                contents = yongsin_content.get("contents", "")
+                if contents:
+                    with st.expander("재능 및 진로 보기", expanded=True):
+                        st.write(contents.replace("\\n", "\n"))
+            else:
+                st.info("용신 콘텐츠를 불러올 수 없습니다.")
+        else:
+            st.info("용신 정보를 불러올 수 없습니다.")
+
+
 def render_tab_interpret(result: dict[str, Any]) -> None:
     """Tab 5: AI 사주 해석."""
     st.subheader("AI 사주 해석")
@@ -539,8 +605,15 @@ def main() -> None:
 
     if st.session_state["saju_result"]:
         result = st.session_state["saju_result"]
-        tab1, tab2, tab3, tab4, tab5 = st.tabs(
-            ["📜 사주 원국", "⭐ 십성 분석", "🔄 운의 흐름", "📊 세부 지표", "🤖 AI 해석"]
+        tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(
+            [
+                "📜 사주 원국",
+                "⭐ 십성 분석",
+                "🔄 운의 흐름",
+                "📊 세부 지표",
+                "🤖 AI 해석",
+                "🌟 나의 정체성",
+            ]
         )
         with tab1:
             render_tab_wonkuk(result)
@@ -552,6 +625,8 @@ def main() -> None:
             render_tab_detail(result)
         with tab5:
             render_tab_interpret(result)
+        with tab6:
+            render_tab_identity(result)
     else:
         st.info("👈 왼쪽 사이드바에서 정보를 입력하고 '사주 계산' 버튼을 클릭하세요.")
 

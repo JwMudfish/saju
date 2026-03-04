@@ -14,6 +14,7 @@ from core.models.domain import (
     SewunItem,
     ShinsalItem,
     SibiUnsungItem,
+    YongshinResult,
     YuksinItem,
 )
 
@@ -51,6 +52,7 @@ class SajuResult(BaseModel):
     sewun: list[SewunItem] | None = None
     pillar_meanings: list[PillarMeaning] | None = None
     hapchung: list[HapchungRelation] | None = None
+    yongshin: YongshinResult | None = None
 
 
 class InterpretResult(BaseModel):
