@@ -6,7 +6,7 @@
 |------|------|
 | SPEC ID | SPEC-UI-003 |
 | 제목 | 일간 캐릭터 카드 + 용신 재능 해설 Streamlit UI |
-| 상태 | Planned |
+| 상태 | completed |
 | 우선순위 | High |
 | 관련 SPEC | SPEC-UI-001, SPEC-UI-002, SPEC-API-001 |
 
@@ -258,3 +258,24 @@ Streamlit에서는 `pathlib.Path(__file__).parent`를 기준으로 경로 계산
 - 관련 모듈: `streamlit_app.py`, `app/services/saju_service.py`, `core/models/response.py`, `core/yongshin.py`
 - 신규 파일: `app/services/content_loader.py`
 - 데이터 파일: `manse_ori/testResult/contents_ilgan.json`, `manse_ori/testResult/contents_yongsin.json`
+
+---
+
+## 구현 노트 (Implementation Notes)
+
+커밋: `9584b87` (2026-03-05)
+
+### 구현 완료 항목
+
+- `core/models/response.py`: `SajuResult`에 `yongshin: YongshinResult | None = None` 필드 추가 (하위 호환성 유지)
+- `app/services/saju_service.py`: `calculate()` 메서드에 `calc_yongshin()` 통합, `birth_hour=None` 시 12시 기본값 처리
+- `app/services/content_loader.py`: JSON 캐시 서비스 신규 생성 — 앱 시작 시 한 번 로딩, `get_ilgan_content()` / `get_yongsin_content()` O(1) 조회 제공
+- `streamlit_app.py`: 6번째 탭 "나의 정체성" 추가, `render_tab_identity()` 함수 구현 (일간 캐릭터 카드 + 용신 재능 카드 2열 레이아웃)
+- `tests/services/test_content_loader.py`: `ContentLoader` 서비스 단위 테스트 14개 추가
+
+### 테스트 결과
+
+- 총 테스트: **466개** (기존 452개 → +14개)
+- 커버리지: **95%** 유지
+- ruff lint: 경고 없음
+- mypy: 타입 오류 없음

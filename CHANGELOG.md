@@ -7,6 +7,36 @@
 
 ---
 
+## [0.7.0] - 2026-03-05
+
+### Added (SPEC-UI-003: 일간 캐릭터 카드 + 용신 재능 해설 UI)
+
+#### 백엔드
+
+- `app/services/content_loader.py` — JSON 콘텐츠 로더 서비스 신규 생성
+  - `contents_ilgan.json` (10개 천간별 성격 카드) 앱 시작 시 한 번 캐싱
+  - `contents_yongsin.json` (8가지 용신 유형별 재능·진로 카드) 한 번 캐싱
+  - `get_ilgan_content(gan)` / `get_yongsin_content(dang_ryeong)` O(1) 조회
+  - 한자-한글 역매핑 테이블 (甲乙丙丁庚辛壬癸 → 갑을병정경신임계)
+- `core/models/response.py` — `SajuResult`에 `yongshin: YongshinResult | None = None` 필드 추가
+- `app/services/saju_service.py` — `calculate()` 메서드에 `calc_yongshin()` 통합
+  - `birth_hour=None` 시 정오(12시) 기본값으로 용신 계산
+  - `SajuResult` 반환 시 `yongshin` 필드 포함
+
+#### 프론트엔드
+
+- `streamlit_app.py` — "나의 정체성" 6번째 탭 추가
+  - `render_tab_identity()` 함수: 일간 캐릭터 카드 + 용신 재능 카드 2열 레이아웃
+  - `ContentLoader` 싱글톤 인스턴스 활용
+  - 데이터 없음 처리 (None 방어 코드)
+
+#### 테스트
+
+- `tests/services/test_content_loader.py` — `ContentLoader` 단위 테스트 14개 추가
+- 466개 테스트 (+14개), 커버리지 95% 유지
+
+---
+
 ## [0.1.0] - 2026-02-27
 
 ### Added (SPEC-CORE-001: 사주팔자 Python 순수 계산 엔진)

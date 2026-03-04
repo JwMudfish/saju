@@ -12,7 +12,8 @@ Python 순수 계산으로 구현한 사주팔자(四柱八字) 엔진입니다.
 - 십이운성·신살·세운 계산 지원
 - 합충형해파(合沖刑害破) 사기둥 쌍 분석 지원
 - 합충형해파 분석 UI (합충형해파 관계 테이블, 강조 표시)
-- 5탭 Streamlit 대시보드 (원국·십성·운·세부지표·AI 해석)
+- 일간 캐릭터 카드 + 용신 재능 해설 UI (ContentLoader 서비스)
+- 6탭 Streamlit 대시보드 (원국·십성·운·세부지표·AI 해석·나의 정체성)
 
 ## 요구사항
 
@@ -205,9 +206,11 @@ saju/
 │   ├── services/      # 비즈니스 로직
 │   │   ├── saju_service.py       # 사주 계산
 │   │   ├── interpretation_service.py  # AI 해석 (OpenAI)
+│   │   ├── content_loader.py     # JSON 콘텐츠 로더 (일간/용신 카드)
 │   │   └── prompt_builder.py     # 해석 프롬프트 생성
 │   └── main.py        # 애플리케이션 팩토리
-├── tests/             # 테스트 스위트 (95%+ 커버리지)
+├── tests/             # 테스트 스위트 (466개, 95%+ 커버리지)
+│   ├── services/      # 서비스 계층 단위 테스트
 ├── pyproject.toml     # 프로젝트 설정 (hatchling)
 └── uv.lock            # 의존성 잠금 파일
 ```
@@ -223,6 +226,16 @@ saju/
 MIT License
 
 ## 변경 사항
+
+### v0.7.0 (SPEC-UI-003)
+
+- 일간 캐릭터 카드: 10천간별 성격 카드 표시 (`contents_ilgan.json`)
+- 용신 재능 해설: 8가지 용신 유형별 재능·진로 카드 표시 (`contents_yongsin.json`)
+- `ContentLoader` 서비스: 앱 시작 시 JSON 캐싱, O(1) 조회 (`app/services/content_loader.py`)
+- Streamlit "나의 정체성" 6번째 탭 (일간 카드 + 용신 카드 2열 레이아웃)
+- `SajuResult.yongshin` 필드 추가 (하위 호환성 유지)
+- `SajuService.calculate()`에 용신 계산 통합 (`birth_hour=None` 지원)
+- 테스트 466개 (+14개), 커버리지 95% 유지
 
 ### v0.6.0 (SPEC-UI-002)
 

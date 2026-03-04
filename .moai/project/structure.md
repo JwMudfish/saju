@@ -22,6 +22,7 @@ saju/
 │       ├── saju_service.py         # 사주 계산 오케스트레이션
 │       ├── calendar_service.py     # 달력 변환 서비스
 │       ├── interpretation_service.py  # LLM 해설 서비스
+│       ├── content_loader.py       # JSON 콘텐츠 로더 (일간/용신 카드 데이터)
 │       └── prompt_builder.py       # 사주 결과 → 프롬프트 변환
 ├── core/                       # 사주 계산 엔진 (핵심 도메인 로직)
 │   ├── __init__.py
@@ -47,6 +48,8 @@ saju/
 │   ├── test_api/
 │   │   ├── test_saju_endpoint.py
 │   │   └── test_calendar_endpoint.py
+│   ├── services/               # 서비스 계층 단위 테스트
+│   │   └── test_content_loader.py  # ContentLoader 서비스 테스트 (14개)
 │   └── test_data/
 │       └── reference_cases.json  # manse_ori 60+ 레퍼런스 케이스
 ├── streamlit_app.py            # Streamlit UI 진입점 (프로젝트 루트)
