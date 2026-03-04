@@ -10,6 +10,7 @@ Python 순수 계산으로 구현한 사주팔자(四柱八字) 엔진입니다.
 - 태음력 변환 지원
 - 완전한 타입 안전성 (mypy strict mode)
 - 십이운성·신살·세운 계산 지원
+- 합충형해파(合沖刑害破) 사기둥 쌍 분석 지원
 - 5탭 Streamlit 대시보드 (원국·십성·운·세부지표·AI 해석)
 
 ## 요구사항
@@ -221,6 +222,19 @@ saju/
 MIT License
 
 ## 변경 사항
+
+### v0.5.0 (SPEC-CALC-002)
+
+- 형(刑)·해(害)·파(破) 판별 함수 추가 (`core/hapchung.py`)
+  - `is_hyeong()`: 시세지형(인사신)·무은지형(축술미)·무례지형(자묘)·자형(진오유해)
+  - `is_hae()`: 육해(六害) 6쌍 (자미·축오·인사·묘진·신해·유술)
+  - `is_pa()`: 육파(六破) 6쌍 (자유·오묘·인해·사신·진축·술미)
+  - `get_hyeong_subtype()`: 형 세부 유형 반환
+- `HapchungRelation` 도메인 모델 추가 (`core/models/domain.py`)
+- `calc_pillar_hapchung()`: 사기둥 지지 전체 쌍(최대 6쌍) 합충형해파 분석
+  - 우선순위: 충 > 형 > 해 > 파 > 육합 > 삼합 > 방합
+- `SajuResult.hapchung` 필드 추가 (`core/models/response.py`)
+- 테스트 431개 (기존 379개 → +52개), 커버리지 95% 유지
 
 ### v0.4.0 (SPEC-INTERP-001)
 
