@@ -62,10 +62,10 @@ class TestInterpretEndpoint:
     def test_no_api_key_returns_200_with_fallback(
         self, client: TestClient, minimal_saju_payload: dict
     ) -> None:
-        """ANTHROPIC_API_KEY 없으면 200 + is_fallback=true를 반환해야 한다."""
+        """OPENAI_API_KEY 없으면 200 + is_fallback=true를 반환해야 한다."""
         with patch("app.api.deps.get_settings") as mock_settings:
             settings = MagicMock()
-            settings.anthropic_api_key = None
+            settings.openai_api_key = None
             mock_settings.return_value = settings
 
             response = client.post("/api/v1/saju/interpret", json=minimal_saju_payload)
@@ -73,25 +73,27 @@ class TestInterpretEndpoint:
         assert response.status_code == 200
         data = response.json()
         assert data["is_fallback"] is True
-        assert "ANTHROPIC_API_KEY" in data["interpretation"]
+        assert "OPENAI_API_KEY" in data["interpretation"]
 
     def test_with_mocked_api_returns_200_not_fallback(
         self, client: TestClient, full_saju_payload: dict
     ) -> None:
         """API 키 있을 때 LLM 응답으로 is_fallback=false를 반환해야 한다."""
+        mock_choice = MagicMock()
+        mock_choice.message.content = "사주 해석 결과입니다."
         mock_response = MagicMock()
-        mock_response.content = [MagicMock(text="사주 해석 결과입니다.")]
+        mock_response.choices = [mock_choice]
 
         with patch("app.api.deps.get_settings") as mock_settings, patch(
-            "anthropic.Anthropic"
-        ) as mock_anthropic_cls:
+            "openai.OpenAI"
+        ) as mock_openai_cls:
             settings = MagicMock()
-            settings.anthropic_api_key = "test-key"
+            settings.openai_api_key = "test-key"
             mock_settings.return_value = settings
 
             mock_client = MagicMock()
-            mock_anthropic_cls.return_value = mock_client
-            mock_client.messages.create.return_value = mock_response
+            mock_openai_cls.return_value = mock_client
+            mock_client.chat.completions.create.return_value = mock_response
 
             response = client.post("/api/v1/saju/interpret", json=full_saju_payload)
 
@@ -121,20 +123,20 @@ class TestInterpretEndpoint:
         self, client: TestClient, minimal_saju_payload: dict
     ) -> None:
         """APIStatusError 발생 시 502를 반환해야 한다."""
-        import anthropic
+        import openai
 
         with patch("app.api.deps.get_settings") as mock_settings, patch(
-            "anthropic.Anthropic"
-        ) as mock_anthropic_cls:
+            "openai.OpenAI"
+        ) as mock_openai_cls:
             settings = MagicMock()
-            settings.anthropic_api_key = "test-key"
+            settings.openai_api_key = "test-key"
             mock_settings.return_value = settings
 
             mock_client = MagicMock()
-            mock_anthropic_cls.return_value = mock_client
+            mock_openai_cls.return_value = mock_client
             mock_resp = MagicMock()
             mock_resp.status_code = 500
-            mock_client.messages.create.side_effect = anthropic.APIStatusError(
+            mock_client.chat.completions.create.side_effect = openai.APIStatusError(
                 "서버 오류", response=mock_resp, body=None
             )
 
@@ -146,18 +148,18 @@ class TestInterpretEndpoint:
         self, client: TestClient, minimal_saju_payload: dict
     ) -> None:
         """APITimeoutError 발생 시 504를 반환해야 한다."""
-        import anthropic
+        import openai
 
         with patch("app.api.deps.get_settings") as mock_settings, patch(
-            "anthropic.Anthropic"
-        ) as mock_anthropic_cls:
+            "openai.OpenAI"
+        ) as mock_openai_cls:
             settings = MagicMock()
-            settings.anthropic_api_key = "test-key"
+            settings.openai_api_key = "test-key"
             mock_settings.return_value = settings
 
             mock_client = MagicMock()
-            mock_anthropic_cls.return_value = mock_client
-            mock_client.messages.create.side_effect = anthropic.APITimeoutError(
+            mock_openai_cls.return_value = mock_client
+            mock_client.chat.completions.create.side_effect = openai.APITimeoutError(
                 request=MagicMock()
             )
 
@@ -169,30 +171,32 @@ class TestInterpretEndpoint:
         self, client: TestClient, full_saju_payload: dict
     ) -> None:
         """user_context가 제공되면 요청에 포함되어야 한다."""
+        mock_choice = MagicMock()
+        mock_choice.message.content = "직업 운 해석입니다."
         mock_response = MagicMock()
-        mock_response.content = [MagicMock(text="직업 운 해석입니다.")]
+        mock_response.choices = [mock_choice]
 
         payload = {**full_saju_payload, "user_context": "직업 운을 알고 싶어요"}
 
         with patch("app.api.deps.get_settings") as mock_settings, patch(
-            "anthropic.Anthropic"
-        ) as mock_anthropic_cls:
+            "openai.OpenAI"
+        ) as mock_openai_cls:
             settings = MagicMock()
-            settings.anthropic_api_key = "test-key"
+            settings.openai_api_key = "test-key"
             mock_settings.return_value = settings
 
             mock_client = MagicMock()
-            mock_anthropic_cls.return_value = mock_client
-            mock_client.messages.create.return_value = mock_response
+            mock_openai_cls.return_value = mock_client
+            mock_client.chat.completions.create.return_value = mock_response
 
             response = client.post("/api/v1/saju/interpret", json=payload)
 
         assert response.status_code == 200
-        # user_context가 프롬프트에 포함되었는지 확인 (messages.create 호출 인자 검사)
-        call_kwargs = mock_client.messages.create.call_args
-        if call_kwargs.kwargs.get("messages"):
-            content = call_kwargs.kwargs["messages"][0]["content"]
-            assert "직업 운을 알고 싶어요" in content
+        # user_context가 프롬프트에 포함되었는지 확인 (messages의 user 메시지 검사)
+        call_kwargs = mock_client.chat.completions.create.call_args
+        if call_kwargs and call_kwargs.kwargs.get("messages"):
+            user_msg = call_kwargs.kwargs["messages"][1]["content"]
+            assert "직업 운을 알고 싶어요" in user_msg
 
     def test_response_has_model_field(
         self, client: TestClient, minimal_saju_payload: dict
@@ -200,7 +204,7 @@ class TestInterpretEndpoint:
         """응답에 model 필드가 있어야 한다."""
         with patch("app.api.deps.get_settings") as mock_settings:
             settings = MagicMock()
-            settings.anthropic_api_key = None
+            settings.openai_api_key = None
             mock_settings.return_value = settings
 
             response = client.post("/api/v1/saju/interpret", json=minimal_saju_payload)
@@ -208,4 +212,4 @@ class TestInterpretEndpoint:
         assert response.status_code == 200
         data = response.json()
         assert "model" in data
-        assert data["model"] == "claude-sonnet-4-6"
+        assert data["model"] == "gpt-4o"

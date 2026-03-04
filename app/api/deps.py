@@ -21,4 +21,4 @@ def get_calendar_service() -> CalendarService:
 def get_interpretation_service() -> InterpretationService:
     """InterpretationService 의존성 주입."""
     settings = get_settings()
-    return InterpretationService(api_key=settings.anthropic_api_key)
+    return InterpretationService(api_key=settings.openai_api_key)

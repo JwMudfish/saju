@@ -15,7 +15,6 @@ from core.models.domain import (
 )
 from core.models.response import DeunResult, SajuResult
 
-
 # ---------------------------------------------------------------------------
 # 테스트 픽스처
 # ---------------------------------------------------------------------------
@@ -191,7 +190,7 @@ class TestInterpretationService:
         result = await service.interpret(minimal_saju_result)
 
         assert result.is_fallback is True
-        assert "ANTHROPIC_API_KEY" in result.interpretation
+        assert "OPENAI_API_KEY" in result.interpretation
 
     @pytest.mark.asyncio
     async def test_no_api_key_fallback_has_model_field(self, minimal_saju_result: SajuResult) -> None:
@@ -207,17 +206,19 @@ class TestInterpretationService:
         assert result.model == INTERPRETATION_MODEL
 
     @pytest.mark.asyncio
-    async def test_with_mocked_anthropic_returns_result(self, full_saju_result: SajuResult) -> None:
-        """anthropic mock 시 is_fallback=False인 InterpretResult를 반환해야 한다."""
+    async def test_with_mocked_openai_returns_result(self, full_saju_result: SajuResult) -> None:
+        """openai mock 시 is_fallback=False인 InterpretResult를 반환해야 한다."""
         from app.services.interpretation_service import InterpretationService
 
+        mock_choice = MagicMock()
+        mock_choice.message.content = "갑자년생의 사주 해석입니다."
         mock_response = MagicMock()
-        mock_response.content = [MagicMock(text="갑자년생의 사주 해석입니다.")]
+        mock_response.choices = [mock_choice]
 
-        with patch("anthropic.Anthropic") as mock_anthropic_cls:
+        with patch("openai.OpenAI") as mock_openai_cls:
             mock_client = MagicMock()
-            mock_anthropic_cls.return_value = mock_client
-            mock_client.messages.create.return_value = mock_response
+            mock_openai_cls.return_value = mock_client
+            mock_client.chat.completions.create.return_value = mock_response
 
             service = InterpretationService(api_key="test-key")
             result = await service.interpret(full_saju_result)
@@ -228,16 +229,16 @@ class TestInterpretationService:
     @pytest.mark.asyncio
     async def test_api_status_error_raises_runtime_error(self, minimal_saju_result: SajuResult) -> None:
         """APIStatusError 발생 시 RuntimeError가 재발생해야 한다."""
-        import anthropic
+        import openai
 
         from app.services.interpretation_service import InterpretationService
 
-        with patch("anthropic.Anthropic") as mock_anthropic_cls:
+        with patch("openai.OpenAI") as mock_openai_cls:
             mock_client = MagicMock()
-            mock_anthropic_cls.return_value = mock_client
+            mock_openai_cls.return_value = mock_client
             mock_response = MagicMock()
             mock_response.status_code = 500
-            mock_client.messages.create.side_effect = anthropic.APIStatusError(
+            mock_client.chat.completions.create.side_effect = openai.APIStatusError(
                 "서버 오류",
                 response=mock_response,
                 body=None,
@@ -250,14 +251,14 @@ class TestInterpretationService:
     @pytest.mark.asyncio
     async def test_api_timeout_error_raises_timeout_error(self, minimal_saju_result: SajuResult) -> None:
         """APITimeoutError 발생 시 TimeoutError가 재발생해야 한다."""
-        import anthropic
+        import openai
 
         from app.services.interpretation_service import InterpretationService
 
-        with patch("anthropic.Anthropic") as mock_anthropic_cls:
+        with patch("openai.OpenAI") as mock_openai_cls:
             mock_client = MagicMock()
-            mock_anthropic_cls.return_value = mock_client
-            mock_client.messages.create.side_effect = anthropic.APITimeoutError(
+            mock_openai_cls.return_value = mock_client
+            mock_client.chat.completions.create.side_effect = openai.APITimeoutError(
                 request=MagicMock()
             )
 
@@ -273,13 +274,15 @@ class TestInterpretationService:
             InterpretationService,
         )
 
+        mock_choice = MagicMock()
+        mock_choice.message.content = "해석 결과"
         mock_response = MagicMock()
-        mock_response.content = [MagicMock(text="해석 결과")]
+        mock_response.choices = [mock_choice]
 
-        with patch("anthropic.Anthropic") as mock_anthropic_cls:
+        with patch("openai.OpenAI") as mock_openai_cls:
             mock_client = MagicMock()
-            mock_anthropic_cls.return_value = mock_client
-            mock_client.messages.create.return_value = mock_response
+            mock_openai_cls.return_value = mock_client
+            mock_client.chat.completions.create.return_value = mock_response
 
             service = InterpretationService(api_key="test-key")
             result = await service.interpret(full_saju_result)

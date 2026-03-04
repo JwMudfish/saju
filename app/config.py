@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     app_version: str = Field(default="0.1.0")
     debug: bool = Field(default=False)
     cors_origins: list[str] = Field(default_factory=lambda: ["*"])
-    anthropic_api_key: str | None = Field(default=None, description="Anthropic API 키")
+    openai_api_key: str | None = Field(default=None, description="OpenAI API 키")
 
     model_config = SettingsConfigDict(
         env_file=".env",
