@@ -10,7 +10,7 @@ Python 순수 계산으로 구현한 사주팔자(四柱八字) 엔진입니다.
 - 태음력 변환 지원
 - 완전한 타입 안전성 (mypy strict mode)
 - 십이운성·신살·세운 계산 지원
-- 4탭 Streamlit 대시보드 (원국·십성·운·세부지표)
+- 5탭 Streamlit 대시보드 (원국·십성·운·세부지표·AI 해석)
 
 ## 요구사항
 
@@ -93,6 +93,14 @@ curl -X POST http://localhost:8000/api/v1/calendar/convert \
     "is_lunar": true,
     "is_leap_month": false
   }'
+
+# AI 해석 (OpenAI API 키 필요)
+curl -X POST http://localhost:8000/api/v1/saju/interpret \
+  -H "Content-Type: application/json" \
+  -d '{
+    "saju_result": { ... },
+    "user_context": "직업 운을 알고 싶어요"
+  }'
 ```
 
 ### Streamlit 웹 UI
@@ -138,6 +146,17 @@ curl -X POST http://localhost:8000/api/v1/calendar/convert \
   }'
 ```
 
+## 환경 변수 설정
+
+OpenAI API를 사용하려면 API 키가 필요합니다:
+
+```bash
+cp .env.example .env
+# .env 파일에서 OPENAI_API_KEY 값 설정
+```
+
+API 키 없이도 기본 사주 계산 기능은 정상 동작합니다 (AI 해석만 제한됨).
+
 ## 개발
 
 ### 테스트 실행
@@ -179,9 +198,12 @@ saju/
 │   └── ...
 ├── app/               # FastAPI REST API
 │   ├── api/           # API 엔드포인트
-│   │   ├── endpoints/ # /saju, /calendar/convert, /health
+│   │   ├── endpoints/ # /saju, /saju/interpret, /calendar/convert, /health
 │   │   └── router.py  # 라우팅
 │   ├── services/      # 비즈니스 로직
+│   │   ├── saju_service.py       # 사주 계산
+│   │   ├── interpretation_service.py  # AI 해석 (OpenAI)
+│   │   └── prompt_builder.py     # 해석 프롬프트 생성
 │   └── main.py        # 애플리케이션 팩토리
 ├── tests/             # 테스트 스위트 (95%+ 커버리지)
 ├── pyproject.toml     # 프로젝트 설정 (hatchling)
@@ -199,6 +221,18 @@ saju/
 MIT License
 
 ## 변경 사항
+
+### v0.4.0 (SPEC-INTERP-001)
+
+- LLM 기반 사주 해석 기능 추가 (`app/services/interpretation_service.py`)
+- OpenAI GPT-4o API 연동 (gpt-4o 모델, `OPENAI_API_KEY` 환경변수)
+- 5섹션 한국어 해석 프롬프트 빌더 (`app/services/prompt_builder.py`)
+- REST API 신규 엔드포인트: `POST /api/v1/saju/interpret`
+  - API 키 미설정 시 graceful fallback (HTTP 200 + is_fallback: true)
+  - LLM 서비스 오류 시 HTTP 502, 타임아웃 시 HTTP 504
+- Streamlit 5번째 탭 추가: "AI 해석" (실시간 GPT-4o 해석)
+- `.env.example` 환경 변수 설정 가이드 추가
+- 테스트 379개 (기존 351개 → +28개), 커버리지 95% 유지
 
 ### v0.3.0 (SPEC-CALC-001 + SPEC-UI-001)
 

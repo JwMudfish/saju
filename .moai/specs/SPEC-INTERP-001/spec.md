@@ -1,7 +1,7 @@
 ---
 id: SPEC-INTERP-001
 version: 1.0.0
-status: planned
+status: completed
 created: 2026-03-04
 updated: 2026-03-04
 author: jw
@@ -28,10 +28,10 @@ SPEC-CALC-001과 SPEC-API-001에서 구축한 사주팔자 계산 엔진과 REST
 **포함 범위:**
 - `app/services/interpretation_service.py` — `InterpretationService` 구현
 - `POST /api/v1/saju/interpret` 엔드포인트
-- Anthropic Claude API 연동 (anthropic Python SDK)
+- OpenAI GPT API 연동 (openai Python SDK)
 - 프롬프트 구성 모듈 (`app/services/prompt_builder.py`)
 - Streamlit UI "해석" 탭 추가 (`streamlit_app.py`)
-- 환경 변수 `ANTHROPIC_API_KEY` 설정 지원
+- 환경 변수 `OPENAI_API_KEY` 설정 지원
 - API 키 미설정 시 우아한 폴백(graceful degradation) 처리
 - 단위 테스트 및 통합 테스트
 
@@ -45,7 +45,7 @@ SPEC-CALC-001과 SPEC-API-001에서 구축한 사주팔자 계산 엔진과 REST
 ### 1.3 목표
 
 1. `SajuResult` 데이터를 입력받아 자연어 한국어 해석 텍스트를 자동 생성한다
-2. claude-sonnet-4-6 모델을 활용하여 품질 높은 해석을 제공한다
+2. gpt-4o 모델을 활용하여 품질 높은 해석을 제공한다
 3. `ANTHROPIC_API_KEY` 미설정 시에도 서비스가 중단되지 않도록 폴백 응답을 반환한다
 4. Streamlit UI에 "해석" 탭을 추가하여 사용자가 즉시 해석 결과를 확인할 수 있게 한다
 
@@ -281,3 +281,29 @@ class Settings(BaseSettings):
 | SPEC-INTERP-001-REQ-021 | `app/services/interpretation_service.py` | 오류 처리 및 폴백 |
 | SPEC-INTERP-001-REQ-030 | `app/api/endpoints/saju.py` | FastAPI 엔드포인트 정의 |
 | SPEC-INTERP-001-REQ-040 | `streamlit_app.py` | Streamlit "해석" 탭 |
+
+---
+
+## Implementation Notes (실제 구현 요약)
+
+**구현 일자:** 2026-03-04
+
+**계획 대비 변경 사항:**
+- API: Anthropic Claude (`claude-sonnet-4-6`) → OpenAI GPT (`gpt-4o`)
+- 환경 변수: `ANTHROPIC_API_KEY` → `OPENAI_API_KEY`
+- 이유: 프로젝트 요구사항 변경 (OpenAI API 사용 결정)
+
+**구현된 파일:**
+- `app/services/interpretation_service.py` — InterpretationService (OpenAI GPT-4o)
+- `app/services/prompt_builder.py` — 5섹션 한국어 해석 프롬프트 빌더
+- `app/api/endpoints/saju.py` — POST /api/v1/saju/interpret 엔드포인트 추가
+- `streamlit_app.py` — AI 해석 탭 (5번째 탭) 추가
+- `app/config.py` — openai_api_key 설정 필드
+- `tests/test_interpretation_service.py` — 단위 테스트 28개
+- `tests/test_api_interpret.py` — 통합 테스트 8개
+- `.env.example` — 환경 변수 설정 가이드
+
+**최종 상태:**
+- 테스트: 379 passed (0 failed)
+- 커버리지: 95%+
+- ruff: clean, mypy: clean
