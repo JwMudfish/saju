@@ -1,7 +1,7 @@
 ---
 id: SPEC-UI-002
 version: 1.0.0
-status: planned
+status: completed
 created: 2026-03-04
 updated: 2026-03-04
 author: jw
