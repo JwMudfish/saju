@@ -5,9 +5,10 @@ from typing import Literal
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
 
-from app.api.deps import get_saju_service
+from app.api.deps import get_interpretation_service, get_saju_service
+from app.services.interpretation_service import InterpretationService
 from app.services.saju_service import SajuService
-from core.models.response import SajuResult
+from core.models.response import InterpretResult, SajuResult
 
 router = APIRouter(prefix="/api/v1", tags=["Saju"])
 
@@ -47,3 +48,28 @@ async def calculate_saju(
         raise HTTPException(status_code=400, detail=str(e)) from e
     except RuntimeError as e:
         raise HTTPException(status_code=500, detail=str(e)) from e
+
+
+class InterpretRequest(BaseModel):
+    """사주 해석 API 요청 모델."""
+
+    saju_result: SajuResult
+    user_context: str | None = Field(None, description="사용자 추가 질문")
+
+
+@router.post("/saju/interpret", response_model=InterpretResult)
+async def interpret_saju(
+    request: InterpretRequest,
+    service: InterpretationService = Depends(get_interpretation_service),
+) -> InterpretResult:
+    """사주 해석 엔드포인트.
+
+    LLM(Claude)을 사용하여 사주 데이터를 자연어로 해석합니다.
+    ANTHROPIC_API_KEY가 없으면 fallback 응답을 반환합니다.
+    """
+    try:
+        return await service.interpret(request.saju_result, request.user_context)
+    except RuntimeError as e:
+        raise HTTPException(status_code=502, detail=str(e)) from e
+    except TimeoutError as e:
+        raise HTTPException(status_code=504, detail=str(e)) from e

@@ -1,4 +1,4 @@
-"""사주팔자 계산 Streamlit 앱 - 4탭 대시보드."""
+"""사주팔자 계산 Streamlit 앱 - 5탭 대시보드."""
 
 from __future__ import annotations
 
@@ -416,6 +416,50 @@ def render_tab_detail(result: dict[str, Any]) -> None:
         st.info("오행 정보가 없습니다.")
 
 
+def render_tab_interpret(result: dict[str, Any]) -> None:
+    """Tab 5: AI 사주 해석."""
+    st.subheader("AI 사주 해석")
+
+    user_context = st.text_area(
+        "추가 질문 (선택)",
+        placeholder="예: 직업 운을 자세히 알고 싶어요.",
+        height=80,
+    )
+
+    if st.button("AI 해석 받기", type="primary"):
+        with st.spinner("AI가 사주를 해석하는 중입니다..."):
+            try:
+                payload = {
+                    "saju_result": result,
+                    "user_context": user_context if user_context.strip() else None,
+                }
+                response = requests.post(
+                    f"{API_BASE_URL}/api/v1/saju/interpret",
+                    json=payload,
+                    timeout=60,
+                )
+                if response.status_code == 200:
+                    data = response.json()
+                    if data.get("is_fallback"):
+                        st.warning(
+                            "ANTHROPIC_API_KEY가 설정되지 않아 AI 해석을 제공할 수 없습니다. "
+                            "환경 변수 ANTHROPIC_API_KEY를 설정해주세요."
+                        )
+                    else:
+                        st.markdown(data.get("interpretation", ""))
+                        st.caption(f"모델: {data.get('model', '')}")
+                elif response.status_code == 502:
+                    st.error("AI 서비스 오류가 발생했습니다. 잠시 후 다시 시도해주세요.")
+                elif response.status_code == 504:
+                    st.error("AI 응답 시간이 초과되었습니다. 잠시 후 다시 시도해주세요.")
+                else:
+                    st.error(f"오류가 발생했습니다. (코드: {response.status_code})")
+            except requests.Timeout:
+                st.error("요청 시간이 초과되었습니다.")
+            except requests.ConnectionError:
+                st.error("API 서버에 연결할 수 없습니다.")
+
+
 def main() -> None:
     """앱 진입점."""
     st.set_page_config(
@@ -443,8 +487,8 @@ def main() -> None:
 
     if st.session_state["saju_result"]:
         result = st.session_state["saju_result"]
-        tab1, tab2, tab3, tab4 = st.tabs(
-            ["📜 사주 원국", "⭐ 십성 분석", "🔄 운의 흐름", "📊 세부 지표"]
+        tab1, tab2, tab3, tab4, tab5 = st.tabs(
+            ["📜 사주 원국", "⭐ 십성 분석", "🔄 운의 흐름", "📊 세부 지표", "🤖 AI 해석"]
         )
         with tab1:
             render_tab_wonkuk(result)
@@ -454,6 +498,8 @@ def main() -> None:
             render_tab_luck(result, st.session_state.get("birth_year_cache", 1990))
         with tab4:
             render_tab_detail(result)
+        with tab5:
+            render_tab_interpret(result)
     else:
         st.info("👈 왼쪽 사이드바에서 정보를 입력하고 '사주 계산' 버튼을 클릭하세요.")
 

@@ -49,3 +49,11 @@ class SajuResult(BaseModel):
     shinsal: list[ShinsalItem] | None = None
     sewun: list[SewunItem] | None = None
     pillar_meanings: list[PillarMeaning] | None = None
+
+
+class InterpretResult(BaseModel):
+    """LLM 사주 해석 결과."""
+
+    interpretation: str
+    model: str
+    is_fallback: bool
