@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
+import pandas as pd
 import requests
 import streamlit as st
 
@@ -316,6 +317,52 @@ def render_tab_luck(result: dict[str, Any], birth_year: int) -> None:
         st.info("세운 정보가 없습니다.")
 
 
+HAPCHUNG_DESCRIPTIONS: dict[str, str] = {
+    "충": "충(沖): 두 지지가 정면으로 충돌하는 관계. 변화·갈등·파괴력을 나타냄.",
+    "형": "형(刑): 세 지지 또는 두 지지 사이의 억압·처벌·규제 관계.",
+    "해": "해(害): 두 지지가 서로 해치는 관계. 방해·훼방·손실을 나타냄.",
+    "파": "파(破): 두 지지가 깨지는 관계. 손상·파손·분리를 나타냄.",
+    "육합": "육합(六合): 두 지지가 서로 합해지는 관계. 결합·협력·화합을 나타냄.",
+    "삼합": "삼합(三合): 세 지지가 하나의 오행으로 합해지는 관계. 강력한 결합력.",
+    "방합": "방합(方合): 같은 방향의 세 지지가 합해지는 관계. 계절·방위의 결합.",
+}
+
+
+def _highlight_chung(row: pd.Series[str]) -> list[str]:
+    """충 관계 행에 배경색 적용."""
+    if row.get("관계") == "충":
+        return ["background-color: #ffe0e0"] * len(row)
+    return [""] * len(row)
+
+
+def _render_hapchung_section(hapchung_list: list[dict]) -> None:
+    """합충형해파 섹션 렌더링."""
+    st.markdown("#### 합충형해파 (合沖刑害破)")
+
+    if not hapchung_list:
+        st.info("기둥 간 특별한 관계가 없습니다.")
+    else:
+        rows = []
+        for rel in hapchung_list:
+            rows.append(
+                {
+                    "기둥1": PILLAR_LABEL_KO.get(rel.get("pillar1", ""), rel.get("pillar1", "")),
+                    "지지1": rel.get("ji1", ""),
+                    "기둥2": PILLAR_LABEL_KO.get(rel.get("pillar2", ""), rel.get("pillar2", "")),
+                    "지지2": rel.get("ji2", ""),
+                    "관계": rel.get("relation_type", ""),
+                    "세부유형": rel.get("subtype") or "",
+                }
+            )
+        df = pd.DataFrame(rows)
+        styled = df.style.apply(_highlight_chung, axis=1)
+        st.dataframe(styled, use_container_width=True, hide_index=True)
+
+    with st.expander("합충형해파 용어 설명", expanded=False):
+        for name, desc in HAPCHUNG_DESCRIPTIONS.items():
+            st.markdown(f"- **{name}**: {desc.split(': ', 1)[1] if ': ' in desc else desc}")
+
+
 def render_tab_detail(result: dict[str, Any]) -> None:
     """Tab 4: 세부 지표."""
     st.subheader("세부 지표")
@@ -414,6 +461,11 @@ def render_tab_detail(result: dict[str, Any]) -> None:
             st.dataframe(ohang_table, use_container_width=True, hide_index=True)
     else:
         st.info("오행 정보가 없습니다.")
+
+    # 5. 합충형해파 분석
+    st.markdown("---")
+    hapchung_list = result.get("hapchung") or []
+    _render_hapchung_section(hapchung_list)
 
 
 def render_tab_interpret(result: dict[str, Any]) -> None:
