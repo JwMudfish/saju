@@ -32,9 +32,7 @@ def build_interpretation_prompt(
         f"일주: {saju_result.day_pillar.gan}{saju_result.day_pillar.ji}",
     ]
     if saju_result.hour_pillar is not None:
-        pillars_lines.append(
-            f"시주: {saju_result.hour_pillar.gan}{saju_result.hour_pillar.ji}"
-        )
+        pillars_lines.append(f"시주: {saju_result.hour_pillar.gan}{saju_result.hour_pillar.ji}")
     else:
         pillars_lines.append("시주: 미상")
     pillars_text = "\n".join(pillars_lines)

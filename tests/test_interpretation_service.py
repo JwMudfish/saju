@@ -154,7 +154,9 @@ class TestBuildInterpretationPrompt:
         """user_context가 제공되면 프롬프트에 포함되어야 한다."""
         from app.services.prompt_builder import build_interpretation_prompt
 
-        _, user_prompt = build_interpretation_prompt(minimal_saju_result, user_context="직업 운을 알고 싶어요")
+        _, user_prompt = build_interpretation_prompt(
+            minimal_saju_result, user_context="직업 운을 알고 싶어요"
+        )
         assert "직업 운을 알고 싶어요" in user_prompt
 
     def test_user_context_none_does_not_cause_error(self, minimal_saju_result: SajuResult) -> None:
@@ -193,7 +195,9 @@ class TestInterpretationService:
         assert "OPENAI_API_KEY" in result.interpretation
 
     @pytest.mark.asyncio
-    async def test_no_api_key_fallback_has_model_field(self, minimal_saju_result: SajuResult) -> None:
+    async def test_no_api_key_fallback_has_model_field(
+        self, minimal_saju_result: SajuResult
+    ) -> None:
         """fallback 응답에도 model 필드가 설정되어야 한다."""
         from app.services.interpretation_service import (
             INTERPRETATION_MODEL,
@@ -227,7 +231,9 @@ class TestInterpretationService:
         assert "갑자년생" in result.interpretation
 
     @pytest.mark.asyncio
-    async def test_api_status_error_raises_runtime_error(self, minimal_saju_result: SajuResult) -> None:
+    async def test_api_status_error_raises_runtime_error(
+        self, minimal_saju_result: SajuResult
+    ) -> None:
         """APIStatusError 발생 시 RuntimeError가 재발생해야 한다."""
         import openai
 
@@ -249,7 +255,9 @@ class TestInterpretationService:
                 await service.interpret(minimal_saju_result)
 
     @pytest.mark.asyncio
-    async def test_api_timeout_error_raises_timeout_error(self, minimal_saju_result: SajuResult) -> None:
+    async def test_api_timeout_error_raises_timeout_error(
+        self, minimal_saju_result: SajuResult
+    ) -> None:
         """APITimeoutError 발생 시 TimeoutError가 재발생해야 한다."""
         import openai
 

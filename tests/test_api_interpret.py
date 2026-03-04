@@ -84,9 +84,10 @@ class TestInterpretEndpoint:
         mock_response = MagicMock()
         mock_response.choices = [mock_choice]
 
-        with patch("app.api.deps.get_settings") as mock_settings, patch(
-            "openai.OpenAI"
-        ) as mock_openai_cls:
+        with (
+            patch("app.api.deps.get_settings") as mock_settings,
+            patch("openai.OpenAI") as mock_openai_cls,
+        ):
             settings = MagicMock()
             settings.openai_api_key = "test-key"
             mock_settings.return_value = settings
@@ -102,16 +103,12 @@ class TestInterpretEndpoint:
         assert data["is_fallback"] is False
         assert "해석 결과" in data["interpretation"]
 
-    def test_missing_saju_result_returns_422(
-        self, client: TestClient
-    ) -> None:
+    def test_missing_saju_result_returns_422(self, client: TestClient) -> None:
         """saju_result 없으면 422를 반환해야 한다."""
         response = client.post("/api/v1/saju/interpret", json={})
         assert response.status_code == 422
 
-    def test_invalid_saju_result_returns_422(
-        self, client: TestClient
-    ) -> None:
+    def test_invalid_saju_result_returns_422(self, client: TestClient) -> None:
         """saju_result 형식이 잘못되면 422를 반환해야 한다."""
         response = client.post(
             "/api/v1/saju/interpret",
@@ -125,9 +122,10 @@ class TestInterpretEndpoint:
         """APIStatusError 발생 시 502를 반환해야 한다."""
         import openai
 
-        with patch("app.api.deps.get_settings") as mock_settings, patch(
-            "openai.OpenAI"
-        ) as mock_openai_cls:
+        with (
+            patch("app.api.deps.get_settings") as mock_settings,
+            patch("openai.OpenAI") as mock_openai_cls,
+        ):
             settings = MagicMock()
             settings.openai_api_key = "test-key"
             mock_settings.return_value = settings
@@ -150,9 +148,10 @@ class TestInterpretEndpoint:
         """APITimeoutError 발생 시 504를 반환해야 한다."""
         import openai
 
-        with patch("app.api.deps.get_settings") as mock_settings, patch(
-            "openai.OpenAI"
-        ) as mock_openai_cls:
+        with (
+            patch("app.api.deps.get_settings") as mock_settings,
+            patch("openai.OpenAI") as mock_openai_cls,
+        ):
             settings = MagicMock()
             settings.openai_api_key = "test-key"
             mock_settings.return_value = settings
@@ -167,9 +166,7 @@ class TestInterpretEndpoint:
 
         assert response.status_code == 504
 
-    def test_with_user_context(
-        self, client: TestClient, full_saju_payload: dict
-    ) -> None:
+    def test_with_user_context(self, client: TestClient, full_saju_payload: dict) -> None:
         """user_context가 제공되면 요청에 포함되어야 한다."""
         mock_choice = MagicMock()
         mock_choice.message.content = "직업 운 해석입니다."
@@ -178,9 +175,10 @@ class TestInterpretEndpoint:
 
         payload = {**full_saju_payload, "user_context": "직업 운을 알고 싶어요"}
 
-        with patch("app.api.deps.get_settings") as mock_settings, patch(
-            "openai.OpenAI"
-        ) as mock_openai_cls:
+        with (
+            patch("app.api.deps.get_settings") as mock_settings,
+            patch("openai.OpenAI") as mock_openai_cls,
+        ):
             settings = MagicMock()
             settings.openai_api_key = "test-key"
             mock_settings.return_value = settings
@@ -198,9 +196,7 @@ class TestInterpretEndpoint:
             user_msg = call_kwargs.kwargs["messages"][1]["content"]
             assert "직업 운을 알고 싶어요" in user_msg
 
-    def test_response_has_model_field(
-        self, client: TestClient, minimal_saju_payload: dict
-    ) -> None:
+    def test_response_has_model_field(self, client: TestClient, minimal_saju_payload: dict) -> None:
         """응답에 model 필드가 있어야 한다."""
         with patch("app.api.deps.get_settings") as mock_settings:
             settings = MagicMock()

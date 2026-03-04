@@ -96,3 +96,18 @@ class YuksinItem(BaseModel):
 
     target: str  # 천간 또는 지지 대상
     yuksin: str  # 육신명 (비견, 겁재, ...)
+
+
+class HapchungRelation(BaseModel):
+    """합충형해파 관계 항목.
+
+    사기둥 지지 간의 단일 관계를 표현합니다.
+    우선순위: 충 > 형 > 해 > 파 > 육합 > 삼합 > 방합
+    """
+
+    relation_type: str  # 관계 유형 ("충", "형", "해", "파", "육합", "삼합", "방합")
+    subtype: str | None = None  # 형의 세부 유형 ("시세지형", "무은지형", "무례지형", "자형")
+    pillar1: str  # 첫 번째 기둥 ("year", "month", "day", "hour")
+    pillar2: str  # 두 번째 기둥 ("year", "month", "day", "hour")
+    ji1: str  # pillar1의 지지
+    ji2: str  # pillar2의 지지

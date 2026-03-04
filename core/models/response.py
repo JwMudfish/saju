@@ -7,6 +7,7 @@ from pydantic import BaseModel
 from core.models.domain import (
     DeunItem,
     GanJi,
+    HapchungRelation,
     HiddenStems,
     OHangRatio,
     PillarMeaning,
@@ -49,6 +50,7 @@ class SajuResult(BaseModel):
     shinsal: list[ShinsalItem] | None = None
     sewun: list[SewunItem] | None = None
     pillar_meanings: list[PillarMeaning] | None = None
+    hapchung: list[HapchungRelation] | None = None
 
 
 class InterpretResult(BaseModel):

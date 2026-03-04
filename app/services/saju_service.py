@@ -5,8 +5,10 @@ from typing import Literal
 
 from core.deun import calc_deun_full, calc_sewun
 from core.exceptions import SajuError
+from core.hapchung import calc_pillar_hapchung
 from core.jijanggan import get_jijanggan
 from core.models.domain import (
+    HapchungRelation,
     HiddenStems,
     OHangRatio,
     PillarMeaning,
@@ -102,6 +104,7 @@ class SajuService:
             shinsal = self._calc_shinsal(pillars)
             sewun = calc_sewun(datetime.now().year)
             pillar_meanings = self._calc_pillar_meanings(pillars)
+            hapchung = self._calc_hapchung(pillars)
 
             return SajuResult(
                 year_pillar=pillars.year_pillar,
@@ -116,6 +119,7 @@ class SajuService:
                 shinsal=shinsal,
                 sewun=sewun,
                 pillar_meanings=pillar_meanings,
+                hapchung=hapchung,
             )
         except SajuError as e:
             raise ValueError(str(e)) from e
@@ -241,3 +245,14 @@ class SajuService:
         if pillars.hour_pillar is not None:
             return list(_PILLAR_MEANINGS)
         return [m for m in _PILLAR_MEANINGS if m.pillar != "hour"]
+
+    def _calc_hapchung(self, pillars: FourPillars) -> list[HapchungRelation]:
+        """사기둥 지지 간 합충형해파 관계를 계산한다."""
+        pillar_list: list[tuple[str, str]] = [
+            ("year", pillars.year_pillar.ji),
+            ("month", pillars.month_pillar.ji),
+            ("day", pillars.day_pillar.ji),
+        ]
+        if pillars.hour_pillar is not None:
+            pillar_list.append(("hour", pillars.hour_pillar.ji))
+        return calc_pillar_hapchung(pillar_list)
