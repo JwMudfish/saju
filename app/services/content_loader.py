@@ -42,6 +42,21 @@ _ILGAN_TO_GAN: dict[str, str] = {v: k for k, v in GAN_TO_ILGAN.items()}
 _BASE_DIR = pathlib.Path(__file__).parent.parent.parent
 _ILGAN_PATH = _BASE_DIR / "manse_ori" / "testResult" / "contents_ilgan.json"
 _YONGSIN_PATH = _BASE_DIR / "manse_ori" / "testResult" / "contents_yongsin.json"
+_GYOUK_PATH = _BASE_DIR / "manse_ori" / "testResult" / "contents_gyouk.json"
+
+# 육신(十星) -> 격국(格局)명 변환 테이블
+YUKSIN_TO_GYOUK: dict[str, str] = {
+    "비견": "건록격",
+    "겁재": "양인격",
+    "편인": "편인격",
+    "정인": "정인격",
+    "편재": "편재격",
+    "정재": "정재격",
+    "식신": "식신격",
+    "상관": "상관격",
+    "정관": "정관격",
+    "편관": "편관격",
+}
 
 
 def _load_json_file(path: pathlib.Path, label: str) -> dict[str, Any]:
@@ -84,22 +99,26 @@ def _extract_hanja_key(subtitle: str) -> str | None:
 
 
 class ContentLoader:
-    """일간 및 용신 콘텐츠를 JSON 파일에서 로드하는 서비스.
+    """일간, 용신, 격국 콘텐츠를 JSON 파일에서 로드하는 서비스.
 
     Args:
         ilgan_path: 일간 콘텐츠 JSON 파일 경로 (기본값: 프로젝트 루트 기준 경로)
         yongsin_path: 용신 콘텐츠 JSON 파일 경로 (기본값: 프로젝트 루트 기준 경로)
+        gyouk_path: 격국 콘텐츠 JSON 파일 경로 (기본값: 프로젝트 루트 기준 경로)
     """
 
     def __init__(
         self,
         ilgan_path: pathlib.Path | None = None,
         yongsin_path: pathlib.Path | None = None,
+        gyouk_path: pathlib.Path | None = None,
     ) -> None:
         self._ilgan_path = ilgan_path if ilgan_path is not None else _ILGAN_PATH
         self._yongsin_path = yongsin_path if yongsin_path is not None else _YONGSIN_PATH
+        self._gyouk_path = gyouk_path if gyouk_path is not None else _GYOUK_PATH
         self._ilgan_map: dict[str, dict[str, Any]] = self._build_ilgan_map()
         self._yongsin_map: dict[str, dict[str, Any]] = self._build_yongsin_map()
+        self._gyouk_map: dict[str, dict[str, Any]] = self._build_gyouk_map()
 
     def _build_ilgan_map(self) -> dict[str, dict[str, Any]]:
         """일간 JSON을 파싱하여 한글 일간 -> 항목 딕셔너리를 구성한다.
@@ -154,6 +173,32 @@ class ContentLoader:
         """
         return self._yongsin_map.get(dang_ryeong)
 
+    def _build_gyouk_map(self) -> dict[str, dict[str, Any]]:
+        """격국 JSON을 파싱하여 격국명(subtitle) -> 항목 딕셔너리를 구성한다.
+
+        Returns:
+            격국명(건록격, 양인격, ...) -> contentsList 항목 딕셔너리
+        """
+        raw = _load_json_file(self._gyouk_path, "격국")
+        result: dict[str, dict[str, Any]] = {}
+        for item in raw.get("contentsList", []):
+            subtitle = item.get("subtitle", "")
+            if subtitle:
+                result[subtitle] = item
+        return result
+
+    def get_gyouk_content(self, gyouk_name: str) -> dict[str, Any] | None:
+        """격국명에 해당하는 콘텐츠 항목을 반환한다.
+
+        Args:
+            gyouk_name: 격국명 (건록격, 양인격, 상관격, 식신격, 정인격,
+                        편인격, 정재격, 편재격, 정관격, 편관격)
+
+        Returns:
+            콘텐츠 항목 딕셔너리 또는 None (찾지 못한 경우)
+        """
+        return self._gyouk_map.get(gyouk_name)
+
 
 # 모듈 레벨 싱글톤 (캐시된 접근)
 _loader: ContentLoader | None = None
@@ -189,3 +234,16 @@ def get_yongsin_content(dang_ryeong: str) -> dict[str, Any] | None:
         콘텐츠 항목 딕셔너리 또는 None
     """
     return _get_loader().get_yongsin_content(dang_ryeong)
+
+
+def get_gyouk_content(gyouk_name: str) -> dict[str, Any] | None:
+    """격국명에 해당하는 콘텐츠를 반환하는 편의 함수.
+
+    Args:
+        gyouk_name: 격국명 (건록격, 양인격, 상관격, 식신격, 정인격,
+                    편인격, 정재격, 편재격, 정관격, 편관격)
+
+    Returns:
+        콘텐츠 항목 딕셔너리 또는 None
+    """
+    return _get_loader().get_gyouk_content(gyouk_name)

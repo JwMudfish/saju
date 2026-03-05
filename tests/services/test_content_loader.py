@@ -104,6 +104,96 @@ class TestModuleLevelFunctions:
         assert get_yongsin_content("unknown") is None
 
 
+class TestContentLoaderGyouk:
+    """격국(格局) 콘텐츠 로딩 테스트."""
+
+    def test_get_gyouk_content_all_gyouk(self) -> None:
+        """10개 격국명 모두 콘텐츠를 반환한다."""
+        loader = ContentLoader()
+        for gyouk_name in [
+            "건록격",
+            "양인격",
+            "상관격",
+            "식신격",
+            "정인격",
+            "편인격",
+            "정재격",
+            "편재격",
+            "정관격",
+            "편관격",
+        ]:
+            result = loader.get_gyouk_content(gyouk_name)
+            assert result is not None, f"Missing gyouk content for {gyouk_name}"
+
+    def test_get_gyouk_content_unknown_returns_none(self) -> None:
+        """알 수 없는 격국명은 None을 반환한다 (예외를 발생시키지 않는다)."""
+        loader = ContentLoader()
+        assert loader.get_gyouk_content("unknown") is None
+
+    def test_get_gyouk_content_empty_string_returns_none(self) -> None:
+        """빈 문자열은 None을 반환한다."""
+        loader = ContentLoader()
+        assert loader.get_gyouk_content("") is None
+
+    def test_get_gyouk_content_returns_dict(self) -> None:
+        """반환값은 dict 타입이다."""
+        loader = ContentLoader()
+        result = loader.get_gyouk_content("건록격")
+        assert isinstance(result, dict)
+
+    def test_get_gyouk_content_건록격_has_required_fields(self) -> None:
+        """건록격 콘텐츠에 필수 필드들이 존재한다."""
+        loader = ContentLoader()
+        result = loader.get_gyouk_content("건록격")
+        assert result is not None
+        assert result.get("subtitle") == "건록격"
+        assert "titleDescription" in result
+        assert "contents" in result
+
+    def test_get_gyouk_content_has_tag_fields(self) -> None:
+        """격국 콘텐츠에 태그 필드들이 존재한다."""
+        loader = ContentLoader()
+        result = loader.get_gyouk_content("식신격")
+        assert result is not None
+        assert "tagZoryun" in result
+        assert "tagAngry" in result
+
+    def test_module_level_get_gyouk_content(self) -> None:
+        """모듈 레벨 get_gyouk_content 함수가 동작한다."""
+        from app.services.content_loader import get_gyouk_content
+
+        result = get_gyouk_content("정관격")
+        assert result is not None
+
+    def test_module_level_get_gyouk_content_unknown_returns_none(self) -> None:
+        """모듈 레벨 함수에서 알 수 없는 격국명은 None을 반환한다."""
+        from app.services.content_loader import get_gyouk_content
+
+        assert get_gyouk_content("없는격국") is None
+
+
+class TestGyoukMapping:
+    """YUKSIN_TO_GYOUK 매핑 테이블 테스트."""
+
+    def test_yuksin_to_gyouk_mapping_has_all_ten_entries(self) -> None:
+        """10개 육신-격국 매핑이 정의되어 있다."""
+        from app.services.content_loader import YUKSIN_TO_GYOUK
+
+        assert len(YUKSIN_TO_GYOUK) == 10
+
+    def test_yuksin_to_gyouk_비견_maps_to_건록격(self) -> None:
+        """비견은 건록격에 매핑된다."""
+        from app.services.content_loader import YUKSIN_TO_GYOUK
+
+        assert YUKSIN_TO_GYOUK["비견"] == "건록격"
+
+    def test_yuksin_to_gyouk_겁재_maps_to_양인격(self) -> None:
+        """겁재는 양인격에 매핑된다."""
+        from app.services.content_loader import YUKSIN_TO_GYOUK
+
+        assert YUKSIN_TO_GYOUK["겁재"] == "양인격"
+
+
 class TestContentLoaderFileNotFound:
     """파일 미존재 상황에서의 동작 테스트."""
 
@@ -115,6 +205,8 @@ class TestContentLoaderFileNotFound:
         loader = ContentLoader(
             ilgan_path=tmp_path / "nonexistent_ilgan.json",  # type: ignore[arg-type]
             yongsin_path=tmp_path / "nonexistent_yongsin.json",  # type: ignore[arg-type]
+            gyouk_path=tmp_path / "nonexistent_gyouk.json",  # type: ignore[arg-type]
         )
         assert loader.get_ilgan_content("갑") is None
         assert loader.get_yongsin_content("갑") is None
+        assert loader.get_gyouk_content("건록격") is None

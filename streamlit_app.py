@@ -8,7 +8,12 @@ import pandas as pd
 import requests
 import streamlit as st
 
-from app.services.content_loader import get_ilgan_content, get_yongsin_content
+from app.services.content_loader import (
+    YUKSIN_TO_GYOUK,
+    get_gyouk_content,
+    get_ilgan_content,
+    get_yongsin_content,
+)
 
 # API 엔드포인트
 API_BASE_URL = "http://localhost:8000"
@@ -337,7 +342,7 @@ def _highlight_chung(row: pd.Series[str]) -> list[str]:
     return [""] * len(row)
 
 
-def _render_hapchung_section(hapchung_list: list[dict]) -> None:
+def _render_hapchung_section(hapchung_list: list[dict[str, Any]]) -> None:
     """합충형해파 섹션 렌더링."""
     st.markdown("#### 합충형해파 (合沖刑害破)")
 
@@ -470,8 +475,32 @@ def render_tab_detail(result: dict[str, Any]) -> None:
     _render_hapchung_section(hapchung_list)
 
 
+def _calc_gyouk_from_result(result: dict[str, Any]) -> str | None:
+    """사주 계산 결과에서 격국명을 도출한다.
+
+    yuksin_list에서 target == "월지"인 항목의 yuksin을 격국명으로 변환한다.
+
+    Args:
+        result: SajuResult 딕셔너리
+
+    Returns:
+        격국명 문자열 또는 None (도출 불가 시)
+    """
+    yuksin_list = result.get("yuksin_list") or []
+    for item in yuksin_list:
+        if isinstance(item, dict):
+            target = item.get("target", "")
+            yuksin = item.get("yuksin", "")
+        else:
+            target = getattr(item, "target", "")
+            yuksin = getattr(item, "yuksin", "")
+        if target == "월지":
+            return YUKSIN_TO_GYOUK.get(yuksin)
+    return None
+
+
 def render_tab_identity(result: dict[str, Any]) -> None:
-    """Tab 6: 나의 정체성 - 일간 캐릭터 카드 + 용신 재능 카드."""
+    """Tab 6: 나의 정체성 - 일간 카드 | 격국 카드 | 용신 카드 (3-컬럼)."""
     st.subheader("나의 정체성 분석")
 
     # 일간(日干) 추출 - dict 또는 Pydantic 모델 모두 지원
@@ -481,6 +510,9 @@ def render_tab_identity(result: dict[str, Any]) -> None:
     else:
         gan = getattr(day_pillar, "gan", "")
 
+    # 격국(格局) 계산
+    gyouk_name = _calc_gyouk_from_result(result)
+
     # 용신(用神) 추출
     yongshin = result.get("yongshin")
     if yongshin is not None and not isinstance(yongshin, dict):
@@ -489,7 +521,7 @@ def render_tab_identity(result: dict[str, Any]) -> None:
         elif hasattr(yongshin, "dict"):
             yongshin = yongshin.dict()
 
-    col1, col2 = st.columns(2)
+    col1, col2, col3 = st.columns(3)
 
     with col1:
         st.markdown("#### 🌱 나의 일간 (日干)")
@@ -511,6 +543,27 @@ def render_tab_identity(result: dict[str, Any]) -> None:
             st.info("일간 캐릭터 정보를 불러올 수 없습니다.")
 
     with col2:
+        st.markdown("#### 🏛️ 나의 격국 (格局)")
+        gyouk_content = get_gyouk_content(gyouk_name) if gyouk_name else None
+        if gyouk_content:
+            st.info(f"격국: {gyouk_name}")
+            title_desc = gyouk_content.get("titleDescription", "")
+            if title_desc:
+                st.markdown(f"**{title_desc}**")
+            tag_zoryun = gyouk_content.get("tagZoryun", "")
+            if tag_zoryun:
+                st.caption(f"베스트 조합: {tag_zoryun}")
+            tag_angry = gyouk_content.get("tagAngry", "")
+            if tag_angry:
+                st.caption(f"최악의 조합: {tag_angry}")
+            contents = gyouk_content.get("contents", "")
+            if contents:
+                with st.expander("성격 자세히 보기", expanded=True):
+                    st.write(contents.replace("\\n", "\n"))
+        else:
+            st.info("격국 정보를 불러올 수 없습니다.")
+
+    with col3:
         st.markdown("#### ✨ 나의 용신 재능 (用神)")
         if yongshin:
             dang_ryeong = yongshin.get("dang_ryeong", "")
