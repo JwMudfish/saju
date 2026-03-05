@@ -7,6 +7,60 @@
 
 ---
 
+## [0.9.0] - 2026-03-05
+
+### Added (SPEC-API-002: 사주 기능별 개별 REST API 엔드포인트 분리)
+
+#### 백엔드
+
+- `core/models/response.py` — 4개 신규 응답 모델 추가
+  - `PillarsResponse`: `year_pillar`, `month_pillar`, `day_pillar`, `hour_pillar`, `pillar_meanings`
+  - `AnalysisResponse`: `yuksin_list`, `hapchung`, `ohang_ratio`, `jijanggan`, `sibiunsung`, `shinsal`
+  - `FortuneResponse`: `deun`, `sewun`
+  - `IdentityResponse`: `day_gan`, `gyouk_name`, `yongshin`, `ilgan_content`, `gyouk_content`, `yongsin_content`
+- `app/api/endpoints/saju.py` — 4개 신규 엔드포인트 추가 (기존 엔드포인트 하위 호환 유지)
+  - `POST /api/v1/saju/pillars` — 사주팔자 4기둥 + 기둥 의미만 반환
+  - `POST /api/v1/saju/analysis` — 육신·합충형해파·오행비율·지장간·십이운성·신살 분석 반환
+  - `POST /api/v1/saju/fortune` — 대운·세운 정보 반환
+  - `POST /api/v1/saju/identity` — 일간·격국·용신 카드 콘텐츠 반환 (콘텐츠 없으면 null + HTTP 200)
+
+#### 테스트
+
+- `tests/test_api_saju_detail.py` — 4개 신규 엔드포인트 통합 테스트 24개 (신규 생성)
+- 501개 테스트 (+24개), 커버리지 95% 유지
+
+---
+
+## [0.8.0] - 2026-03-05
+
+### Added (SPEC-UI-004: 격국 캐릭터 카드 UI)
+
+#### 백엔드
+
+- `app/services/content_loader.py` — 격국(格局) 콘텐츠 로딩 지원 추가
+  - `_GYOUK_PATH` 상수: `manse_ori/testResult/contents_gyouk.json` 기본 경로
+  - `YUKSIN_TO_GYOUK` 딕셔너리: 10개 육신 → 격국명 매핑 (비견→건록격, 겁재→양인격 등)
+  - `ContentLoader._build_gyouk_map()`: subtitle 기반 격국명 인덱싱
+  - `ContentLoader.get_gyouk_content(gyouk_name)`: O(1) 격국 콘텐츠 조회
+  - `get_gyouk_content()` 모듈 레벨 편의 함수
+
+#### 프론트엔드
+
+- `streamlit_app.py` — "나의 정체성" 탭 3-컬럼 확장
+  - `_calc_gyouk_from_result()` 헬퍼: `yuksin_list`의 `target == "월지"` 항목으로 격국명 도출
+  - 3-컬럼 레이아웃: 일간 카드 | 격국 카드 | 용신 카드
+  - 격국 데이터 없음 안내 메시지 처리
+
+#### 테스트
+
+- `tests/services/test_content_loader.py` — 격국 관련 테스트 11개 추가
+  - `TestContentLoaderGyouk`: 10격국 조회, None 반환, 필드 검증 (8개)
+  - `TestGyoukMapping`: `YUKSIN_TO_GYOUK` 매핑 검증 (3개)
+  - `TestContentLoaderFileNotFound` 격국 경로 미존재 케이스 추가
+- 477개 테스트 (+11개), 커버리지 95% 유지
+
+---
+
 ## [0.7.0] - 2026-03-05
 
 ### Added (SPEC-UI-003: 일간 캐릭터 카드 + 용신 재능 해설 UI)

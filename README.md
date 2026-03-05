@@ -12,8 +12,9 @@ Python 순수 계산으로 구현한 사주팔자(四柱八字) 엔진입니다.
 - 십이운성·신살·세운 계산 지원
 - 합충형해파(合沖刑害破) 사기둥 쌍 분석 지원
 - 합충형해파 분석 UI (합충형해파 관계 테이블, 강조 표시)
-- 일간 캐릭터 카드 + 용신 재능 해설 UI (ContentLoader 서비스)
+- 일간 캐릭터 카드 + 용신 재능 해설 + 격국 캐릭터 카드 UI (ContentLoader 서비스)
 - 6탭 Streamlit 대시보드 (원국·십성·운·세부지표·AI 해석·나의 정체성)
+- 기능별 개별 REST API 엔드포인트: `/saju/pillars`, `/saju/analysis`, `/saju/fortune`, `/saju/identity`
 
 ## 요구사항
 
@@ -104,6 +105,26 @@ curl -X POST http://localhost:8000/api/v1/saju/interpret \
     "saju_result": { ... },
     "user_context": "직업 운을 알고 싶어요"
   }'
+
+# 사주팔자 4기둥만 조회
+curl -X POST http://localhost:8000/api/v1/saju/pillars \
+  -H "Content-Type: application/json" \
+  -d '{"birth_year": 1984, "birth_month": 4, "birth_day": 15, "birth_hour": 12, "is_lunar": false, "is_leap_month": false, "gender": "male"}'
+
+# 육신·합충형해파·오행 분석
+curl -X POST http://localhost:8000/api/v1/saju/analysis \
+  -H "Content-Type: application/json" \
+  -d '{"birth_year": 1984, "birth_month": 4, "birth_day": 15, "birth_hour": 12, "is_lunar": false, "is_leap_month": false, "gender": "male"}'
+
+# 대운·세운 정보
+curl -X POST http://localhost:8000/api/v1/saju/fortune \
+  -H "Content-Type: application/json" \
+  -d '{"birth_year": 1984, "birth_month": 4, "birth_day": 15, "birth_hour": 12, "is_lunar": false, "is_leap_month": false, "gender": "male"}'
+
+# 일간·격국·용신 카드 콘텐츠
+curl -X POST http://localhost:8000/api/v1/saju/identity \
+  -H "Content-Type: application/json" \
+  -d '{"birth_year": 1984, "birth_month": 4, "birth_day": 15, "birth_hour": 12, "is_lunar": false, "is_leap_month": false, "gender": "male"}'
 ```
 
 ### Streamlit 웹 UI
@@ -201,15 +222,15 @@ saju/
 │   └── ...
 ├── app/               # FastAPI REST API
 │   ├── api/           # API 엔드포인트
-│   │   ├── endpoints/ # /saju, /saju/interpret, /calendar/convert, /health
+│   │   ├── endpoints/ # /saju, /saju/pillars, /saju/analysis, /saju/fortune, /saju/identity, /saju/interpret, /calendar/convert, /health
 │   │   └── router.py  # 라우팅
 │   ├── services/      # 비즈니스 로직
 │   │   ├── saju_service.py       # 사주 계산
 │   │   ├── interpretation_service.py  # AI 해석 (OpenAI)
-│   │   ├── content_loader.py     # JSON 콘텐츠 로더 (일간/용신 카드)
+│   │   ├── content_loader.py     # JSON 콘텐츠 로더 (일간/용신/격국 카드)
 │   │   └── prompt_builder.py     # 해석 프롬프트 생성
 │   └── main.py        # 애플리케이션 팩토리
-├── tests/             # 테스트 스위트 (466개, 95%+ 커버리지)
+├── tests/             # 테스트 스위트 (501개, 95%+ 커버리지)
 │   ├── services/      # 서비스 계층 단위 테스트
 ├── pyproject.toml     # 프로젝트 설정 (hatchling)
 └── uv.lock            # 의존성 잠금 파일
@@ -226,6 +247,24 @@ saju/
 MIT License
 
 ## 변경 사항
+
+### v0.9.0 (SPEC-API-002)
+
+- 기능별 개별 REST API 엔드포인트 4개 분리 (하위 호환성 유지)
+  - `POST /api/v1/saju/pillars` — 사주팔자 4기둥 + 기둥 의미
+  - `POST /api/v1/saju/analysis` — 육신·합충형해파·오행비율·지장간·십이운성·신살
+  - `POST /api/v1/saju/fortune` — 대운·세운 정보
+  - `POST /api/v1/saju/identity` — 일간·격국·용신 카드 콘텐츠 (ContentLoader 연동)
+- `core/models/response.py` — `PillarsResponse`, `AnalysisResponse`, `FortuneResponse`, `IdentityResponse` 추가
+- 테스트 501개 (+24개), 커버리지 95% 유지
+
+### v0.8.0 (SPEC-UI-004)
+
+- 격국(格局) 캐릭터 카드: 10격국별 특성 카드 표시 (`contents_gyouk.json`)
+- `ContentLoader` 서비스 `get_gyouk_content()` 및 `YUKSIN_TO_GYOUK` 매핑 추가
+- Streamlit "나의 정체성" 탭 3-컬럼 확장 (일간 | 격국 | 용신)
+- `_calc_gyouk_from_result()`: 월지 육신 기반 격국명 자동 도출
+- 테스트 477개 (+11개), 커버리지 95% 유지
 
 ### v0.7.0 (SPEC-UI-003)
 
