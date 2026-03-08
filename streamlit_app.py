@@ -11,6 +11,7 @@ import streamlit as st
 from app.services.content_loader import (
     YUKSIN_TO_GYOUK,
     get_gyouk_content,
+    get_hisin_content,
     get_ilgan_content,
     get_yongsin_content,
 )
@@ -585,6 +586,28 @@ def render_tab_identity(result: dict[str, Any]) -> None:
                 st.info("용신 콘텐츠를 불러올 수 없습니다.")
         else:
             st.info("용신 정보를 불러올 수 없습니다.")
+
+    # 희신 콘텐츠 섹션 (3-컬럼 레이아웃 하단 추가)
+    if yongshin:
+        dang_ryeong = yongshin.get("dang_ryeong", "")
+        if dang_ryeong:
+            hisin_content = get_hisin_content(dang_ryeong)
+            if hisin_content:
+                st.markdown("---")
+                st.markdown("#### 🌟 희신 콘텐츠 (喜神)")
+                with st.expander("희신 콘텐츠 상세 보기", expanded=False):
+                    contents_list = hisin_content.get("contentsList", [])
+                    if contents_list:
+                        for item in contents_list:
+                            subtitle = item.get("subtitle", "")
+                            if subtitle:
+                                st.markdown(f"**{subtitle}**")
+                            contents = item.get("contents", "")
+                            if contents:
+                                st.write(contents.replace("\\n", "\n"))
+                            st.markdown("---")
+                    else:
+                        st.json(hisin_content)
 
 
 def render_tab_interpret(result: dict[str, Any]) -> None:

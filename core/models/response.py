@@ -99,6 +99,9 @@ class IdentityResponse(BaseModel):
     day_gan: str
     gyouk_name: str | None = None
     yongshin: YongshinResult | None = None
-    ilgan_content: dict[str, Any] | None = None
-    gyouk_content: dict[str, Any] | None = None
-    yongsin_content: dict[str, Any] | None = None
+    ilgan_content: dict[str, Any] | None = None       # 일간 콘텐츠 (ilgan content)
+    gyouk_content: dict[str, Any] | None = None       # 격국 콘텐츠 (gyouk content)
+    yongsin_content: dict[str, Any] | None = None     # 용신 콘텐츠 (yongsin content)
+    hisin_content: dict[str, Any] | None = None       # 희신 콘텐츠 (hisin content)
+    hisin_gisin_content: dict[str, Any] | None = None  # 희기신 콘텐츠 (hisin-gisin content)
+    salary_content: dict[str, Any] | None = None      # 연봉 콘텐츠 (salary content)

@@ -43,6 +43,23 @@ _BASE_DIR = pathlib.Path(__file__).parent.parent.parent
 _ILGAN_PATH = _BASE_DIR / "manse_ori" / "testResult" / "contents_ilgan.json"
 _YONGSIN_PATH = _BASE_DIR / "manse_ori" / "testResult" / "contents_yongsin.json"
 _GYOUK_PATH = _BASE_DIR / "manse_ori" / "testResult" / "contents_gyouk.json"
+_HISIN_BASE = _BASE_DIR / "manse_ori" / "testResult" / "contents_Hisin10"
+_HISIN_GISIN_PATH = (
+    _BASE_DIR / "manse_ori" / "testResult" / "contents_hisin_gisin.json"
+)
+_SALARY_PATH = _BASE_DIR / "manse_ori" / "testResult" / "contents_salary.json"
+
+# 당령 -> Hisin10 디렉토리명 매핑 테이블
+_DANG_RYEONG_TO_HISIN10_DIR: dict[str, str] = {
+    "갑": "contents_gapmuk",
+    "을": "contents_ulmok",
+    "병": "content_byeongHwa",
+    "정": "contents_jungHwa",
+    "경": "contents_GyeongGum",
+    "신": "content_sinGum",
+    "임": "content_Limsu",
+    "계": "contents_gyesu",
+}
 
 # 육신(十星) -> 격국(格局)명 변환 테이블
 YUKSIN_TO_GYOUK: dict[str, str] = {
@@ -99,12 +116,15 @@ def _extract_hanja_key(subtitle: str) -> str | None:
 
 
 class ContentLoader:
-    """일간, 용신, 격국 콘텐츠를 JSON 파일에서 로드하는 서비스.
+    """일간, 용신, 격국, 희신, 희기신, 연봉 콘텐츠를 JSON 파일에서 로드하는 서비스.
 
     Args:
         ilgan_path: 일간 콘텐츠 JSON 파일 경로 (기본값: 프로젝트 루트 기준 경로)
         yongsin_path: 용신 콘텐츠 JSON 파일 경로 (기본값: 프로젝트 루트 기준 경로)
         gyouk_path: 격국 콘텐츠 JSON 파일 경로 (기본값: 프로젝트 루트 기준 경로)
+        hisin_base: 희신 Hisin10 디렉토리 기본 경로 (기본값: 프로젝트 루트 기준 경로)
+        hisin_gisin_path: 희기신 콘텐츠 JSON 파일 경로 (기본값: 프로젝트 루트 기준 경로)
+        salary_path: 연봉 콘텐츠 JSON 파일 경로 (기본값: 프로젝트 루트 기준 경로)
     """
 
     def __init__(
@@ -112,10 +132,18 @@ class ContentLoader:
         ilgan_path: pathlib.Path | None = None,
         yongsin_path: pathlib.Path | None = None,
         gyouk_path: pathlib.Path | None = None,
+        hisin_base: pathlib.Path | None = None,
+        hisin_gisin_path: pathlib.Path | None = None,
+        salary_path: pathlib.Path | None = None,
     ) -> None:
         self._ilgan_path = ilgan_path if ilgan_path is not None else _ILGAN_PATH
         self._yongsin_path = yongsin_path if yongsin_path is not None else _YONGSIN_PATH
         self._gyouk_path = gyouk_path if gyouk_path is not None else _GYOUK_PATH
+        self._hisin_base = hisin_base if hisin_base is not None else _HISIN_BASE
+        self._hisin_gisin_path = (
+            hisin_gisin_path if hisin_gisin_path is not None else _HISIN_GISIN_PATH
+        )
+        self._salary_path = salary_path if salary_path is not None else _SALARY_PATH
         self._ilgan_map: dict[str, dict[str, Any]] = self._build_ilgan_map()
         self._yongsin_map: dict[str, dict[str, Any]] = self._build_yongsin_map()
         self._gyouk_map: dict[str, dict[str, Any]] = self._build_gyouk_map()
@@ -199,6 +227,44 @@ class ContentLoader:
         """
         return self._gyouk_map.get(gyouk_name)
 
+    def get_hisin_content(
+        self, dang_ryeong: str, hisin_yes: bool = True
+    ) -> dict[str, Any] | None:
+        """당령에 해당하는 희신 콘텐츠 전체를 반환한다.
+
+        Args:
+            dang_ryeong: 한글 천간 (갑, 을, 병, 정, 경, 신, 임, 계)
+            hisin_yes: True이면 희신있음(HisinYes), False이면 희신없음(HisinNo)
+
+        Returns:
+            콘텐츠 JSON 딕셔너리 또는 None (찾지 못한 경우)
+        """
+        dir_name = _DANG_RYEONG_TO_HISIN10_DIR.get(dang_ryeong)
+        if dir_name is None:
+            return None
+        filename = "contents_HisinYes.json" if hisin_yes else "contents_HisinNo.json"
+        file_path = self._hisin_base / dir_name / filename
+        raw = _load_json_file(file_path, f"희신({dang_ryeong})")
+        return raw if raw else None
+
+    def get_hisin_gisin_content(self) -> dict[str, Any] | None:
+        """희기신 콘텐츠 전체를 반환한다.
+
+        Returns:
+            희기신 콘텐츠 JSON 딕셔너리 또는 None (파일 로드 실패 시)
+        """
+        raw = _load_json_file(self._hisin_gisin_path, "희기신")
+        return raw if raw else None
+
+    def get_salary_content(self) -> dict[str, Any] | None:
+        """연봉 콘텐츠 전체를 반환한다.
+
+        Returns:
+            연봉 콘텐츠 JSON 딕셔너리 또는 None (파일 로드 실패 시)
+        """
+        raw = _load_json_file(self._salary_path, "연봉")
+        return raw if raw else None
+
 
 # 모듈 레벨 싱글톤 (캐시된 접근)
 _loader: ContentLoader | None = None
@@ -247,3 +313,36 @@ def get_gyouk_content(gyouk_name: str) -> dict[str, Any] | None:
         콘텐츠 항목 딕셔너리 또는 None
     """
     return _get_loader().get_gyouk_content(gyouk_name)
+
+
+def get_hisin_content(
+    dang_ryeong: str, hisin_yes: bool = True
+) -> dict[str, Any] | None:
+    """당령에 해당하는 희신 콘텐츠를 반환하는 편의 함수.
+
+    Args:
+        dang_ryeong: 한글 천간 (갑, 을, 병, 정, 경, 신, 임, 계)
+        hisin_yes: True이면 희신있음, False이면 희신없음
+
+    Returns:
+        콘텐츠 JSON 딕셔너리 또는 None
+    """
+    return _get_loader().get_hisin_content(dang_ryeong, hisin_yes)
+
+
+def get_hisin_gisin_content() -> dict[str, Any] | None:
+    """희기신 콘텐츠 전체를 반환하는 편의 함수.
+
+    Returns:
+        희기신 콘텐츠 JSON 딕셔너리 또는 None
+    """
+    return _get_loader().get_hisin_gisin_content()
+
+
+def get_salary_content() -> dict[str, Any] | None:
+    """연봉 콘텐츠 전체를 반환하는 편의 함수.
+
+    Returns:
+        연봉 콘텐츠 JSON 딕셔너리 또는 None
+    """
+    return _get_loader().get_salary_content()

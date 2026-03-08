@@ -296,6 +296,28 @@ async def test_identity_yongshin_structure(client: AsyncClient) -> None:
         assert "heuisin" in yongshin
 
 
+async def test_identity_new_content_fields_exist(client: AsyncClient) -> None:
+    """신규 콘텐츠 필드(hisin_content, hisin_gisin_content, salary_content) 존재 확인."""
+    response = await client.post("/api/v1/saju/identity", json=VALID_PAYLOAD)
+    assert response.status_code == 200
+    data = response.json()
+    assert "hisin_content" in data
+    assert "hisin_gisin_content" in data
+    assert "salary_content" in data
+
+
+async def test_identity_new_content_fields_nullable(client: AsyncClient) -> None:
+    """신규 콘텐츠 필드는 dict 또는 null이어야 함."""
+    response = await client.post("/api/v1/saju/identity", json=VALID_PAYLOAD)
+    assert response.status_code == 200
+    data = response.json()
+    for field in ("hisin_content", "hisin_gisin_content", "salary_content"):
+        value = data[field]
+        assert value is None or isinstance(value, dict), (
+            f"{field}는 dict 또는 null이어야 함, 실제값: {type(value)}"
+        )
+
+
 # ---------------------------------------------------------------------------
 # 기존 엔드포인트 회귀 테스트 (변경 없음 확인)
 # ---------------------------------------------------------------------------

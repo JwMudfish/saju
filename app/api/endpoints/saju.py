@@ -9,7 +9,10 @@ from app.api.deps import get_interpretation_service, get_saju_service
 from app.services.content_loader import (
     YUKSIN_TO_GYOUK,
     get_gyouk_content,
+    get_hisin_content,
+    get_hisin_gisin_content,
     get_ilgan_content,
+    get_salary_content,
     get_yongsin_content,
 )
 from app.services.interpretation_service import InterpretationService
@@ -220,9 +223,11 @@ async def get_identity(
     # 콘텐츠 로딩 (실패 시 None, HTTP 200 유지)
     ilgan_content = get_ilgan_content(day_gan)
     gyouk_content = get_gyouk_content(gyouk_name) if gyouk_name else None
-    yongsin_content = (
-        get_yongsin_content(result.yongshin.dang_ryeong) if result.yongshin else None
-    )
+    dang_ryeong = result.yongshin.dang_ryeong if result.yongshin else None
+    yongsin_content = get_yongsin_content(dang_ryeong) if dang_ryeong else None
+    hisin_content = get_hisin_content(dang_ryeong) if dang_ryeong else None
+    hisin_gisin_content = get_hisin_gisin_content()
+    salary_content = get_salary_content()
 
     return IdentityResponse(
         day_gan=day_gan,
@@ -231,4 +236,7 @@ async def get_identity(
         ilgan_content=ilgan_content,
         gyouk_content=gyouk_content,
         yongsin_content=yongsin_content,
+        hisin_content=hisin_content,
+        hisin_gisin_content=hisin_gisin_content,
+        salary_content=salary_content,
     )

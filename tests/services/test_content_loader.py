@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import pathlib
+
 import pytest
 
 from app.services.content_loader import ContentLoader
@@ -210,3 +212,182 @@ class TestContentLoaderFileNotFound:
         assert loader.get_ilgan_content("갑") is None
         assert loader.get_yongsin_content("갑") is None
         assert loader.get_gyouk_content("건록격") is None
+
+
+class TestContentLoaderHisin:
+    """희신(希神) Hisin10 콘텐츠 로딩 테스트."""
+
+    def test_get_hisin_content_갑_hisin_yes_returns_content(
+        self, tmp_path: pathlib.Path
+    ) -> None:
+        """갑 당령 희신있음 콘텐츠를 반환한다."""
+        import json as _json
+
+        from app.services.content_loader import ContentLoader
+
+        hisin_dir = tmp_path / "contents_gapmuk"
+        hisin_dir.mkdir()
+        data = {"contentsList": [{"title": "hisinYes", "contents": "갑목 희신 내용"}]}
+        (hisin_dir / "contents_HisinYes.json").write_text(
+            _json.dumps(data, ensure_ascii=False), encoding="utf-8"
+        )
+        loader = ContentLoader(hisin_base=tmp_path)
+        result = loader.get_hisin_content("갑", hisin_yes=True)
+        assert result is not None
+
+    def test_get_hisin_content_갑_hisin_no_returns_content(
+        self, tmp_path: pathlib.Path
+    ) -> None:
+        """갑 당령 희신없음 콘텐츠를 반환한다."""
+        import json as _json
+
+        from app.services.content_loader import ContentLoader
+
+        hisin_dir = tmp_path / "contents_gapmuk"
+        hisin_dir.mkdir()
+        data = {"contentsList": [{"title": "hisinNo", "contents": "갑목 비희신 내용"}]}
+        (hisin_dir / "contents_HisinNo.json").write_text(
+            _json.dumps(data, ensure_ascii=False), encoding="utf-8"
+        )
+        loader = ContentLoader(hisin_base=tmp_path)
+        result = loader.get_hisin_content("갑", hisin_yes=False)
+        assert result is not None
+
+    def test_get_hisin_content_unknown_dang_ryeong_returns_none(
+        self, tmp_path: pathlib.Path
+    ) -> None:
+        """매핑 없는 당령(무)은 None을 반환한다."""
+        from app.services.content_loader import ContentLoader
+
+        loader = ContentLoader(hisin_base=tmp_path)
+        result = loader.get_hisin_content("무")
+        assert result is None
+
+    def test_get_hisin_content_file_not_found_returns_none(
+        self, tmp_path: pathlib.Path
+    ) -> None:
+        """파일 없으면 None을 반환한다."""
+        from app.services.content_loader import ContentLoader
+
+        # 디렉토리 없이 hisin_base만 지정 (파일 없음)
+        loader = ContentLoader(hisin_base=tmp_path)
+        result = loader.get_hisin_content("갑")
+        assert result is None
+
+    def test_get_hisin_content_returns_dict(self, tmp_path: pathlib.Path) -> None:
+        """반환값은 dict 타입이다."""
+        import json as _json
+
+        from app.services.content_loader import ContentLoader
+
+        hisin_dir = tmp_path / "contents_gapmuk"
+        hisin_dir.mkdir()
+        data = {"contentsList": [{"title": "hisinYes", "contents": "내용"}]}
+        (hisin_dir / "contents_HisinYes.json").write_text(
+            _json.dumps(data, ensure_ascii=False), encoding="utf-8"
+        )
+        loader = ContentLoader(hisin_base=tmp_path)
+        result = loader.get_hisin_content("갑")
+        assert isinstance(result, dict)
+
+
+class TestContentLoaderHisinGisin:
+    """희기신 콘텐츠 로딩 테스트."""
+
+    def test_get_hisin_gisin_content_returns_content(
+        self, tmp_path: pathlib.Path
+    ) -> None:
+        """희기신 콘텐츠를 반환한다."""
+        import json as _json
+
+        from app.services.content_loader import ContentLoader
+
+        data = {
+            "name": "contents_hisin_gisin",
+            "contentsList": [
+                {
+                    "number": 1,
+                    "title": "hisin_gisin_1",
+                    "subtitle": "희신있음/조건/있음/없음",
+                    "contents": "희기신 설명",
+                }
+            ],
+        }
+        gisin_file = tmp_path / "contents_hisin_gisin.json"
+        gisin_file.write_text(_json.dumps(data, ensure_ascii=False), encoding="utf-8")
+        loader = ContentLoader(hisin_gisin_path=gisin_file)
+        result = loader.get_hisin_gisin_content()
+        assert result is not None
+
+    def test_get_hisin_gisin_content_file_not_found_returns_none(
+        self, tmp_path: pathlib.Path
+    ) -> None:
+        """파일 없으면 None을 반환한다."""
+        from app.services.content_loader import ContentLoader
+
+        loader = ContentLoader(
+            hisin_gisin_path=tmp_path / "nonexistent_hisin_gisin.json"
+        )
+        result = loader.get_hisin_gisin_content()
+        assert result is None
+
+
+class TestContentLoaderSalary:
+    """연봉 콘텐츠 로딩 테스트."""
+
+    def test_get_salary_content_returns_content(self, tmp_path: pathlib.Path) -> None:
+        """연봉 콘텐츠를 반환한다."""
+        import json as _json
+
+        from app.services.content_loader import ContentLoader
+
+        data = {
+            "contentsList": [
+                {
+                    "title": "salary_1",
+                    "titleDescription": "연봉 유형 1",
+                    "subtitle": "유형A",
+                    "contents": "연봉 설명",
+                }
+            ]
+        }
+        salary_file = tmp_path / "contents_salary.json"
+        salary_file.write_text(_json.dumps(data, ensure_ascii=False), encoding="utf-8")
+        loader = ContentLoader(salary_path=salary_file)
+        result = loader.get_salary_content()
+        assert result is not None
+
+    def test_get_salary_content_file_not_found_returns_none(
+        self, tmp_path: pathlib.Path
+    ) -> None:
+        """파일 없으면 None을 반환한다."""
+        from app.services.content_loader import ContentLoader
+
+        loader = ContentLoader(salary_path=tmp_path / "nonexistent_salary.json")
+        result = loader.get_salary_content()
+        assert result is None
+
+
+class TestModuleLevelHisinFunctions:
+    """모듈 레벨 편의 함수 테스트."""
+
+    def test_module_get_hisin_content_갑(self) -> None:
+        """모듈 레벨 get_hisin_content 함수가 갑 당령 콘텐츠를 반환한다."""
+        from app.services.content_loader import get_hisin_content
+
+        result = get_hisin_content("갑")
+        assert result is not None
+
+    def test_module_get_hisin_gisin_content(self) -> None:
+        """모듈 레벨 get_hisin_gisin_content 함수가 동작한다."""
+        from app.services.content_loader import get_hisin_gisin_content
+
+        result = get_hisin_gisin_content()
+        assert result is not None
+
+    def test_module_get_salary_content(self) -> None:
+        """모듈 레벨 get_salary_content 함수가 동작한다."""
+        from app.services.content_loader import get_salary_content
+
+        result = get_salary_content()
+        assert result is not None
