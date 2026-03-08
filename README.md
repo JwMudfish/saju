@@ -6,13 +6,13 @@ Python 순수 계산으로 구현한 사주팔자(四柱八字) 엔진입니다.
 
 - 순수 Python 3.11+ 구현
 - uv 기반 빠른 패키지 관리
-- 95%+ 테스트 커버리지
+- 94%+ 테스트 커버리지 (515개)
 - 태음력 변환 지원
 - 완전한 타입 안전성 (mypy strict mode)
 - 십이운성·신살·세운 계산 지원
 - 합충형해파(合沖刑害破) 사기둥 쌍 분석 지원
 - 합충형해파 분석 UI (합충형해파 관계 테이블, 강조 표시)
-- 일간 캐릭터 카드 + 용신 재능 해설 + 격국 캐릭터 카드 UI (ContentLoader 서비스)
+- 일간·격국·용신 캐릭터 카드 + 희신 콘텐츠 UI (ContentLoader 서비스)
 - 6탭 Streamlit 대시보드 (원국·십성·운·세부지표·AI 해석·나의 정체성)
 - 기능별 개별 REST API 엔드포인트: `/saju/pillars`, `/saju/analysis`, `/saju/fortune`, `/saju/identity`
 
@@ -230,7 +230,7 @@ saju/
 │   │   ├── content_loader.py     # JSON 콘텐츠 로더 (일간/용신/격국 카드)
 │   │   └── prompt_builder.py     # 해석 프롬프트 생성
 │   └── main.py        # 애플리케이션 팩토리
-├── tests/             # 테스트 스위트 (501개, 95%+ 커버리지)
+├── tests/             # 테스트 스위트 (515개, 94%+ 커버리지)
 │   ├── services/      # 서비스 계층 단위 테스트
 ├── pyproject.toml     # 프로젝트 설정 (hatchling)
 └── uv.lock            # 의존성 잠금 파일
@@ -247,6 +247,16 @@ saju/
 MIT License
 
 ## 변경 사항
+
+### v1.0.0 (SPEC-CONTENT-001)
+
+- `ContentLoader` 서비스 희신/희기신/연봉 콘텐츠 로딩 지원 추가
+  - `get_hisin_content()`, `get_hisin_gisin_content()`, `get_salary_content()` 메서드 추가
+  - `_DANG_RYEONG_TO_HISIN10_DIR` 매핑: 8개 당령 → Hisin10 디렉토리명
+- `IdentityResponse`에 `hisin_content`, `hisin_gisin_content`, `salary_content` 필드 추가
+- `/saju/identity` API 응답에 희신/희기신/연봉 콘텐츠 포함
+- Streamlit "나의 정체성" 탭 희신 콘텐츠 카드 섹션 추가 (기존 3-컬럼 하단)
+- 테스트 515개 (+14개), 커버리지 94%
 
 ### v0.9.0 (SPEC-API-002)
 

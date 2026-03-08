@@ -7,6 +7,47 @@
 
 ---
 
+## [1.0.0] - 2026-03-08
+
+### Added (SPEC-CONTENT-001: ContentLoader 희신/희기신/연봉 콘텐츠 확장)
+
+#### 백엔드
+
+- `app/services/content_loader.py` — 희신/희기신/연봉 콘텐츠 로딩 지원 추가
+  - `_HISIN_BASE`, `_HISIN_GISIN_PATH`, `_SALARY_PATH` 경로 상수 추가
+  - `_DANG_RYEONG_TO_HISIN10_DIR` 딕셔너리: 8개 당령 → Hisin10 디렉토리명 매핑 (갑→gapmuk 등)
+  - `ContentLoader.get_hisin_content(dang_ryeong, hisin_yes)`: Hisin10 디렉토리에서 당령별 희신 콘텐츠 조회 (O(1))
+  - `ContentLoader.get_hisin_gisin_content()`: 희기신 콘텐츠 전체 반환
+  - `ContentLoader.get_salary_content()`: 연봉 콘텐츠 전체 반환
+  - 모듈 레벨 편의 함수 3개 추가 (`get_hisin_content`, `get_hisin_gisin_content`, `get_salary_content`)
+- `core/models/response.py` — `IdentityResponse`에 Optional 필드 3개 추가
+  - `hisin_content: dict[str, Any] | None = None` — 희신 콘텐츠
+  - `hisin_gisin_content: dict[str, Any] | None = None` — 희기신 콘텐츠
+  - `salary_content: dict[str, Any] | None = None` — 연봉 콘텐츠
+
+#### API
+
+- `app/api/endpoints/saju.py` — `/saju/identity` 엔드포인트에 신규 콘텐츠 필드 3개 추가
+  - 희신 콘텐츠, 희기신 콘텐츠, 연봉 콘텐츠 로딩 및 응답 포함 (콘텐츠 없으면 null + HTTP 200 유지)
+
+#### 프론트엔드
+
+- `streamlit_app.py` — "나의 정체성" 탭 희신 콘텐츠 카드 섹션 추가
+  - 기존 3-컬럼(일간|격국|용신) 레이아웃 하단에 희신 콘텐츠 표시
+  - 당령 존재 시 조건부 렌더링
+
+#### 테스트
+
+- `tests/services/test_content_loader.py` — 희신/희기신/연봉 TDD 테스트 12개 추가
+  - `TestContentLoaderHisin`: 희신 로딩 5개
+  - `TestContentLoaderHisinGisin`: 희기신 로딩 2개
+  - `TestContentLoaderSalary`: 연봉 로딩 2개
+  - `TestModuleLevelHisinFunctions`: 모듈 레벨 편의 함수 3개
+- `tests/test_api_saju_detail.py` — identity API 신규 필드 검증 2개 추가
+- 515개 테스트 (+14개), 커버리지 94%
+
+---
+
 ## [0.9.0] - 2026-03-05
 
 ### Added (SPEC-API-002: 사주 기능별 개별 REST API 엔드포인트 분리)
