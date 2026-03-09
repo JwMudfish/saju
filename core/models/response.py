@@ -14,6 +14,7 @@ from core.models.domain import (
     OHangRatio,
     PillarMeaning,
     SewunItem,
+    ShgjResult,
     ShinsalItem,
     SibiUnsungItem,
     YongshinResult,
@@ -55,6 +56,7 @@ class SajuResult(BaseModel):
     pillar_meanings: list[PillarMeaning] | None = None
     hapchung: list[HapchungRelation] | None = None
     yongshin: YongshinResult | None = None
+    shgj: ShgjResult | None = None
 
 
 class InterpretResult(BaseModel):
@@ -105,3 +107,7 @@ class IdentityResponse(BaseModel):
     hisin_content: dict[str, Any] | None = None       # 희신 콘텐츠 (hisin content)
     hisin_gisin_content: dict[str, Any] | None = None  # 희기신 콘텐츠 (hisin-gisin content)
     salary_content: dict[str, Any] | None = None      # 연봉 콘텐츠 (salary content)
+    shgj: ShgjResult | None = None                    # 신격 분석 결과 (shgj result)
+    sangsin_content: dict[str, Any] | None = None     # 상신 설명 콘텐츠 (sangsin content)
+    gusin_content: dict[str, Any] | None = None       # 구신 설명 콘텐츠 (gusin content)
+    shgj_gilhung_content: dict[str, Any] | None = None  # 신격 길흉 콘텐츠 (shgj gilhung content)

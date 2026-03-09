@@ -196,4 +196,9 @@ def calc_yongshin(
     return YongshinResult(
         dang_ryeong=dang_ryeong,
         heuisin=heuisin,
+        # 영격령 세부지표 (MVP: None 반환, 추후 구현)
+        saryeong=None,   # TODO: 사령 계산 로직 구현
+        junghwa=None,    # TODO: 중화 계산 로직 구현
+        jisok=None,      # TODO: 지속 계산 로직 구현
+        hwakjang=None,   # TODO: 확장 계산 로직 구현
     )

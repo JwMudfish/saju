@@ -48,6 +48,11 @@ _HISIN_GISIN_PATH = (
     _BASE_DIR / "manse_ori" / "testResult" / "contents_hisin_gisin.json"
 )
 _SALARY_PATH = _BASE_DIR / "manse_ori" / "testResult" / "contents_salary.json"
+_SANGSIN_PATH = _BASE_DIR / "manse_ori" / "testResult" / "contents_sangsin.json"
+_GUSIN_PATH = _BASE_DIR / "manse_ori" / "testResult" / "contents_gusin.json"
+_SHGJ_GILHUNG_BASE = (
+    _BASE_DIR / "manse_ori" / "testResult" / "contents_shgjGilHung"
+)
 
 # 당령 -> Hisin10 디렉토리명 매핑 테이블
 _DANG_RYEONG_TO_HISIN10_DIR: dict[str, str] = {
@@ -135,6 +140,9 @@ class ContentLoader:
         hisin_base: pathlib.Path | None = None,
         hisin_gisin_path: pathlib.Path | None = None,
         salary_path: pathlib.Path | None = None,
+        sangsin_path: pathlib.Path | None = None,
+        gusin_path: pathlib.Path | None = None,
+        shgj_gilhung_base: pathlib.Path | None = None,
     ) -> None:
         self._ilgan_path = ilgan_path if ilgan_path is not None else _ILGAN_PATH
         self._yongsin_path = yongsin_path if yongsin_path is not None else _YONGSIN_PATH
@@ -144,6 +152,15 @@ class ContentLoader:
             hisin_gisin_path if hisin_gisin_path is not None else _HISIN_GISIN_PATH
         )
         self._salary_path = salary_path if salary_path is not None else _SALARY_PATH
+        self._sangsin_path = (
+            sangsin_path if sangsin_path is not None else _SANGSIN_PATH
+        )
+        self._gusin_path = gusin_path if gusin_path is not None else _GUSIN_PATH
+        self._shgj_gilhung_base = (
+            shgj_gilhung_base
+            if shgj_gilhung_base is not None
+            else _SHGJ_GILHUNG_BASE
+        )
         self._ilgan_map: dict[str, dict[str, Any]] = self._build_ilgan_map()
         self._yongsin_map: dict[str, dict[str, Any]] = self._build_yongsin_map()
         self._gyouk_map: dict[str, dict[str, Any]] = self._build_gyouk_map()
@@ -265,6 +282,78 @@ class ContentLoader:
         raw = _load_json_file(self._salary_path, "연봉")
         return raw if raw else None
 
+    def get_sangsin_content(self, sangsin: str) -> dict[str, Any] | None:
+        """상신(Sangsin) 설명 컨텐츠를 로드한다.
+
+        Args:
+            sangsin: 상신 식별자 (예: "Sangsin_1", "Sangsin_2", "Sangsin_3", "Sangsin_4")
+
+        Returns:
+            상신 콘텐츠 항목 딕셔너리 또는 None (찾지 못한 경우)
+        """
+        raw = _load_json_file(self._sangsin_path, "상신")
+        if not raw:
+            return None
+
+        for item in raw.get("contentsList", []):
+            if item.get("title") == sangsin:
+                return cast("dict[str, Any]", item)
+        return None
+
+    def get_gusin_content(self, gusin: str) -> dict[str, Any] | None:
+        """구신(Gusin) 설명 컨텐츠를 로드한다.
+
+        Args:
+            gusin: 구신 식별자 (예: "gusin_1", "gusin_2", "gusin_3", "gusin_4")
+
+        Returns:
+            구신 콘텐츠 항목 딕셔너리 또는 None (찾지 못한 경우)
+        """
+        raw = _load_json_file(self._gusin_path, "구신")
+        if not raw:
+            return None
+
+        for item in raw.get("contentsList", []):
+            if item.get("title") == gusin:
+                return cast("dict[str, Any]", item)
+        return None
+
+    def get_shgj_gilhung_content(
+        self, gyouk_name: str, is_gil: bool
+    ) -> dict[str, Any] | None:
+        """신격 길흉(Shgj Gilhung) 컨텐츠를 로드한다.
+
+        Args:
+            gyouk_name: 격국명 (건록격, 양인격, 상관격, 식신격, 정인격,
+                        편인격, 정재격, 편재격, 정관격, 편관격)
+            is_gil: True면 길(gil) 신격, False면 흉(hung) 신격
+
+        Returns:
+            길흉 콘텐츠 JSON 딕셔너리 또는 None (파일 로드 실패 시)
+        """
+        # 격국명을 파일명으로 변환 (카멜케이스)
+        gyouk_to_filename = {
+            "건록격": "gunLok",
+            "양인격": "yangIn",
+            "상관격": "sangGuan",
+            "식신격": "siksin",
+            "정인격": "jungIn",
+            "편인격": "pyeonIn",
+            "정재격": "jungje",
+            "편재격": "pyeonje",
+            "정관격": "jungGuan",
+            "편관격": "pyeonGuan",
+        }
+
+        filename_key = gyouk_to_filename.get(gyouk_name)
+        if filename_key is None:
+            return None
+
+        subdir = "gil" if is_gil else "hung"
+        file_path = self._shgj_gilhung_base / subdir / f"contents_{filename_key}.json"
+        raw = _load_json_file(file_path, f"신격길흉({gyouk_name})")
+        return raw if raw else None
+
 
 # 모듈 레벨 싱글톤 (캐시된 접근)
 _loader: ContentLoader | None = None
@@ -346,3 +435,41 @@ def get_salary_content() -> dict[str, Any] | None:
         연봉 콘텐츠 JSON 딕셔너리 또는 None
     """
     return _get_loader().get_salary_content()
+
+
+def get_sangsin_content(sangsin: str) -> dict[str, Any] | None:
+    """상신(Sangsin) 설명 컨텐츠를 반환하는 편의 함수.
+
+    Args:
+        sangsin: 상신 식별자 (예: "Sangsin_1", "Sangsin_2", "Sangsin_3", "Sangsin_4")
+
+    Returns:
+        상신 콘텐츠 항목 딕셔너리 또는 None
+    """
+    return _get_loader().get_sangsin_content(sangsin)
+
+
+def get_gusin_content(gusin: str) -> dict[str, Any] | None:
+    """구신(Gusin) 설명 컨텐츠를 반환하는 편의 함수.
+
+    Args:
+        gusin: 구신 식별자 (예: "gusin_1", "gusin_2", "gusin_3", "gusin_4")
+
+    Returns:
+        구신 콘텐츠 항목 딕셔너리 또는 None
+    """
+    return _get_loader().get_gusin_content(gusin)
+
+
+def get_shgj_gilhung_content(gyouk_name: str, is_gil: bool) -> dict[str, Any] | None:
+    """신격 길흉(Shgj Gilhung) 컨텐츠를 반환하는 편의 함수.
+
+    Args:
+        gyouk_name: 격국명 (건록격, 양인격, 상관격, 식신격, 정인격,
+                    편인격, 정재격, 편재격, 정관격, 편관격)
+        is_gil: True면 길(gil) 신격, False면 흉(hung) 신격
+
+    Returns:
+        길흉 콘텐츠 JSON 딕셔너리 또는 None
+    """
+    return _get_loader().get_shgj_gilhung_content(gyouk_name, is_gil)

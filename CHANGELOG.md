@@ -7,6 +7,93 @@
 
 ---
 
+## [1.1.0] - 2026-03-09
+
+### Added (SPEC-CONTENT-002: 신격(Shgj) 코어 로직 포팅 및 컨텐츠 연동)
+
+#### 백엔드
+
+- `core/shgj.py` — 신격(Shgj) 계산 모듈 신규 개발
+  - `ShgjResult` 도메인 모델: 상신/구신/국국분/상화/설화 필드 (MVP: 상신/구신만 구현)
+  - `calc_shgj()`: 용신 기반 상신/구신 계산 함수
+  - 오행 상생상극 매핑: `_SANGSIN_OHANG_MAP`, `_GUSIN_OHANG_MAP`
+  - `_collect_all_stems()`: 육신과 사주팔자 천간 수집 (용신 제외)
+  - `_find_sangsin()`: 용신을 생하는 천간 찾기 (우선순위: 상신천간 > 일간 > 용신과 상생관계)
+  - `_find_gusin()`: 용신을 극하는 천간 찾기 (상신 제외)
+- `core/models/domain.py` — `ShgjResult` 도메인 모델 추가
+  - `sangsin: str | None` — 상신 천간
+  - `gusin: str | None` — 구신 천간
+  - `gukgubun: str | None` — 국국분 (MVP: None)
+  - `sanghwa: str | None` — 상화 관계 (MVP: None)
+  - `sulhwa: str | None` — 설화 관계 (MVP: None)
+- `core/yongshin.py` — `YongshinResult` 영격령 세부지표 필드 추가
+  - `saryeong: str | None = None` — 사령
+  - `junghwa: str | None = None` — 중화
+  - `jisok: str | None = None` — 지속
+  - `hwakjang: str | None = None` — 확장
+  - 하위 호환성 유지 (기본값 None)
+- `app/services/content_loader.py` — 상신/구신/길흉 컨텐츠 로딩 지원
+  - `get_sangsin_content(sangsin_gan)`: 상신별 설명 콘텐츠 조회
+  - `get_gusin_content(gusin_gan)`: 구신별 설명 콘텐츠 조회
+  - `get_shgj_gilhung_content(gyouk_name, is_gil)`: 격국별 길신/흉신 콘텐츠 조회
+  - `_load_shgj_gilhung()`: 길흉 JSON 캐싱 (앱 시작 시 1회)
+  - 모듈 레벨 편의 함수 추가
+- `app/services/saju_service.py` — `calc_shgj()` 통합
+  - `SajuService.calculate()`에 신격 계산 로직 추가
+  - `SajuResult` 확장: `shgj: ShgjResult | None` 필드 추가
+
+#### API
+
+- `core/models/response.py` — `IdentityResponse` 확장
+  - `shgj: ShgjResult | None = None` — 신격 계산 결과
+  - `sangsin_content: dict[str, Any] | None = None` — 상신 콘텐츠
+  - `gusin_content: dict[str, Any] | None = None` — 구신 콘텐츠
+  - `shgj_gilhung_content: dict[str, Any] | None = None` — 길흉 콘텐츠
+- `app/api/endpoints/saju.py` — `/saju/identity` 엔드포인트 확장
+  - 신격 계산 및 컨텐츠 로딩 로직 추가
+  - 응답에 4개 신규 필드 포함
+
+#### 프론트엔드
+
+- `streamlit_app.py` — "나의 정체성" 탭 신격 지표 섹션 추가
+  - 상신/구신 설명 카드 2열 레이아웃
+  - 길신/흉신 expander (격국별 길흉 콘텐츠)
+  - 조건부 렌더링 (데이터 존재 시)
+
+#### 테스트
+
+- `tests/core/test_shgj_parity.py` — 알고리즘 패리티 테스트 27개
+  - 기본 패리티: 10개 천간 × 5오행 조합
+  - 엣지 케이스: 빈 육신, 무효 당령, 상신/구신만 존재
+  - 통합 시나리오: 실제 사주 데이터 기반 검증
+  - 오행 상생/상극 주기 완전성 검증
+- `tests/integration/test_shgj_integration.py` — E2E 통합 테스트 10개
+  - API에서 신격 계산 완전 흐름 검증
+  - 성능: 신격 계산 2초 이내
+  - 에러 핸들링: 용신 미존재, ContentLoader None 반환
+  - 데이터 일관성: 파이프라인 전체
+  - 하위 호환성: 기존 API 무영향
+  - 응답 구조 검증
+  - 다중 요청 일관성
+  - 컨텐츠 로딩 성능
+- `tests/test_characterization_identity_shgj.py` — 기존 동작 특성화 테스트
+- `tests/test_saju_service_shgj_characterization.py` — SajuService 특성화 테스트
+- `tests/test_saju_service_shgj_integration.py` — SajuService 통합 테스트
+- `tests/test_task_003_shgj_api_integration.py` — API 통합 테스트
+- `tests/test_yongshin_characterization.py` — Yongshin 확장 특성화 테스트
+- `tests/services/test_content_loader.py` — ContentLoader 확장 테스트 29개 추가
+  - 상신/구신/길흉 컨텐츠 로딩
+  - 모듈 레벨 함수 검증
+  - 파일 없음 시 None 반환
+- 621개 테스트 (+106개), 커버리지 91%
+
+#### MVP 범위
+
+- 상신(Sangsin), 구신(Gusin) 계산 완료
+- 국국분(Gukgubun), 상화(Sanghwa), 설화(Sulhwa)은 None 반환 (추후 구현 예정)
+
+---
+
 ## [1.0.0] - 2026-03-08
 
 ### Added (SPEC-CONTENT-001: ContentLoader 희신/희기신/연봉 콘텐츠 확장)

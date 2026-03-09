@@ -39,6 +39,21 @@ class YongshinResult(BaseModel):
 
     dang_ryeong: str  # 당령 (yongsin) - 지배적 천간
     heuisin: str  # 희신 - 당령으로부터 유도된 길신
+    # 영격령 세부지표 (Optional, 하위 호환성 유지)
+    saryeong: str | None = None  # 사령
+    junghwa: str | None = None  # 중화
+    jisok: str | None = None  # 지속
+    hwakjang: str | None = None  # 확장
+
+
+class ShgjResult(BaseModel):
+    """신격(Shgj) 분석 결과."""
+
+    sangsin: str | None = None  # 상신 천간
+    gusin: str | None = None  # 구신 천간
+    gukgubun: str | None = None  # 국국분 (길격/흉격)
+    sanghwa: str | None = None  # 상화 관계
+    sulhwa: str | None = None  # 설화 관계
 
 
 class OHangRatio(BaseModel):

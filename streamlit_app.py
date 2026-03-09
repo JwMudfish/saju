@@ -609,6 +609,26 @@ def render_tab_identity(result: dict[str, Any]) -> None:
                     else:
                         st.json(hisin_content)
 
+    # 신격(Shgj) 섹션
+    shgj = result.get("shgj")
+    if shgj is not None and not isinstance(shgj, dict):
+        if hasattr(shgj, "model_dump"):
+            shgj = shgj.model_dump()
+        elif hasattr(shgj, "dict"):
+            shgj = shgj.dict()
+
+    if shgj:
+        st.markdown("---")
+        st.subheader("신격 (Shgj)")
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            st.metric("상신", shgj.get("sangsin") or "-")
+        with col2:
+            st.metric("구신", shgj.get("gusin") or "-")
+        with col3:
+            # 3번째 컬럼은 예비용 또는 추가 정보용
+            st.metric("국국분", shgj.get("gukgubun") or "-")
+
 
 def render_tab_interpret(result: dict[str, Any]) -> None:
     """Tab 5: AI 사주 해석."""

@@ -391,3 +391,171 @@ class TestModuleLevelHisinFunctions:
 
         result = get_salary_content()
         assert result is not None
+
+
+class TestContentLoaderSangsin:
+    """상신(Sangsin) 콘텐츠 로딩 테스트."""
+
+    def test_get_sangsin_content_all_types(self) -> None:
+        """4개 상신 유형 모두 콘텐츠를 반환한다."""
+        loader = ContentLoader()
+        for sangsin in ["Sangsin_1", "Sangsin_2", "Sangsin_3", "Sangsin_4"]:
+            result = loader.get_sangsin_content(sangsin)
+            assert result is not None, f"Missing sangsin content for {sangsin}"
+            assert "contents" in result, f"sangsin content for {sangsin} must have contents"
+
+    def test_get_sangsin_content_unknown_returns_none(self) -> None:
+        """알 수 없는 상신은 None을 반환한다."""
+        loader = ContentLoader()
+        assert loader.get_sangsin_content("unknown") is None
+
+    def test_get_sangsin_content_returns_dict(self) -> None:
+        """반환값은 dict 타입이다."""
+        loader = ContentLoader()
+        result = loader.get_sangsin_content("Sangsin_1")
+        assert isinstance(result, dict)
+
+    def test_get_sangsin_content_has_required_fields(self) -> None:
+        """상신 콘텐츠에 필수 필드들이 존재한다."""
+        loader = ContentLoader()
+        result = loader.get_sangsin_content("Sangsin_1")
+        assert result is not None
+        assert result.get("title") == "Sangsin_1"
+        assert "subtitle" in result
+        assert "contents" in result
+
+
+class TestContentLoaderGusin:
+    """구신(Gusin) 콘텐츠 로딩 테스트."""
+
+    def test_get_gusin_content_all_types(self) -> None:
+        """4개 구신 유형 모두 콘텐츠를 반환한다."""
+        loader = ContentLoader()
+        for gusin in ["gusin_1", "gusin_2", "gusin_3", "gusin_4"]:
+            result = loader.get_gusin_content(gusin)
+            assert result is not None, f"Missing gusin content for {gusin}"
+            assert "contents" in result, f"gusin content for {gusin} must have contents"
+
+    def test_get_gusin_content_unknown_returns_none(self) -> None:
+        """알 수 없는 구신은 None을 반환한다."""
+        loader = ContentLoader()
+        assert loader.get_gusin_content("unknown") is None
+
+    def test_get_gusin_content_returns_dict(self) -> None:
+        """반환값은 dict 타입이다."""
+        loader = ContentLoader()
+        result = loader.get_gusin_content("gusin_1")
+        assert isinstance(result, dict)
+
+    def test_get_gusin_content_has_required_fields(self) -> None:
+        """구신 콘텐츠에 필수 필드들이 존재한다."""
+        loader = ContentLoader()
+        result = loader.get_gusin_content("gusin_1")
+        assert result is not None
+        assert result.get("title") == "gusin_1"
+        assert "subtitle" in result
+        assert "contents" in result
+
+
+class TestContentLoaderShgjGilhung:
+    """신격 길흝(Shgj Gilhung) 콘텐츠 로딩 테스트."""
+
+    def test_get_shgj_gilhung_content_gil_정인격(self) -> None:
+        """정인격 길신 콘텐츠를 반환한다."""
+        loader = ContentLoader()
+        result = loader.get_shgj_gilhung_content("정인격", is_gil=True)
+        assert result is not None
+        assert "contentsList" in result or "contents" in result
+
+    def test_get_shgj_gilhung_content_hung_양인격(self) -> None:
+        """양인격 흉신 콘텐츠를 반환한다."""
+        loader = ContentLoader()
+        result = loader.get_shgj_gilhung_content("양인격", is_gil=False)
+        assert result is not None
+        assert "contentsList" in result or "contents" in result
+
+    def test_get_shgj_gilhung_content_unknown_gyouk_returns_none(self) -> None:
+        """알 수 없는 격국명은 None을 반환한다."""
+        loader = ContentLoader()
+        assert loader.get_shgj_gilhung_content("unknown", is_gil=True) is None
+
+    def test_get_shgj_gilhung_content_returns_dict(self) -> None:
+        """반환값은 dict 타입이다."""
+        loader = ContentLoader()
+        result = loader.get_shgj_gilhung_content("양인격", is_gil=False)
+        assert isinstance(result, dict)
+
+    def test_get_shgj_gilhung_content_all_gyouk_gil(self) -> None:
+        """길신 디렉토리의 모든 격국 파일을 로드한다."""
+        loader = ContentLoader()
+        for gyouk in [
+            "건록격",
+            "양인격",
+            "상관격",
+            "식신격",
+            "정인격",
+            "편인격",
+            "정재격",
+            "편재격",
+            "정관격",
+            "편관격",
+        ]:
+            result = loader.get_shgj_gilhung_content(gyouk, is_gil=True)
+            # Some 격국 may not have gil files, so we just check it doesn't crash
+            assert result is None or isinstance(result, dict)
+
+    def test_get_shgj_gilhung_content_all_gyouk_hung(self) -> None:
+        """흉신 디렉토리의 모든 격국 파일을 로드한다."""
+        loader = ContentLoader()
+        for gyouk in [
+            "건록격",
+            "양인격",
+            "상관격",
+            "식신격",
+            "정인격",
+            "편인격",
+            "정재격",
+            "편재격",
+            "정관격",
+            "편관격",
+        ]:
+            result = loader.get_shgj_gilhung_content(gyouk, is_gil=False)
+            # Some 격국 may not have hung files, so we just check it doesn't crash
+            assert result is None or isinstance(result, dict)
+
+
+class TestModuleLevelShgjFunctions:
+    """모듈 레벨 신격 편의 함수 테스트."""
+
+    def test_module_get_sangsin_content(self) -> None:
+        """모듈 레벨 get_sangsin_content 함수가 동작한다."""
+        from app.services.content_loader import get_sangsin_content
+
+        result = get_sangsin_content("Sangsin_1")
+        assert result is not None
+
+    def test_module_get_gusin_content(self) -> None:
+        """모듈 레벨 get_gusin_content 함수가 동작한다."""
+        from app.services.content_loader import get_gusin_content
+
+        result = get_gusin_content("gusin_1")
+        assert result is not None
+
+    def test_module_get_shgj_gilhung_content(self) -> None:
+        """모듈 레벨 get_shgj_gilhung_content 함수가 동작한다."""
+        from app.services.content_loader import get_shgj_gilhung_content
+
+        result = get_shgj_gilhung_content("정인격", is_gil=True)
+        assert result is not None
+
+    def test_module_level_shgj_unknown_returns_none(self) -> None:
+        """모듈 레벨 함수에서 알 수 없는 키는 None을 반환한다."""
+        from app.services.content_loader import (
+            get_gusin_content,
+            get_sangsin_content,
+            get_shgj_gilhung_content,
+        )
+
+        assert get_sangsin_content("unknown") is None
+        assert get_gusin_content("unknown") is None
+        assert get_shgj_gilhung_content("unknown", is_gil=True) is None

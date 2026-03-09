@@ -8,11 +8,14 @@ from pydantic import BaseModel, Field
 from app.api.deps import get_interpretation_service, get_saju_service
 from app.services.content_loader import (
     YUKSIN_TO_GYOUK,
+    get_gusin_content,
     get_gyouk_content,
     get_hisin_content,
     get_hisin_gisin_content,
     get_ilgan_content,
     get_salary_content,
+    get_sangsin_content,
+    get_shgj_gilhung_content,
     get_yongsin_content,
 )
 from app.services.interpretation_service import InterpretationService
@@ -25,6 +28,7 @@ from core.models.response import (
     PillarsResponse,
     SajuResult,
 )
+from core.shgj import calc_shgj
 
 router = APIRouter(prefix="/api/v1", tags=["Saju"])
 
@@ -229,6 +233,50 @@ async def get_identity(
     hisin_gisin_content = get_hisin_gisin_content()
     salary_content = get_salary_content()
 
+    # TASK-003: 신격(Shgj) 계산 및 컨텐츠 로드
+    shgj_result = None
+    sangsin_content = None
+    gusin_content = None
+    shgj_gilhung_content = None
+
+    # shgj 계산 (용신, 육신, 격국이 모두 있을 때)
+    if (
+        dang_ryeong
+        and result.yuksin_list
+        and gyouk_name
+    ):
+        try:
+            # FourPillars 구성
+            from core.models.response import FourPillars as FourPillarsModel
+            pillars = FourPillarsModel(
+                year_pillar=result.year_pillar,
+                month_pillar=result.month_pillar,
+                day_pillar=result.day_pillar,
+                hour_pillar=result.hour_pillar,
+            )
+
+            shgj_result = calc_shgj(
+                pillars=pillars,
+                gyouk_name=gyouk_name,
+                yuksin_list=result.yuksin_list,
+                dang_ryeong=dang_ryeong,
+            )
+
+            # 상신/구신 컨텐츠 로드
+            if shgj_result.sangsin:
+                sangsin_content = get_sangsin_content(shgj_result.sangsin)
+            if shgj_result.gusin:
+                gusin_content = get_gusin_content(shgj_result.gusin)
+
+            # 길흉 컨텐츠 로드 (격국 기반)
+            if gyouk_name:
+                # MVP: 길신 컨텐츠만 로드 (향후 확장 가능)
+                shgj_gilhung_content = get_shgj_gilhung_content(gyouk_name, is_gil=True)
+
+        except Exception:
+            # shgj 계산 실패 시 기존 동작 유지 (None 반환)
+            shgj_result = None
+
     return IdentityResponse(
         day_gan=day_gan,
         gyouk_name=gyouk_name,
@@ -239,4 +287,8 @@ async def get_identity(
         hisin_content=hisin_content,
         hisin_gisin_content=hisin_gisin_content,
         salary_content=salary_content,
+        shgj=shgj_result,
+        sangsin_content=sangsin_content,
+        gusin_content=gusin_content,
+        shgj_gilhung_content=shgj_gilhung_content,
     )
