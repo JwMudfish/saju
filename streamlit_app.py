@@ -10,9 +10,13 @@ import streamlit as st
 
 from app.services.content_loader import (
     YUKSIN_TO_GYOUK,
+    get_gusin_content,
     get_gyouk_content,
     get_hisin_content,
+    get_hisin_gisin_content,
     get_ilgan_content,
+    get_sangsin_content,
+    get_salary_content,
     get_yongsin_content,
 )
 
@@ -609,6 +613,44 @@ def render_tab_identity(result: dict[str, Any]) -> None:
                     else:
                         st.json(hisin_content)
 
+    # 희기신 컨텐츠 섹션
+    hisin_gisin_content = get_hisin_gisin_content()
+    if hisin_gisin_content:
+        st.markdown("---")
+        st.markdown("#### 🎭 희기신 판정 (喜忌神)")
+        with st.expander("희기신 상세 보기", expanded=False):
+            contents_list = hisin_gisin_content.get("contentsList", [])
+            if contents_list:
+                for item in contents_list:
+                    subtitle = item.get("subtitle", "")
+                    if subtitle:
+                        st.markdown(f"**{subtitle}**")
+                    contents = item.get("contents", "")
+                    if contents:
+                        st.write(contents.replace("\\n", "\n"))
+                    st.markdown("---")
+            else:
+                st.json(hisin_gisin_content)
+
+    # 연봉 컨텐츠 섹션
+    salary_content = get_salary_content()
+    if salary_content:
+        st.markdown("---")
+        st.markdown("#### 💰 연봉运势 (Salary)")
+        with st.expander("연봉运势 상세 보기", expanded=False):
+            contents_list = salary_content.get("contentsList", [])
+            if contents_list:
+                for item in contents_list:
+                    subtitle = item.get("subtitle", "")
+                    if subtitle:
+                        st.markdown(f"**{subtitle}**")
+                    contents = item.get("contents", "")
+                    if contents:
+                        st.write(contents.replace("\\n", "\n"))
+                    st.markdown("---")
+            else:
+                st.json(salary_content)
+
     # 신격(Shgj) 섹션
     shgj = result.get("shgj")
     if shgj is not None and not isinstance(shgj, dict):
@@ -628,6 +670,42 @@ def render_tab_identity(result: dict[str, Any]) -> None:
         with col3:
             # 3번째 컬럼은 예비용 또는 추가 정보용
             st.metric("국국분", shgj.get("gukgubun") or "-")
+
+        # 상신 상세 설명
+        sangsin = shgj.get("sangsin")
+        if sangsin:
+            sangsin_content = get_sangsin_content(sangsin)
+            if sangsin_content:
+                st.markdown("---")
+                st.markdown("##### 🌟 상신 상세 설명")
+                with st.expander("상신 설명 보기", expanded=False):
+                    title = sangsin_content.get("title", "")
+                    if title:
+                        st.markdown(f"**{title}**")
+                    subtitle = sangsin_content.get("subtitle", "")
+                    if subtitle:
+                        st.caption(subtitle)
+                    contents = sangsin_content.get("contents", "")
+                    if contents:
+                        st.write(contents.replace("\\n", "\n"))
+
+        # 구신 상세 설명
+        gusin = shgj.get("gusin")
+        if gusin:
+            gusin_content = get_gusin_content(gusin)
+            if gusin_content:
+                st.markdown("---")
+                st.markdown("##### ⚠️ 구신 상세 설명")
+                with st.expander("구신 설명 보기", expanded=False):
+                    title = gusin_content.get("title", "")
+                    if title:
+                        st.markdown(f"**{title}**")
+                    subtitle = gusin_content.get("subtitle", "")
+                    if subtitle:
+                        st.caption(subtitle)
+                    contents = gusin_content.get("contents", "")
+                    if contents:
+                        st.write(contents.replace("\\n", "\n"))
 
 
 def render_tab_interpret(result: dict[str, Any]) -> None:
