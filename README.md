@@ -6,7 +6,7 @@ Python 순수 계산으로 구현한 사주팔자(四柱八字) 엔진입니다.
 
 - 순수 Python 3.11+ 구현
 - uv 기반 빠른 패키지 관리
-- 91%+ 테스트 커버리지 (621개)
+- 94%+ 테스트 커버리지 (650개)
 - 태음력 변환 지원
 - 완전한 타입 안전성 (mypy strict mode)
 - 십이운성·신살·세운 계산 지원
@@ -15,6 +15,7 @@ Python 순수 계산으로 구현한 사주팔자(四柱八字) 엔진입니다.
 - 합충형해파 분석 UI (합충형해파 관계 테이블, 강조 표시)
 - 일간·격국·용신 캐릭터 카드 + 희신 콘텐츠 UI (ContentLoader 서비스)
 - 신격(상신/구신) 지표 UI + 길흉 콘텐츠
+- **개선된 AI 해석 프롬프트 시스템** (ContentLoader 연동, 핵심 판단 요약, 질문 우선순위)
 - 6탭 Streamlit 대시보드 (원국·십성·운·세부지표·AI 해석·나의 정체성)
 - 기능별 개별 REST API 엔드포인트: `/saju/pillars`, `/saju/analysis`, `/saju/fortune`, `/saju/identity`
 
@@ -231,9 +232,9 @@ saju/
 │   │   ├── saju_service.py       # 사주 계산
 │   │   ├── interpretation_service.py  # AI 해석 (OpenAI)
 │   │   ├── content_loader.py     # JSON 콘텐츠 로더 (일간/용신/격국/신격 카드)
-│   │   └── prompt_builder.py     # 해석 프롬프트 생성
+│   │   └── prompt_builder.py     # 해석 프롬프트 생성 (ContentLoader 연동, 핵심 판단 요약, 질문 우선순위)
 │   └── main.py        # 애플리케이션 팩토리
-├── tests/             # 테스트 스위트 (621개, 91%+ 커버리지)
+├── tests/             # 테스트 스위트 (650개, 94%+ 커버리지)
 │   ├── core/          # 코어 모듈 테스트
 │   ├── services/      # 서비스 계층 단위 테스트
 │   └── integration/   # E2E 통합 테스트
@@ -252,6 +253,16 @@ saju/
 MIT License
 
 ## 변경 사항
+
+### v1.2.0 (SPEC-PROMPT-001)
+
+- **프롬프트 빌더 전면 개편** (`app/services/prompt_builder.py`)
+  - ContentLoader 연동: 일간, 격국, 용신, 희신 콘텐츠 자동 주입
+  - 핵심 판단 요약 섹션: 신강약, 오행 균형, 핵심 십신 분석
+  - 질문 우선순위 시스템: 카테고리별 키워드 분류 (직업, 연애, 재물, 건강)
+  - 개선된 프롬프트 구조: 명리학 콘텐츠 + 핵심 판단 요약 + 사용자 질문 섹션
+- LLM 해석 품질 향상: 구조화된 콘텐츠와 판단 요약을 통한 전문적인 해석 제공
+- 테스트 650개 (+29개), 커버리지 94%
 
 ### v1.1.0 (SPEC-CONTENT-002)
 

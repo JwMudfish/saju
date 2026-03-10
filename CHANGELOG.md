@@ -7,6 +7,83 @@
 
 ---
 
+## [1.2.0] - 2026-03-10
+
+### Added (SPEC-PROMPT-001: 사주 프롬프트 시스템 개선)
+
+#### 백엔드
+
+- `app/services/prompt_builder.py` — 프롬프트 빌더 전면 개편
+  - `build_interpretation_prompt()`: ContentLoader 통합, 핵심 판단 요약, 질문 우선순위 처리
+  - `_build_myeongli_content_section()`: 명리학 콘텐츠 섹션 구축 (일간, 격국, 용신, 희신)
+  - `_build_core_summary_section()`: 핵심 판단 요약 섹션 구축 (신강약, 오행 균형, 핵심 십신)
+  - `_build_user_question_section()`: 사용자 질문 섹션 구축 및 카테고리 분류
+  - `_extract_question_category()`: 질문 키워드 기반 자동 카테고리 분류 (직업, 연애, 재물, 건강)
+  - `_QUESTION_CATEGORY_KEYWORDS`: 질문 카테고리별 키워드 매핑 딕셔너리
+  - `_yuksin_to_gyouk()`: 육신을 격국명으로 변환하는 헬퍼 함수
+
+#### 기능 개선
+
+**ContentLoader 연동 (Priority 1)**:
+- 일간 콘텐츠: `loader.get_ilgan_content(day_gan)` — 일간 성격, 특징 설명
+- 격국 콘텐츠: `loader.get_gyouk_content(gyouk_name)` — 격국 해설, 베스트/최악 조합
+- 용신 콘텐츠: `loader.get_yongsin_content(dang_ryeong)` — 용신 재능, 진로 설명
+- 희신 콘텐츠: `loader.get_hisin_content(dang_ryeong)` — 희신 상세 설명
+- 콘텐츠 미존재 시 graceful handling (null 처리 및 프롬프트 생성 계속)
+
+**핵심 판단 요약 (Priority 2)**:
+- 일간 강약 분석: 오행 세기 기반 판단
+- 오행 균형 분석: 가장 강한/약한 오행 식별, 20% 이상 차이 시 불균형 표시
+- 핵심 십신 식별: 사주에서 가장 많이 나타나는 육신 도출
+- 용신/희신 정보: 핵심 판단 요약에 포함
+
+**질문 우선순위 (Priority 3)**:
+- 질문 키워드 분석: 카테고리별 키워드 매칭
+- 질문 카테고리 분류: 직업, 연애, 재물, 건강 자동 분류
+- 카테고리별 가이드: 관련 항목 상세 해석, 나머지 간략 언급
+- 질문 없음 시: 모든 항목 균형 해석
+
+#### 프롬프트 구조 개선
+
+기존 5섹션 구조 유지 + 3개 신규 섹션 추가:
+```
+[사주 사기둥]
+[대운 흐름]
+[오행 균형 분석]
+[신살 분석]
+[육신 분석]
+[명리학 콘텐츠] ← 신규
+  - 일간 해설 (성격, 특징)
+  - 격국 해설 (제목, 설명)
+  - 용신 해설 (제목, 특징, 재능)
+  - 희신 해설 (제목, 설명)
+[핵심 판단 요약] ← 신규
+  - 일간 정보
+  - 오행 분석 (가장 강한/약한 오행)
+  - 핵심 십신
+  - 용신/희신 정보
+[사용자 질문] ← 신규
+  - 질문 내용
+  - 질문 카테고리 (자동 분류)
+  - 해석 가이드 (카테고리별 우선순위)
+```
+
+#### 테스트
+
+- `tests/services/test_prompt_builder.py` — 프롬프트 빌더 통합 테스트 8개 추가
+  - `TestBuildInterpretationPrompt`: ContentLoader 연동 4개
+  - `TestCoreSummarySection`: 핵심 판단 요약 2개
+  - `TestQuestionCategoryExtraction`: 질문 카테고리 분류 2개
+- 650개 테스트 (+29개), 커버리지 94%
+
+#### 호환성
+
+- Streamlit UI 수정 불필요 (백엔드 `prompt_builder.py` 수정만으로 자동 반영)
+- API 엔드포인트 변경 없음 (`/api/v1/saju/interpret` 기존 그대로)
+- 하위 호환성 완전 유지
+
+---
+
 ## [1.1.0] - 2026-03-09
 
 ### Added (SPEC-CONTENT-002: 신격(Shgj) 코어 로직 포팅 및 컨텐츠 연동)
