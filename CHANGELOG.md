@@ -9,6 +9,71 @@
 
 ## [Unreleased]
 
+### Added (SPEC-UI-005: Streamlit UI 확장 - 탭 구조 및 관계 분석)
+
+#### 프론트엔드
+
+- `streamlit_app.py` — 탭 구조 확장 (6탭 → 8탭)
+  - **Tab 6 "나의 정체성" 확장**: 신격 지표 6개 + 영격령 3개 + 관련 콘텐츠 7개
+  - **Tab 7 "관계 분석" (신규)**: 합충, 화월, 연애, 베프 4가지 분석
+  - **Tab 8 "경운 안내" (신규)**: 노소 유형, 경운 질문
+  - Import 12개 함수 추가 (`get_hapchung_content`, `get_ilgan_hw_content`, `get_ilgan_love_content`, `get_bestfriend_content`, `get_old_young_content`, `get_light_question_category_content`, `get_light_question_content`, `get_sangsin_compliment_content`, `get_gusin_gisin_content`, `get_jisok_content`, `get_joonghwa_content`, `get_hwakjang_content`)
+  - 신규 함수 2개 (`render_tab_relationship`, `render_tab_light_question`)
+  - 367 라인 추가
+
+#### UI 구조 개선
+
+**Tab 6 "나의 정체성" 섹션 확장**:
+- 신격 지표: 상신(Sangsin), 구신(Gusin), 상화(Sanghwa), 설화(Sulhwa)
+- 영격령 세부지표: 지속(Jisok), 중화(Junghwa), 확장(Hwakjang)
+- 보완 콘텐츠: 상신 보완, 구신 기신
+- 영격령 설명: 지속/중화/확장별 상세 설명
+
+**Tab 7 "관계 분석" 신규 기능**:
+- 합충 관계: 4가지 유형 분석 (no, samhapYes, banghapYes, onlyChung)
+- 일간 화월: 일간별 화월 콘텐츠 표시
+- 일간 연애: 일간별 연애 성향 콘텐츠 표시
+- 베프 유형: 최고의 친구 유형 분석 콘텐츠 표시
+
+**Tab 8 "경운 안내" 신규 기능**:
+- 노소 유형: 일간+월지 조합에 따른 노소 유형 분석
+- 경운 질문: 행, 목, 직, 금 카테고리별 경운 질문 다이너리 표시
+
+#### 생성된 문서
+
+- `.moai/specs/SPEC-UI-005/IMPLEMENTATION_SUMMARY.md` — 구현 완료 요약
+- `.moai/specs/SPEC-UI-005/UI_STRUCTURE.md` — UI 구조 상세 문서
+- `.moai/specs/SPEC-UI-005/CONTENT_FUNCTIONS_REFERENCE.md` — 콘텐츠 함수 레퍼런스
+- `.moai/specs/SPEC-UI-005/TESTING_CHECKLIST.md` — 테스트 체크리스트
+
+#### 구현 완료 현황
+
+**SPEC-CONTENT-002 Phase 2 (3개 필드)**:
+- sanghwa, sulhwa (상화/설화)
+- shgj_gilhung_content (신격 길흉)
+
+**SPEC-CONTENT-003 Phase 1 (6개 필드)**:
+- jisok, joonghwa, hwakjang (영격령 지표)
+- sangsin_compliment_content, gusin_gisin_content (보완)
+- jisok_content, joonghwa_content, hwakjang_content (영격령 설명)
+
+**SPEC-CONTENT-003 Phase 2 (4개 필드)**:
+- hapchung_content, ilgan_hw_content, ilgan_love_content, bestfriend_content
+
+**SPEC-CONTENT-003 Phase 3 (2개 필드)**:
+- old_young_content, light_question_content
+
+**총 21개 필드 = 100% 완료**
+
+#### 기술적 개선
+
+- UI 확장성: 8탭 구조로 추가 기능 확장 용이
+- 콘텐츠 로드: ContentLoader 연동으로 O(1) 성능 유지
+- 조건부 렌더링: 데이터 존재 시에만 UI 표시
+- 일관성 있는 스타일: 기존 UI 패턴 준수
+
+---
+
 ### Added (SPEC-CONTENT-003 Phase 1~3: 남은 콘텐츠 파일 연동 완료)
 
 #### 백엔드
