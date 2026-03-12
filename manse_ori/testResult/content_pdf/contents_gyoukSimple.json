@@ -1,0 +1,44 @@
+{
+  "contentsList": [
+    {
+      "title": "gunlok",
+      "contents":"사회적 가치를 보호하는 지식교육형."
+    },
+    {
+      "title": "yangin",
+      "contents":"외부 위협에 맞서는 정의방어형"
+    },
+    {
+      "title": "sangGuan",
+      "contents":"틀을 깨는 변칙의 혁신주의형"
+    },
+    {
+      "title": "siksin",
+      "contents":"자유를 꿈꾸는 능력개발형"
+    },
+    {
+      "title": "jungIn",
+      "contents":"아는만큼 보이는 이론습득형"
+    },
+    {
+      "title": "pyeonIn",
+      "contents":"다양성을 존중하는 이상주의형"
+    },
+    {
+      "title": "jungJe",
+      "contents":"안정적인 기반 위의 기회추구형"
+    },
+    {
+      "title": "pyeonje",
+      "contents":"새로운 도전을 좋아하는 성장도모형"
+    },
+    {
+      "title": "jungGuan",
+      "contents":"명분을 중시하는 원리원칙형"
+    },
+    {
+      "title": "pyeonGuan",
+      "subtitle": "강단있는 판단력의 질서정리형"
+    }
+  ]
+}

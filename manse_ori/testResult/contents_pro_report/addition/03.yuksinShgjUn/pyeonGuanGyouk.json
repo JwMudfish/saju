@@ -1,0 +1,55 @@
+{
+    "contentsList": [
+      {
+        "title": "pyeonGuan_siksangUn_sangsinYes",
+        "subtitle": "편관격 식상운 상신O",
+        "contents": "신분 만드는 시기・자격 획득・자리를 보장받다・정체성 확립・이름 값이 올라감・매출 상승"
+      },      
+      {
+        "title": "pyeonGuan_siksangUn_sangsinNo",
+        "subtitle": "편관격 식상운 상신X",
+        "contents": "신분 만드는 시기・자격 획득・자리를 보장받다・정체성 확립・향후 10년간 먹거리가 생김・실력이 들통날 수 있음・과도한 중압감으로 숨막힘"
+      },
+      {
+        "title": "pyeonGuan_jeSungUn_sangsinYes_gunWak",
+        "subtitle": "편관격 재성운 상신O 근약",
+        "contents": "끈끈한 우정 다지기・나만의 영역 확보・조직 / 모임 / 동아리 / 세력 만들기・기반 다지기・위탁・소속이 생김・보호자 찾기・공인받아 활동하는 시기・공적 활동을 시작함・확장하기"
+      },   
+      {
+        "title": "pyeonGuan_jeSungUn_sangsinYes_gunWang",
+        "subtitle": "편관격 재성운 상신O 근왕",
+        "contents": "끈끈한 우정 다지기・나만의 영역 확보・조직 / 모임 / 동아리 / 세력 만들기・기반 다지기・위탁・소속이 생김・보호자 찾기・사조직 형성・눈 가리고 아웅・일단 GO"
+      },         
+      {
+        "title": "pyeonGuan_jeSungUn_sangsinNo_gunWak",
+        "subtitle": "편관격 재성운 상신X 근약",
+        "contents": "끈끈한 우정 다지기・나만의 영역 확보・조직 / 모임 / 동아리 / 세력 만들기・기반 다지기・주도권 갖기・조직 결성・독립 욕구 충만・공인받아 활동하는 시기・공적 활동을 시작함・확장하기"
+      },   
+      {
+        "title": "pyeonGuan_jeSungUn_sangsinNo_gunWang",
+        "subtitle": "편관격 재성운 상신X 근왕",
+        "contents": "끈끈한 우정 다지기・나만의 영역 확보・조직 / 모임 / 동아리 / 세력 만들기・기반 다지기・주도권 갖기・조직 결성・독립 욕구 충만・사조직 형성・눈 가리고 아웅・일단 GO"
+      },
+      {
+        "title": "pyeonGuan_guanSungUn_sangsinYes",
+        "subtitle": "편관격 관살운 상신O",
+        "contents": "다 할 수 있다는 마음으로 깝죽거려 보기・일단 해보려고 하는 자세・사명감 도취・임무 완수・거부권 없음・진보적인 활동・리스크 제거・안티 사랑하기"
+      },      
+      {
+        "title": "pyeonGuan_guanSungUn_sangsinNo",
+        "subtitle": "편관격 관살운 상신X",
+        "contents": "다 할 수 있다는 마음으로 깝죽거려 보기・일단 해보려고 하는 자세・사명감 도취・임무 완수・거부권 없음・도망가거나 회피해야 하는 운・해결할 수 있는 사람을 부를 것"
+      },     
+      {
+        "title": "pyeonGuan_inSungUn",
+        "subtitle": "편관격 인성운",
+        "contents": "문제 해결・결과가 나오고 검증이 완료되어야 하는 시기・부족함을 채우기 위한 묘수가 필요"
+      },
+      {
+        "title": "pyeonGuan_bigubUn",
+        "subtitle": "편관격 비겁운",
+        "contents": "입지가 견고해짐・조직이 탄탄해지는 시기・조직이나 단체의 이름 값 상승・성과에 대한 인정・금전적 보상"
+      }
+    ]
+  }
+  

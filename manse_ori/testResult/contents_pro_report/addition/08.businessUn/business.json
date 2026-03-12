@@ -1,0 +1,36 @@
+{
+    "contentsList": [
+     
+      {
+        "title": "jeSungYesGuanSungNo",
+        "subtitle": "재성O・ 관성X",
+        "contents": "여기저기서 일거리를 만들어 내는 시기・사업 수완이 있는 편・반드시 사업을 해야 하는 것은 아님・운에서 오는 기회를 잘 잡자"
+      },
+      {
+        "title": "jeSungNoGuanSungYes",
+        "subtitle": "관성O・ 재성X",
+        "contents": "함께 뭔가를 시작해볼 수 있는 운・일거리를 만드는 것은 다소 어려운 편・주어진 일을 잘 처리할 수 있음・혼자보다 같이 하는 것이 유리함"
+      },
+      {
+        "title": "jeSungNoGuanSungNo",
+        "subtitle": "관성X・ 재성X",
+        "contents": "사업해보기 좋은 운・1인 사업가 또는 소규모 업체 추천・여럿이서 함께 하는 것보다 홀로・어차피 인생은 혼자"
+      },
+      {
+        "title": "jeSungYesGuanSungYesGunWangBiGubSangsinUn",
+        "subtitle": "관성O・ 재성O 근왕+비겁+상신운",
+        "contents": "사업을 해야 할 이유가 생기는 시기・나만의 길을 찾아가야 함"
+      },
+      {
+        "title": "jeSungYesGuanSungYesGunWangSangsinUn",
+        "subtitle": "관성O・ 재성O 근왕+상신운",
+        "contents": "나만의 것을 만들고 싶어서 사업・시행착오가 있음"
+      },
+      {
+        "title": "jeSungYesGuanSungYesGunWakGunWangUn",
+        "subtitle": "관성O・ 재성O 근약+근왕운",
+        "contents": "독립하면 더 많이 벌 수 있을 것 같아서 시도・기반을 먼저 다져놓지 않으면 실패 가능성 높음・"
+      }
+    ]
+  }
+  

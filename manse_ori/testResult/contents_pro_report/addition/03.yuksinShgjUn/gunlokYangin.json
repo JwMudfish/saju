@@ -1,0 +1,49 @@
+{
+  "contentsList": [
+    {
+      "title": "gunlokYangin_guanSungUn_bigubYes",
+      "subtitle": "건록격 양인격 관성운 비겁O",
+      "contents": "공적으로 움직이기・관직에 등용되는 신분 상승・급여 증가・적극적인 태도・수단 방법을 가리지 않음"
+    },
+    {
+      "title": "gunlokYangin_guanSungUn_bigubNo",
+      "subtitle": "건록격 양인격 관성운 비겁X",
+      "contents": "공적으로 움직이기・관직에 등용되는 신분 상승・급여 증가・튀는 행동 금지・소극적인 태도・경쟁을 싫어함"
+    },
+    {
+      "title": "gunlokYangin_bigubUn_bigubYes",
+      "subtitle": "건록격 양인격 비겁운 비겁O",
+      "contents": "개인 활동 추구・돈 앞에 체면은 내려놓게 되는 시기・구설이 생길 수 있다・돈 버는 운"
+    },
+    {
+      "title": "gunlokYangin_bigubUn_bigubNo",
+      "subtitle": "건록격 양인격 비겁운 비겁X",
+      "contents": "개인 활동 추구・돈 앞에 체면은 내려놓게 되는 시기・이대로는 안될 것 같은 마음・돈 욕심이 강해짐"
+    },
+    {
+      "title": "gunlokYangin_inSungUn_gunWang",
+      "subtitle": "건록격 양인격 인성운 근왕",
+      "contents": "대우받게 되는 운・결과에 따라 위신이 살아남・강한 인정욕구・좀 더 대우가 좋은 곳으로 이동"
+    },
+    {
+      "title": "gunlokYangin_inSungUn_gunWak",
+      "subtitle": "건록격 양인격 인성운 근약",
+      "contents": "대우받게 되는 운・결과에 따라 위신이 살아남・주어진 대로 욕심내지 않음・눈치껏 활동하기"
+    },
+    {
+      "title": "gunlokYangin_jeSungUn_bigubYes",
+      "subtitle": "건록격 양인격 재성운 비겁O",
+      "contents": "실력을 갖추는 운・일단 해보는 것이 중요・기회를 잡을 수 있음"
+    },
+    {
+      "title": "gunlokYangin_jeSungUn_bigubNo",
+      "subtitle": "건록격 양인격 재성운 비겁X",
+      "contents": "실력을 갖추는 운・필요한 것만 하려고 함・기회를 놓칠 수 있으니 주의"
+    },
+    {
+      "title": "gunlokYangin_siksangUn",
+      "subtitle": "건록격 양인격 식상운",
+      "contents": "적응하는 시기・안정화・자리 잡는 운"
+    }
+  ]
+}

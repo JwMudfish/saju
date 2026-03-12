@@ -1,0 +1,95 @@
+{
+    "contentsList": [
+      {
+        "title": "sengHwaUn_sengHwaYes_sengHwaZehwaYes",
+        "subtitle": "생화운 생화O, 생화제화O",
+        "contents": "기회 포착・돈 버는 시기・주변 경계심은 접어두기・사람이 재산・경쟁 참여・투자 가능・더 큰 수익으로"
+      },
+      {
+        "title": "sengHwaUn_sengHwaYes_sengHwaZehwaNo",
+        "subtitle": "생화운 생화O, 생화제화X",
+        "contents": "기회 포착・돈 버는 시기・주변 경계심은 접어두기・사람이 재산・너무 무리하게 되면 실수가 생김・적당한 만족으로"
+      },
+      {
+        "title": "sengHwaUn_sengHwanNo_sengHwaZehwaYes",
+        "subtitle": "생화운 생화X, 생화제화O",
+        "contents": "큰 사건은 없는 시기・기회를 놓치는 경우가 발생・기회라고 생각했지만 아닐 수 있음・경쟁 참여・불안한 마음・피곤함"
+      },
+      {
+        "title": "sengHwaUn_sengHwanNo_sengHwaZehwaNo",
+        "subtitle": "생화운 생화X, 생화제화X",
+        "contents": "큰 사건은 없는 시기・기회를 놓치는 경우가 발생・기회라고 생각했지만 아닐 수 있음・그냥 흘려보내도 좋음・무소식이 희소식"
+      },
+      {
+        "title": "sengHwaZehwaUn_sengHwaYes_sengHwaZehwaYes",
+        "subtitle": "생화제화운 생화O, 생화제화O",
+        "contents": "승리・우위를 점함・수익 극대화・점유율 상승・시장 지배・조직 내 평가 높이기"
+      },
+      {
+        "title": "sengHwaZehwaUn_sengHwaYes_sengHwaZehwaNo",
+        "subtitle": "생화제화운 생화O, 생화제화X",
+        "contents": "승리・우위를 점함・수익 극대화・마음 같지 않은 날들・무리하지 말 것・천천히 해보기"
+      },
+      {
+        "title": "sengHwaZehwaUn_sengHwanNo_sengHwaZehwaYes",
+        "subtitle": "생화제화운 생화X, 생화제화O",
+        "contents": "원치 않은 경쟁・친구가 적으로 느껴짐・심한 스트레스 주의・쓸데없는 경쟁일 수 있음・피로 누적・괜히 자꾸 노출되는 상황・"
+      },
+      {
+        "title": "sengHwaZehwaUn_sengHwanNo_sengHwaZehwaNo",
+        "subtitle": "생화제화운 생화X, 생화제화X",
+        "contents": "원치 않은 경쟁・친구가 적으로 느껴짐・심한 스트레스 주의・그냥 흘려보내도 좋음・무소식이 희소식"
+      },
+      {
+        "title": "sulHwaUn_sengHwaYes_sengHwaZehwaYes",
+        "subtitle": "설화운 생화O, 생화제화O",
+        "contents": "노력의 결실・보다 향상된 결과 도출・신분 상승・적극적으로 임하기・돈을 버는 운은 아님・일단 성과가 나오면 따라오는 수익"
+      },
+      {
+        "title": "sulHwaUn_sengHwaYes_sengHwaZehwaNo",
+        "subtitle": "설화운 생화O, 생화제화X",
+        "contents": "노력의 결실・보다 향상된 결과 도출・신분 상승・적극적으로 임하기・순서에 맞게 나아가기・조급하지 말 것・갑작스러운 성공은 없다"
+      },
+      {
+        "title": "sulHwaUn_sengHwanNo_sengHwaZehwaYes",
+        "subtitle": "설화운 생화X, 생화제화O",
+        "contents": "시기 질투를 받는 시기・부족함이 드러남・맨땅에 헤딩・생존 가능・버티면 된다"
+      },
+      {
+        "title": "sulHwaUn_sengHwanNo_sengHwaZehwaNo",
+        "subtitle": "설화운 생화X, 생화제화X",
+        "contents": "시기 질투를 받는 시기・부족함이 드러남・맨땅에 헤딩・그냥 흘려보내도 좋음・무소식이 희소식"
+      },
+      {
+        "title": "sulHwaZehwaUn_sengHwaYes_sengHwaZehwaYes",
+        "subtitle": "설화제화운 생화O, 생화제화O",
+        "contents": "좋은 평가가 생기는 시기・우수성 입증・적극적으로 어필하기・검증받아야 함・상대의 공격이 나에게 행운・투명하게 드러낼 것"
+      },
+      {
+        "title": "sulHwaZehwaUn_sengHwaYes_sengHwaZehwaNo",
+        "subtitle": "설화제화운 생화O, 생화제화X",
+        "contents": "좋은 평가가 생기는 시기・우수성 입증・적극적으로 어필하기・분수에 맞는 만족・욕심은 패가망신"
+      },
+      {
+        "title": "sulHwaZehwaUn_sengHwanNo_sengHwaZehwaYes",
+        "subtitle": "설화제화운 생화X, 생화제화O",
+        "contents": "구설수 생기는 시기・잡음 발생・잘못이 드러날 수 있으니 주의・과오를 인정해야 한다・그냥 흘려보내도 좋음・무소식이 희소식"
+      },
+      {
+        "title": "sulHwaZehwaUn_sengHwanNo_sengHwaZehwaNo",
+        "subtitle": "설화제화운 생화X, 생화제화X",
+        "contents": "설화제화운인데 생화는 없고 생화제화도 없어요"
+      },
+      {
+        "title": "gyoukUn_sulHwaYes",
+        "subtitle": "격운 설화O",
+        "contents": "성과가 나오는 시기・계획의 시작・좋은 결과・만족하지 말고 미래를 준비・이제 시작일 뿐"
+      },
+      {
+        "title": "gyoukUn_sulHwaNo",
+        "subtitle": "격운 설화X",
+        "contents": "진로 고민의 시기・결정하지 않기・섣부른 판단 금지・운이 끝날 때쯤 선택"
+      }
+    ]
+  }
+  

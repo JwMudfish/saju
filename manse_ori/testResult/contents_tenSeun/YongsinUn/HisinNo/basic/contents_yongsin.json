@@ -1,0 +1,16 @@
+{
+  "contentsList": [
+    {
+      "title": "basic",
+      "contents": "기초용신의 글입니다"
+    },
+    {
+      "title": "yongsin_SuHwa",
+      "contents": "-수/화 용신 : 아이디어나 계획은 있음. 이것을 어떻게 할지 막연함. 도와줄 곳 찾기"
+    },
+    {
+      "title": "yongsin_MokGum",
+      "contents": "-목/금 용신 : 결과 대비 차별성이 없어 고민. 차별성을 만들 방법 찾기 여정 시작"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+    "contentsList": [
+      {
+        "title": "heuisinYesBasic",
+        "subtitle": "희신O, 기초분야",
+        "contents": "행동하게 되는 시기・기존에 하던 것이 탄력 받음・Do it・안정화・일이 잘 풀림・명확해짐・기초 튼튼"
+      },
+      {
+        "title": "heuisinYesUses",
+        "subtitle": "희신O, 활용분야",
+        "contents": "행동하게 되는 시기・기존에 하던 것이 탄력 받음・Do it・사용 가능한 인프라가 생김"
+      },
+      {
+        "title": "heuisinNoBasic",
+        "subtitle": "희신X, 기초분야",
+        "contents": "행동하게 되는 시기・갑자기 뭔가 잘 되는 것 같음・잘하고 있다는 착각・영원한 것은 없다・당황스러움・불만・생각과 다른 현실・그래도 해야만 하는 일"
+      },
+      {
+        "title": "heuisinNoUses",
+        "subtitle": "희신X, 활용분야",
+        "contents": "행동하게 되는 시기・갑자기 뭔가 잘 되는 것 같음・잘하고 있다는 착각・영원한 것은 없다・당황스러움・불만・일단 할 수밖에 없는 환경・도망갈 수 없음"
+      }
+    ]
+  }
+  
