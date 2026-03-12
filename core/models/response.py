@@ -111,3 +111,16 @@ class IdentityResponse(BaseModel):
     sangsin_content: dict[str, Any] | None = None     # 상신 설명 콘텐츠 (sangsin content)
     gusin_content: dict[str, Any] | None = None       # 구신 설명 콘텐츠 (gusin content)
     shgj_gilhung_content: dict[str, Any] | None = None  # 신격 길흉 콘텐츠 (shgj gilhung content)
+    sangsin_compliment_content: dict[str, Any] | None = None  # 상신 보완 콘텐츠 (sangsin compliment content)
+    gusin_gisin_content: dict[str, Any] | None = None  # 구신 기신 콘텐츠 (gusin gisin content)
+    jisok_content: dict[str, Any] | None = None  # 지속 설명 콘텐츠 (jisok content)
+    joonghwa_content: dict[str, Any] | None = None  # 중화 설명 콘텐츠 (joonghwa content)
+    hwakjang_content: dict[str, Any] | None = None  # 확장 설명 콘텐츠 (hwakjang content)
+    # Phase 2: 합충 관계, 일간 화월, 일간 연애, 베프 유형 콘텐츠
+    hapchung_content: dict[str, Any] | None = None  # 합충 관계 콘텐츠 (hapchung content)
+    ilgan_hw_content: dict[str, Any] | None = None  # 일간 화월 콘텐츠 (ilgan hwawol content)
+    ilgan_love_content: dict[str, Any] | None = None  # 일간 연애 콘텐츠 (ilgan love content)
+    bestfriend_content: dict[str, Any] | None = None  # 베프 유형 콘텐츠 (bestfriend content)
+    # Phase 3: 노소 유형, 경운 질문 콘텐츠
+    old_young_content: dict[str, Any] | None = None  # 노소 유형 콘텐츠 (old young content)
+    light_question_content: dict[str, Any] | None = None  # 경운 질문 콘텐츠 (light question content)

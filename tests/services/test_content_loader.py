@@ -559,3 +559,508 @@ class TestModuleLevelShgjFunctions:
         assert get_sangsin_content("unknown") is None
         assert get_gusin_content("unknown") is None
         assert get_shgj_gilhung_content("unknown", is_gil=True) is None
+
+
+class TestContentLoaderSangsinCompliment:
+    """상신 보완(Sangsin Compliment) 콘텐츠 로딩 테스트."""
+
+    def test_get_sangsin_compliment_content_all_types(self) -> None:
+        """상신 보완 콘텐츠를 반환한다 (실제 JSON title 형식: sangsin_compliment1)."""
+        loader = ContentLoader()
+        # 실제 JSON 파일의 title 형식에 맞춰 테스트
+        for sangsin in ["sangsin_compliment1", "sangsin_compliment2", "sangsin_compliment3", "sangsin_compliment4"]:
+            result = loader.get_sangsin_compliment_content(sangsin)
+            assert result is not None, f"Missing sangsin compliment content for {sangsin}"
+            assert "contents" in result, f"sangsin compliment content for {sangsin} must have contents"
+
+    def test_get_sangsin_compliment_content_unknown_returns_none(self) -> None:
+        """알 수 없는 상신은 None을 반환한다."""
+        loader = ContentLoader()
+        assert loader.get_sangsin_compliment_content("unknown") is None
+
+    def test_get_sangsin_compliment_content_returns_dict(self) -> None:
+        """반환값은 dict 타입이다."""
+        loader = ContentLoader()
+        result = loader.get_sangsin_compliment_content("sangsin_compliment1")
+        assert isinstance(result, dict)
+
+    def test_get_sangsin_compliment_content_has_required_fields(self) -> None:
+        """상신 보완 콘텐츠에 필수 필드들이 존재한다."""
+        loader = ContentLoader()
+        result = loader.get_sangsin_compliment_content("sangsin_compliment1")
+        assert result is not None
+        assert result.get("title") == "sangsin_compliment1"
+        assert "subtitle" in result
+        assert "contents" in result
+
+
+class TestContentLoaderGusinGisin:
+    """구신 기신(Gusin Gisin) 콘텐츠 로딩 테스트."""
+
+    def test_get_gusin_gisin_content_all_types(self) -> None:
+        """4개 구신 유형 모두 기신 콘텐츠를 반환한다 (실제 JSON title 형식: gusin_gisin_1)."""
+        loader = ContentLoader()
+        for gusin in ["gusin_gisin_1", "gusin_gisin_2", "gusin_gisin_3", "gusin_gisin_4"]:
+            result = loader.get_gusin_gisin_content(gusin)
+            assert result is not None, f"Missing gusin gisin content for {gusin}"
+            assert "contents" in result, f"gusin gisin content for {gusin} must have contents"
+
+    def test_get_gusin_gisin_content_unknown_returns_none(self) -> None:
+        """알 수 없는 구신은 None을 반환한다."""
+        loader = ContentLoader()
+        assert loader.get_gusin_gisin_content("unknown") is None
+
+    def test_get_gusin_gisin_content_returns_dict(self) -> None:
+        """반환값은 dict 타입이다."""
+        loader = ContentLoader()
+        result = loader.get_gusin_gisin_content("gusin_gisin_1")
+        assert isinstance(result, dict)
+
+    def test_get_gusin_gisin_content_has_required_fields(self) -> None:
+        """구신 기신 콘텐츠에 필수 필드들이 존재한다."""
+        loader = ContentLoader()
+        result = loader.get_gusin_gisin_content("gusin_gisin_1")
+        assert result is not None
+        assert result.get("title") == "gusin_gisin_1"
+        assert "subtitle" in result
+        assert "contents" in result
+
+
+class TestContentLoaderJisok:
+    """지속(Jisok) 설명 콘텐츠 로딩 테스트."""
+
+    def test_get_jisok_content_all_types(self) -> None:
+        """4개 지속 유형 모두 설명 콘텐츠를 반환한다."""
+        loader = ContentLoader()
+        for jisok in ["jisok_1", "jisok_2", "jisok_3", "jisok_4"]:
+            result = loader.get_jisok_content(jisok)
+            assert result is not None, f"Missing jisok content for {jisok}"
+            assert "contents" in result, f"jisok content for {jisok} must have contents"
+
+    def test_get_jisok_content_unknown_returns_none(self) -> None:
+        """알 수 없는 지속은 None을 반환한다."""
+        loader = ContentLoader()
+        assert loader.get_jisok_content("unknown") is None
+
+    def test_get_jisok_content_returns_dict(self) -> None:
+        """반환값은 dict 타입이다."""
+        loader = ContentLoader()
+        result = loader.get_jisok_content("jisok_1")
+        assert isinstance(result, dict)
+
+    def test_get_jisok_content_has_required_fields(self) -> None:
+        """지속 설명 콘텐츠에 필수 필드들이 존재한다."""
+        loader = ContentLoader()
+        result = loader.get_jisok_content("jisok_1")
+        assert result is not None
+        assert result.get("title") == "jisok_1"
+        assert "subtitle" in result
+        assert "contents" in result
+
+
+class TestContentLoaderJoonghwa:
+    """중화(Joonghwa) 설명 콘텐츠 로딩 테스트."""
+
+    def test_get_joonghwa_content_all_types(self) -> None:
+        """4개 중화 유형 모두 설명 콘텐츠를 반환한다."""
+        loader = ContentLoader()
+        for joonghwa in ["joonghwa_1", "joonghwa_2", "joonghwa_3", "joonghwa_4"]:
+            result = loader.get_joonghwa_content(joonghwa)
+            assert result is not None, f"Missing joonghwa content for {joonghwa}"
+            assert "contents" in result, f"joonghwa content for {joonghwa} must have contents"
+
+    def test_get_joonghwa_content_unknown_returns_none(self) -> None:
+        """알 수 없는 중화는 None을 반환한다."""
+        loader = ContentLoader()
+        assert loader.get_joonghwa_content("unknown") is None
+
+    def test_get_joonghwa_content_returns_dict(self) -> None:
+        """반환값은 dict 타입이다."""
+        loader = ContentLoader()
+        result = loader.get_joonghwa_content("joonghwa_1")
+        assert isinstance(result, dict)
+
+    def test_get_joonghwa_content_has_required_fields(self) -> None:
+        """중화 설명 콘텐츠에 필수 필드들이 존재한다."""
+        loader = ContentLoader()
+        result = loader.get_joonghwa_content("joonghwa_1")
+        assert result is not None
+        assert result.get("title") == "joonghwa_1"
+        assert "subtitle" in result
+        assert "contents" in result
+
+
+class TestContentLoaderHwakjang:
+    """확장(Hwakjang) 설명 콘텐츠 로딩 테스트."""
+
+    def test_get_hwakjang_content_all_types(self) -> None:
+        """4개 확장 유형 모두 설명 콘텐츠를 반환한다."""
+        loader = ContentLoader()
+        for hwakjang in ["hwakjang_1", "hwakjang_2", "hwakjang_3", "hwakjang_4"]:
+            result = loader.get_hwakjang_content(hwakjang)
+            assert result is not None, f"Missing hwakjang content for {hwakjang}"
+            assert "contents" in result, f"hwakjang content for {hwakjang} must have contents"
+
+    def test_get_hwakjang_content_unknown_returns_none(self) -> None:
+        """알 수 없는 확장은 None을 반환한다."""
+        loader = ContentLoader()
+        assert loader.get_hwakjang_content("unknown") is None
+
+    def test_get_hwakjang_content_returns_dict(self) -> None:
+        """반환값은 dict 타입이다."""
+        loader = ContentLoader()
+        result = loader.get_hwakjang_content("hwakjang_1")
+        assert isinstance(result, dict)
+
+    def test_get_hwakjang_content_has_required_fields(self) -> None:
+        """확장 설명 콘텐츠에 필수 필드들이 존재한다."""
+        loader = ContentLoader()
+        result = loader.get_hwakjang_content("hwakjang_1")
+        assert result is not None
+        assert result.get("title") == "hwakjang_1"
+        assert "subtitle" in result
+        assert "contents" in result
+
+
+class TestModuleLevelPhase1Functions:
+    """모듈 레벨 Phase 1 편의 함수 테스트."""
+
+    def test_module_get_sangsin_compliment_content(self) -> None:
+        """모듈 레벨 get_sangsin_compliment_content 함수가 동작한다."""
+        from app.services.content_loader import get_sangsin_compliment_content
+
+        result = get_sangsin_compliment_content("sangsin_compliment1")
+        assert result is not None
+
+    def test_module_get_gusin_gisin_content(self) -> None:
+        """모듈 레벨 get_gusin_gisin_content 함수가 동작한다."""
+        from app.services.content_loader import get_gusin_gisin_content
+
+        result = get_gusin_gisin_content("gusin_gisin_1")
+        assert result is not None
+
+    def test_module_get_jisok_content(self) -> None:
+        """모듈 레벨 get_jisok_content 함수가 동작한다."""
+        from app.services.content_loader import get_jisok_content
+
+        result = get_jisok_content("jisok_1")
+        assert result is not None
+
+    def test_module_get_joonghwa_content(self) -> None:
+        """모듈 레벨 get_joonghwa_content 함수가 동작한다."""
+        from app.services.content_loader import get_joonghwa_content
+
+        result = get_joonghwa_content("joonghwa_1")
+        assert result is not None
+
+    def test_module_get_hwakjang_content(self) -> None:
+        """모듈 레벨 get_hwakjang_content 함수가 동작한다."""
+        from app.services.content_loader import get_hwakjang_content
+
+        result = get_hwakjang_content("hwakjang_1")
+        assert result is not None
+
+    def test_module_phase1_unknown_returns_none(self) -> None:
+        """모듈 레벨 함수에서 알 수 없는 키는 None을 반환한다."""
+        from app.services.content_loader import (
+            get_gusin_gisin_content,
+            get_hwakjang_content,
+            get_jisok_content,
+            get_joonghwa_content,
+            get_sangsin_compliment_content,
+        )
+
+        assert get_sangsin_compliment_content("unknown") is None
+        assert get_gusin_gisin_content("unknown") is None
+        assert get_jisok_content("unknown") is None
+        assert get_joonghwa_content("unknown") is None
+        assert get_hwakjang_content("unknown") is None
+
+
+class TestContentLoaderPhase2:
+    """Phase 2: 합충 관계, 일간 화월, 일간 연애, 베프 유형 콘텐츠 로딩 테스트."""
+
+    def test_get_hapchung_content_onlychung_returns_content(self) -> None:
+        """합충 관계 onlyChung 콘텐츠를 반환한다."""
+        loader = ContentLoader()
+        result = loader.get_hapchung_content("onlyChung")
+        assert result is not None
+        assert "contentsList" in result
+
+    def test_get_hapchung_content_samhap_yes_returns_content(self) -> None:
+        """합충 관계 samhapYes 콘텐츠를 반환한다."""
+        loader = ContentLoader()
+        result = loader.get_hapchung_content("samhapYes")
+        assert result is not None
+        assert "contentsList" in result
+
+    def test_get_hapchung_content_banghap_yes_returns_content(self) -> None:
+        """합충 관계 banghapYes 콘텐츠를 반환한다."""
+        loader = ContentLoader()
+        result = loader.get_hapchung_content("banghapYes")
+        assert result is not None
+        assert "contentsList" in result
+
+    def test_get_hapchung_content_no_returns_content(self) -> None:
+        """합충 관계 no 콘텐츠를 반환한다."""
+        loader = ContentLoader()
+        result = loader.get_hapchung_content("no")
+        assert result is not None
+        assert "contentsList" in result
+
+    def test_get_hapchung_content_unknown_returns_none(self) -> None:
+        """알 수 없는 합충 유형은 None을 반환한다."""
+        loader = ContentLoader()
+        assert loader.get_hapchung_content("unknown") is None
+
+    def test_get_ilgan_hw_content_returns_content(self) -> None:
+        """일간 화월 콘텐츠를 반환한다."""
+        loader = ContentLoader()
+        result = loader.get_ilgan_hw_content("갑", "자")
+        assert result is not None
+        assert "contentsList" in result
+
+    def test_get_ilgan_hw_content_all_gan_combinations(self) -> None:
+        """모든 일간 조합에 대해 콘텐츠를 반환한다."""
+        loader = ContentLoader()
+        for ilgan in ["갑", "을", "병", "정", "무", "기", "경", "신", "임", "계"]:
+            result = loader.get_ilgan_hw_content(ilgan, "자")
+            assert result is not None, f"Missing ilgan_hw content for {ilgan}"
+
+    def test_get_ilgan_love_content_returns_content(self) -> None:
+        """일간 연애 콘텐츠를 반환한다."""
+        loader = ContentLoader()
+        result = loader.get_ilgan_love_content("갑")
+        assert result is not None
+        assert "contentsList" in result
+
+    def test_get_ilgan_love_content_all_gan(self) -> None:
+        """모든 일간에 대해 연애 콘텐츠를 반환한다."""
+        loader = ContentLoader()
+        for ilgan in ["갑", "을", "병", "정", "무", "기", "경", "신", "임", "계"]:
+            result = loader.get_ilgan_love_content(ilgan)
+            assert result is not None, f"Missing ilgan_love content for {ilgan}"
+
+    def test_get_bestfriend_content_returns_content(self) -> None:
+        """베프 유형 콘텐츠를 반환한다."""
+        loader = ContentLoader()
+        result = loader.get_bestfriend_content("비견")
+        assert result is not None
+        assert "contentsList" in result
+
+    def test_get_bestfriend_content_all_yuksin(self) -> None:
+        """모든 육신에 대해 베프 콘텐츠를 반환한다."""
+        loader = ContentLoader()
+        for yuksin in ["비견", "겁재", "편인", "정인", "편재", "정재", "식신", "상관", "정관", "편관"]:
+            result = loader.get_bestfriend_content(yuksin)
+            assert result is not None, f"Missing bestfriend content for {yuksin}"
+
+    def test_module_get_hapchung_content(self) -> None:
+        """모듈 레벨 get_hapchung_content 함수가 동작한다."""
+        from app.services.content_loader import get_hapchung_content
+
+        result = get_hapchung_content("onlyChung")
+        assert result is not None
+
+    def test_module_get_ilgan_hw_content(self) -> None:
+        """모듈 레벨 get_ilgan_hw_content 함수가 동작한다."""
+        from app.services.content_loader import get_ilgan_hw_content
+
+        result = get_ilgan_hw_content("갑", "자")
+        assert result is not None
+
+    def test_module_get_ilgan_love_content(self) -> None:
+        """모듈 레벨 get_ilgan_love_content 함수가 동작한다."""
+        from app.services.content_loader import get_ilgan_love_content
+
+        result = get_ilgan_love_content("갑")
+        assert result is not None
+
+    def test_module_get_bestfriend_content(self) -> None:
+        """모듈 레벨 get_bestfriend_content 함수가 동작한다."""
+        from app.services.content_loader import get_bestfriend_content
+
+        result = get_bestfriend_content("비견")
+        assert result is not None
+
+    def test_module_phase2_unknown_returns_none(self) -> None:
+        """모듈 레벨 함수에서 알 수 없는 키는 None을 반환한다."""
+        from app.services.content_loader import (
+            get_bestfriend_content,
+            get_hapchung_content,
+            get_ilgan_hw_content,
+            get_ilgan_love_content,
+        )
+
+        assert get_hapchung_content("unknown") is None
+        assert get_ilgan_hw_content("unknown", "자") is not None  # 파일 전체 로드
+        assert get_ilgan_love_content("unknown") is not None  # 파일 전체 로드
+        assert get_bestfriend_content("unknown") is not None  # 파일 전체 로드
+
+
+class TestContentLoaderPhase3:
+    """Phase 3: 노소 유형, 경운 질문 콘텐츠 로딩 테스트."""
+
+    def test_get_old_young_content_all_combinations(self) -> None:
+        """모든 일간(10)과 월지(12) 조합에 대해 콘텐츠를 반환한다."""
+        loader = ContentLoader()
+        ilgan_list = ["갑", "을", "병", "정", "무", "기", "경", "신", "임", "계"]
+        ji_list = ["자", "축", "인", "묘", "진", "사", "오", "미", "신", "유", "술", "해"]
+        
+        count = 0
+        for ilgan in ilgan_list:
+            for ji in ji_list:
+                result = loader.get_old_young_content(ilgan, ji)
+                assert result is not None, f"Missing old_young content for {ilgan}+{ji}"
+                assert "title" in result, f"old_young content for {ilgan}+{ji} must have title"
+                assert "contents" in result, f"old_young content for {ilgan}+{ji} must have contents"
+                count += 1
+        
+        # 총 120개 조합 확인
+        assert count == 120
+
+    def test_get_old_young_content_first_combination(self) -> None:
+        """갑+자 조합은 old_young_1을 반환한다."""
+        loader = ContentLoader()
+        result = loader.get_old_young_content("갑", "자")
+        assert result is not None
+        assert result.get("title") == "old_young_1"
+
+    def test_get_old_young_content_last_combination(self) -> None:
+        """계+해 조합은 old_young_120을 반환한다."""
+        loader = ContentLoader()
+        result = loader.get_old_young_content("계", "해")
+        assert result is not None
+        # 마지막 항목이 존재하는지 확인 (인덱스 계산 검증)
+        assert "title" in result
+        assert result["title"].startswith("old_young_")
+
+    def test_get_old_young_content_unknown_ilgan_returns_none(self) -> None:
+        """알 수 없는 일간은 None을 반환한다."""
+        loader = ContentLoader()
+        result = loader.get_old_young_content("unknown", "자")
+        assert result is None
+
+    def test_get_old_young_content_unknown_ji_returns_none(self) -> None:
+        """알 수 없는 월지는 None을 반환한다."""
+        loader = ContentLoader()
+        result = loader.get_old_young_content("갑", "unknown")
+        assert result is None
+
+    def test_get_old_young_content_returns_dict(self) -> None:
+        """반환값은 dict 타입이다."""
+        loader = ContentLoader()
+        result = loader.get_old_young_content("갑", "자")
+        assert isinstance(result, dict)
+
+    def test_get_light_question_content_q1_yongsin(self) -> None:
+        """Q1 용신 기반 질문 콘텐츠를 반환한다."""
+        loader = ContentLoader()
+        result = loader.get_light_question_content("q1", "yongsin")
+        assert result is not None
+        assert "contentsList" in result
+
+    def test_get_light_question_content_q1_gyouk(self) -> None:
+        """Q1 격국 기반 질문 콘텐츠를 반환한다."""
+        loader = ContentLoader()
+        result = loader.get_light_question_content("q1", "gyouk")
+        assert result is not None
+        assert "contentsList" in result
+
+    def test_get_light_question_content_q1_invalid_type_returns_none(self) -> None:
+        """Q1에서 잘못된 타입은 None을 반환한다."""
+        loader = ContentLoader()
+        result = loader.get_light_question_content("q1", "invalid")
+        assert result is None
+
+    def test_get_light_question_content_q7_jungje_sengyes_sulno(self) -> None:
+        """Q7 정재 상화Yes/설화No 조합 콘텐츠를 반환한다."""
+        loader = ContentLoader()
+        result = loader.get_light_question_content("q7", "jungJe", "sengYes", "sulNo")
+        assert result is not None
+        assert "contentsList" in result
+
+    def test_get_light_question_content_q7_pyeonje_sengno_sulyes(self) -> None:
+        """Q7 편재 상화No/설화Yes 조합 콘텐츠를 반환한다."""
+        loader = ContentLoader()
+        result = loader.get_light_question_content("q7", "pyeonje", "sengNo", "sulYes")
+        assert result is not None
+        assert "contentsList" in result
+
+    def test_get_light_question_content_q7_missing_params_returns_none(self) -> None:
+        """Q7에서 필수 파라미터가 없으면 None을 반환한다."""
+        loader = ContentLoader()
+        # gyouk_name 누락
+        assert loader.get_light_question_content("q7", None, "sengYes", "sulNo") is None
+        # sanghwa 누락
+        assert loader.get_light_question_content("q7", "jungJe", None, "sulNo") is None
+        # sulhwa 누락
+        assert loader.get_light_question_content("q7", "jungJe", "sengYes", None) is None
+
+    def test_get_light_question_content_q8_siksin_sengyes_sulno(self) -> None:
+        """Q8 식신 상화Yes/설화No 조합 콘텐츠를 반환한다."""
+        loader = ContentLoader()
+        result = loader.get_light_question_content("q8", "siksin", "sengYes", "sulNo")
+        assert result is not None
+        assert "contentsList" in result
+
+    def test_get_light_question_content_q8_jungin_sangseng(self) -> None:
+        """Q8 정인 상세지표(상성) 콘텐츠를 반환한다."""
+        loader = ContentLoader()
+        result = loader.get_light_question_content("q8", "jungIn", "sangSeng", "sangSeng")
+        assert result is not None
+        assert "contentsList" in result
+
+    def test_get_light_question_content_q8_invalid_gyouk_returns_none(self) -> None:
+        """Q8에서 잘못된 격국명은 None을 반환한다."""
+        loader = ContentLoader()
+        result = loader.get_light_question_content("q8", "invalid", "sengYes", "sulNo")
+        assert result is None
+
+    def test_get_light_question_content_q8_missing_params_returns_none(self) -> None:
+        """Q8에서 필수 파라미터가 없으면 None을 반환한다."""
+        loader = ContentLoader()
+        # gyouk_name 누락
+        assert loader.get_light_question_content("q8", None, "sengYes", "sulNo") is None
+        # sanghwa, sulhwa 누락 (상성이 아닌 경우)
+        assert loader.get_light_question_content("q8", "siksin", None, None) is None
+
+    def test_get_light_question_content_invalid_question_id_returns_none(self) -> None:
+        """잘못된 질문 ID는 None을 반환한다."""
+        loader = ContentLoader()
+        result = loader.get_light_question_content("q99", "yongsin")
+        assert result is None
+
+    def test_get_light_question_content_returns_dict(self) -> None:
+        """반환값은 dict 타입이다."""
+        loader = ContentLoader()
+        result = loader.get_light_question_content("q1", "yongsin")
+        assert isinstance(result, dict)
+
+
+class TestModuleLevelPhase3Functions:
+    """모듈 레벨 Phase 3 편의 함수 테스트."""
+
+    def test_module_get_old_young_content(self) -> None:
+        """모듈 레벨 get_old_young_content 함수가 동작한다."""
+        from app.services.content_loader import get_old_young_content
+
+        result = get_old_young_content("갑", "자")
+        assert result is not None
+
+    def test_module_get_light_question_content(self) -> None:
+        """모듈 레벨 get_light_question_content 함수가 동작한다."""
+        from app.services.content_loader import get_light_question_content
+
+        result = get_light_question_content("q1", "yongsin")
+        assert result is not None
+
+    def test_module_phase3_unknown_returns_none(self) -> None:
+        """모듈 레벨 함수에서 알 수 없는 키는 None을 반환한다."""
+        from app.services.content_loader import (
+            get_light_question_content,
+            get_old_young_content,
+        )
+
+        assert get_old_young_content("unknown", "자") is None
+        assert get_light_question_content("q99", "yongsin") is None

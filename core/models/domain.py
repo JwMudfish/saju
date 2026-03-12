@@ -54,6 +54,9 @@ class ShgjResult(BaseModel):
     gukgubun: str | None = None  # 국국분 (길격/흉격)
     sanghwa: str | None = None  # 상화 관계
     sulhwa: str | None = None  # 설화 관계
+    jisok: str | None = None  # 지속
+    joonghwa: str | None = None  # 중화
+    hwakjang: str | None = None  # 확장
 
 
 class OHangRatio(BaseModel):

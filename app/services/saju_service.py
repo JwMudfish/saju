@@ -338,3 +338,30 @@ class SajuService:
         except Exception:
             # 신격 계산 실패 시 메인 계산 보호
             return None
+
+    def _determine_hapchung_type(self, hapchung: list[HapchungRelation]) -> str:
+        """합충 관계 목록에서 콘텐츠 유형을 결정한다.
+
+        우선순위:
+        1. samhapYes - 삼합이 있을 때
+        2. banghapYes - 방합이 있을 때 (삼합 없음)
+        3. onlyChung - 충만 있을 때 (삼합, 방합 없음)
+        4. no - 합충이 없을 때
+
+        Args:
+            hapchung: 합충 관계 목록
+
+        Returns:
+            합충 콘텐츠 유형 ('samhapYes', 'banghapYes', 'onlyChung', 'no')
+        """
+        has_samhap = any(item.relation_type == "삼합" for item in hapchung)
+        has_banghap = any(item.relation_type == "방합" for item in hapchung)
+        has_chung = any(item.relation_type == "충" for item in hapchung)
+
+        if has_samhap:
+            return "samhapYes"
+        if has_banghap:
+            return "banghapYes"
+        if has_chung:
+            return "onlyChung"
+        return "no"
