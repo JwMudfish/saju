@@ -171,7 +171,7 @@ class TestCalcShgj:
         assert result.gusin is None
 
     def test_sanghwa_and_sulhwa_none_in_mvp(self) -> None:
-        """MVP에서는 상화/설화 항상 None 반환."""
+        """상화/설화 계산: 나를 생하는/극하는 천간이 사주팔자/육신에 존재해야 한다."""
         # Arrange
         pillars = FourPillars(
             year_pillar=GanJi(gan="갑", ji="진"),
@@ -181,9 +181,9 @@ class TestCalcShgj:
         )
         gyouk_name = "정관격"
         yuksin_list = [
-            YuksinItem(target="갑", yuksin="비견"),
+            YuksinItem(target="임", yuksin="정재"),  # 수(Water) - 목(갑)을 생함
         ]
-        dang_ryeong = "갑"
+        dang_ryeong = "갑"  # 목(木)
 
         # Act
         result = calc_shgj(
@@ -193,9 +193,107 @@ class TestCalcShgj:
             dang_ryeong=dang_ryeong,
         )
 
-        # Assert - MVP: 상화/설화 미구현
-        assert result.sanghwa is None
+        # Assert - 상화: 목을 생하는 수(임)가 존재
+        assert result.sanghwa == "임"
+        # 설화: 목을 극하는 금이 없으므로 None
         assert result.sulhwa is None
+
+    def test_sanghwa_finds_stem_that_generates_yongsin(self) -> None:
+        """상화: 용신을 생하는 천간 중 사주팔자/육신에 존재하는 것."""
+        # Arrange
+        pillars = FourPillars(
+            year_pillar=GanJi(gan="임", ji="진"),  # 수(Water) - 목을 생함
+            month_pillar=GanJi(gan="을", ji="묘"),
+            day_pillar=GanJi(gan="병", ji="오"),
+            hour_pillar=GanJi(gan="정", ji="미"),
+        )
+        gyouk_name = "정관격"
+        yuksin_list = []
+        dang_ryeong = "갑"  # 목(木)
+
+        # Act
+        result = calc_shgj(
+            pillars=pillars,
+            gyouk_name=gyouk_name,
+            yuksin_list=yuksin_list,
+            dang_ryeong=dang_ryeong,
+        )
+
+        # Assert - 상화: 목을 생하는 수(임)가 pillars에 존재
+        assert result.sanghwa == "임"
+
+    def test_sulhwa_finds_stem_that_restricts_yongsin(self) -> None:
+        """설화: 용신을 극하는 천간 중 사주팔자/육신에 존재하는 것."""
+        # Arrange
+        pillars = FourPillars(
+            year_pillar=GanJi(gan="갑", ji="진"),
+            month_pillar=GanJi(gan="을", ji="묘"),
+            day_pillar=GanJi(gan="경", ji="오"),  # 금(Metal) - 목을 극함
+            hour_pillar=GanJi(gan="정", ji="미"),
+        )
+        gyouk_name = "정관격"
+        yuksin_list = []
+        dang_ryeong = "갑"  # 목(木)
+
+        # Act
+        result = calc_shgj(
+            pillars=pillars,
+            gyouk_name=gyouk_name,
+            yuksin_list=yuksin_list,
+            dang_ryeong=dang_ryeong,
+        )
+
+        # Assert - 설화: 목을 극하는 금(경)가 pillars에 존재
+        assert result.sulhwa == "경"
+
+    def test_sanghwa_returns_none_when_no_generating_stem_exists(self) -> None:
+        """상화: 용신을 생하는 천간이 없으면 None."""
+        # Arrange
+        pillars = FourPillars(
+            year_pillar=GanJi(gan="을", ji="진"),  # 목(목)
+            month_pillar=GanJi(gan="병", ji="묘"),  # 화(화)
+            day_pillar=GanJi(gan="정", ji="오"),    # 화(화)
+            hour_pillar=GanJi(gan="무", ji="미"),   # 토(토)
+        )
+        gyouk_name = "편재격"
+        yuksin_list = []
+        dang_ryeong = "임"  # 수(수) - 수를 생하는 금이 없음
+
+        # Act
+        result = calc_shgj(
+            pillars=pillars,
+            gyouk_name=gyouk_name,
+            yuksin_list=yuksin_list,
+            dang_ryeong=dang_ryeong,
+        )
+
+        # Assert - 상화: 수를 생하는 금(경,신)이 없으므로 None
+        assert result.sanghwa is None
+
+    def test_sulhwa_returns_none_when_no_restricting_stem_exists(self) -> None:
+        """설화: 용신을 극하는 천간이 없으면 None."""
+        # Arrange
+        pillars = FourPillars(
+            year_pillar=GanJi(gan="을", ji="진"),  # 목(목)
+            month_pillar=GanJi(gan="병", ji="묘"),  # 화(화)
+            day_pillar=GanJi(gan="정", ji="오"),    # 화(화)
+            hour_pillar=GanJi(gan="무", ji="미"),   # 토(토)
+        )
+        gyouk_name = "식신격"
+        yuksin_list = []
+        dang_ryeong = "임"  # 수(수) - 수를 극하는 토만 있음
+        # 토(무,기)가 존재하므로 설화는 토를 반환해야 함
+
+        # Act
+        result = calc_shgj(
+            pillars=pillars,
+            gyouk_name=gyouk_name,
+            yuksin_list=yuksin_list,
+            dang_ryeong=dang_ryeong,
+        )
+
+        # Assert - 설화: 수를 극하는 토(무)가 존재
+        assert result.sulhwa == "무"
 
     def test_gukgubun_none_in_mvp(self) -> None:
         """MVP에서는 국국분 항상 None 반환."""

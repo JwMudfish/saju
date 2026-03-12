@@ -66,6 +66,25 @@ _HEUISIN_TABLE: dict[str, str] = {
     "계": "갑",
 }
 
+# 영격령 매핑 테이블 - ryeongWord.js 기반
+# 중화(junghwa): 당령의 중화 기신
+_JUNGHWA_MAP: dict[str, str] = {
+    "갑": "기", "을": "무", "병": "무", "정": "기",
+    "경": "기", "신": "무", "임": "무", "계": "기",
+}
+
+# 지속(jisok): 당령의 지속성 기신
+_JISOK_MAP: dict[str, str] = {
+    "갑": "신", "을": "계", "병": "계", "정": "을",
+    "경": "을", "신": "정", "임": "정", "계": "신",
+}
+
+# 확장(hwakjang): 당령의 확장성 기신
+_HWAKJANG_MAP: dict[str, str] = {
+    "갑": "병", "을": "경", "병": "경", "정": "임",
+    "경": "임", "신": "갑", "임": "갑", "계": "병",
+}
+
 # 중기(junggi) 캐시: (year, month) -> datetime
 _JUNGGI_CACHE: dict[tuple[int, int], datetime] | None = None
 
@@ -187,18 +206,65 @@ def calc_yongshin(
         year: 월주에 사용된 연도
 
     Returns:
-        YongshinResult(dang_ryeong, heuisin)
+        YongshinResult(dang_ryeong, heuisin, junghwa, jisok, hwakjang)
     """
     before_junggi = is_before_junggi(birth_dt=birth_dt, month=month, year=year)
     dang_ryeong = calc_dang_ryeong(month_ji=month_ji, is_before_junggi=before_junggi)
     heuisin = calc_heuisin(dang_ryeong)
 
+    # 영격령 세부지표 계산
+    junghwa = _calc_junghwa(dang_ryeong)
+    jisok = _calc_jisok(dang_ryeong)
+    hwakjang = _calc_hwakjang(dang_ryeong)
+
     return YongshinResult(
         dang_ryeong=dang_ryeong,
         heuisin=heuisin,
-        # 영격령 세부지표 (MVP: None 반환, 추후 구현)
-        saryeong=None,   # TODO: 사령 계산 로직 구현
-        junghwa=None,    # TODO: 중화 계산 로직 구현
-        jisok=None,      # TODO: 지속 계산 로직 구현
-        hwakjang=None,   # TODO: 확장 계산 로직 구현
+        # 영격령 세부지표
+        saryeong=None,   # 사령: 추후 구현 (로직 미정)
+        junghwa=junghwa, # 중화: 구현 완료
+        jisok=jisok,     # 지속: 구현 완료
+        hwakjang=hwakjang,  # 확장: 구현 완료
     )
+
+
+def _calc_junghwa(dang_ryeong: str) -> str:
+    """중화(junghwa)를 계산합니다.
+
+    Based on manse_ori manseUtil/ryeong/ryeongWord.js junghwaCheck().
+
+    Args:
+        dang_ryeong: 당령 천간 문자
+
+    Returns:
+        중화 천간 문자
+    """
+    return _JUNGHWA_MAP[dang_ryeong]
+
+
+def _calc_jisok(dang_ryeong: str) -> str:
+    """지속(jisok)을 계산합니다.
+
+    Based on manse_ori manseUtil/ryeong/ryeongWord.js jisokCheck().
+
+    Args:
+        dang_ryeong: 당령 천간 문자
+
+    Returns:
+        지속 천간 문자
+    """
+    return _JISOK_MAP[dang_ryeong]
+
+
+def _calc_hwakjang(dang_ryeong: str) -> str:
+    """확장(hwakjang)을 계산합니다.
+
+    Based on manse_ori manseUtil/ryeong/ryeongWord.js hwakjangCheck().
+
+    Args:
+        dang_ryeong: 당령 천간 문자
+
+    Returns:
+        확장 천간 문자
+    """
+    return _HWAKJANG_MAP[dang_ryeong]

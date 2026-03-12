@@ -59,13 +59,13 @@ def calc_shgj(
         ShgjResult: 신격 분석 결과
         - sangsin: 용신을 돕는 천간 (상신)
         - gusin: 용신을 극하는 천간 (구신)
-        - MVP: sanghwa, sulhwa, gukgubun은 None 반환
+        - sanghwa: 용신을 생하는 천간 중 사주팔자/육신에 존재하는 것
+        - sulhwa: 용신을 극하는 천간 중 사주팔자/육신에 존재하는 것
+        - gukgubun: 국국분 (추후 구현)
     """
-    # MVP: 상신/구신 계산만 구현
-
     # 1. 용신(dang_ryeong)의 오행 확인
     if dang_ryeong not in GAN_OHANG:
-        return ShgjResult(sangsin=None, gusin=None)
+        return ShgjResult(sangsin=None, gusin=None, sanghwa=None, sulhwa=None)
 
     yongsin_ohang = GAN_OHANG[dang_ryeong]
 
@@ -73,7 +73,7 @@ def calc_shgj(
     all_stems = _collect_all_stems(yuksin_list, pillars, dang_ryeong)
 
     if not all_stems:
-        return ShgjResult(sangsin=None, gusin=None)
+        return ShgjResult(sangsin=None, gusin=None, sanghwa=None, sulhwa=None)
 
     # 3. 상신 계산 (용신을 생하는 천간)
     sangsin = _find_sangsin(yongsin_ohang, all_stems)
@@ -81,12 +81,18 @@ def calc_shgj(
     # 4. 구신 계산 (용신을 극하는 천간)
     gusin = _find_gusin(yongsin_ohang, all_stems)
 
+    # 5. 상화/설화 계산
+    # 상화: 용신을 생하는 천간 중, 사주팔자/육신에 존재하는 천간
+    # 설화: 용신을 극하는 천간 중, 사주팔자/육신에 존재하는 천간
+    sanghwa = _find_sanghwa(yongsin_ohang, all_stems)
+    sulhwa = _find_sulhwa(yongsin_ohang, all_stems)
+
     return ShgjResult(
         sangsin=sangsin,
         gusin=gusin,
-        gukgubun=None,  # MVP: 미구현
-        sanghwa=None,   # MVP: 미구현
-        sulhwa=None,    # MVP: 미구현
+        gukgubun=None,  # 추후 구현
+        sanghwa=sanghwa,
+        sulhwa=sulhwa,
     )
 
 
@@ -171,6 +177,82 @@ def _find_gusin(yongsin_ohang: str, all_stems: list[str]) -> str | None:
     # 해당 오행을 가진 천간 찾기
     for stem in all_stems:
         if stem in GAN_OHANG and GAN_OHANG[stem] == gusin_ohang:
+            return stem
+
+    return None
+
+
+def _find_sanghwa(yongsin_ohang: str, all_stems: list[str]) -> str | None:
+    """상화(용신을 생하는 천간 중 사주팔자/육신에 존재하는 것)를 찾습니다.
+
+    Based on manse_ori gungShgj/gil.js sanghwa().
+
+    상화는 용신을 생하는 천간(나를 생하는 것) 중,
+    사주팔자 또는 육신에 실제로 존재하는 천간입니다.
+
+    Args:
+        yongsin_ohang: 용신의 오행 (목, 화, 토, 금, 수)
+        all_stems: 사주팔자/육신의 천간 리스트
+
+    Returns:
+        상화 천간 또는 None
+    """
+    # 오행 상생 관계: 나를 생하는 것
+    # 목(수→목), 화(목→화), 토(화→토), 금(토→금), 수(금→수)
+    _SANGHWA_SOURCE_MAP: dict[str, str] = {
+        "목": "수",  # 수생목
+        "화": "목",  # 목생화
+        "토": "화",  # 화생토
+        "금": "토",  # 토생금
+        "수": "금",  # 금생수
+    }
+
+    if yongsin_ohang not in _SANGHWA_SOURCE_MAP:
+        return None
+
+    source_ohang = _SANGHWA_SOURCE_MAP[yongsin_ohang]
+
+    # 해당 오행을 가진 천간 찾기
+    for stem in all_stems:
+        if stem in GAN_OHANG and GAN_OHANG[stem] == source_ohang:
+            return stem
+
+    return None
+
+
+def _find_sulhwa(yongsin_ohang: str, all_stems: list[str]) -> str | None:
+    """설화(용신을 극하는 천간 중 사주팔자/육신에 존재하는 것)를 찾습니다.
+
+    Based on manse_ori gungShgj/gil.js sulhwa().
+
+    설화는 용신을 극하는 천간(나를 극하는 것) 중,
+    사주팔자 또는 육신에 실제로 존재하는 천간입니다.
+
+    Args:
+        yongsin_ohang: 용신의 오행 (목, 화, 토, 금, 수)
+        all_stems: 사주팔자/육신의 천간 리스트
+
+    Returns:
+        설화 천간 또는 None
+    """
+    # 오행 상극 관계: 나를 극하는 것
+    # 목(금극목), 화(수극화), 토(목극토), 금(화극금), 수(토극수)
+    _SULHWA_SOURCE_MAP: dict[str, str] = {
+        "목": "금",  # 금극목
+        "화": "수",  # 수극화
+        "토": "목",  # 목극토
+        "금": "화",  # 화극금
+        "수": "토",  # 토극수
+    }
+
+    if yongsin_ohang not in _SULHWA_SOURCE_MAP:
+        return None
+
+    source_ohang = _SULHWA_SOURCE_MAP[yongsin_ohang]
+
+    # 해당 오행을 가진 천간 찾기
+    for stem in all_stems:
+        if stem in GAN_OHANG and GAN_OHANG[stem] == source_ohang:
             return stem
 
     return None

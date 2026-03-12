@@ -7,6 +7,58 @@
 
 ---
 
+## [Unreleased]
+
+### Added (SPEC-CONTENT-002 Phase 2: 상화/설화 및 영격령 세부지표)
+
+#### 백엔드
+
+- `core/shgj.py` — 신격(Shgj) 상화/설화 계산 추가
+  - `_find_sanghwa()`: 용신을 생하는 천간 중 사주에 존재하는 것 찾기
+  - `_find_sulhwa()`: 용신을 극하는 천간 중 사주에 존재하는 것 찾기
+  - 오행 상생/상극 매핑 테이블 구현 (수→목→화→토→금→수, 금→목→토→수→화→금)
+  - Based on `manse_ori/gungShgj/gil.js` sanghwa(), sulhwa() 함수
+- `core/yongshin.py` — 영격령 세부지표 계산 추가
+  - `_calc_junghwa()`: 중화 계산 (ryeongWord.js junghwaCheck 기반)
+  - `_calc_jisok()`: 지속 계산 (ryeongWord.js jisokCheck 기반)
+  - `_calc_hwakjang()`: 확장 계산 (ryeongWord.js hwakjangCheck 기반)
+  - 매핑 테이블: 8개 당령 → 중화/지족/확장 기신 매핑
+  - `calc_yongshin()` 함수에서 영격령 세부지표 자동 계산 및 반환
+
+#### 도메인 모델
+
+- `ShgjResult` — 상화/설화 필드 실제 계산 값 반환 (기존 None → 실제 값)
+  - `sanghwa: str | None` — 상화 관계 (용신을 생하는 천간 중 사주에 존재하는 것)
+  - `sulhwa: str | None` — 설화 관계 (용신을 극하는 천간 중 사주에 존재하는 것)
+- `YongshinResult` — 영격령 세부지표 필드 실제 계산 값 반환 (기존 None → 실제 값)
+  - `junghwa: str | None` — 중화(中和): 당령의 중화 기신
+  - `jisok: str | None` — 지속(持續): 당령의 지속성 기신
+  - `hwakjang: str | None` — 확장(擴張): 당령의 확장성 기신
+  - `saryeong: str | None` — 사령(士令): 추후 구현 예정
+
+#### 테스트
+
+- `tests/test_shgj.py` — 상화/설화 테스트 4개 추가
+  - `test_sanghwa_finds_stem_that_generates_yongsin` — 상화 계산 검증
+  - `test_sulhwa_finds_stem_that_restricts_yongsin` — 설화 계산 검증
+  - `test_sanghwa_returns_none_when_no_generating_stem_exists` — 상화 None 반환 검증
+  - `test_sulhwa_returns_none_when_no_restricting_stem_exists` — 설화 None 반환 검증
+- `tests/test_yongshin.py` — 영격령 세부지표 테스트 8개 추가
+  - `test_*_junghwa` — 8개 당령 중화 매핑 검증
+  - `test_*_jisok` — 8개 당령 지속 매핑 검증
+  - `test_*_hwakjang` — 8개 당령 확장 매핑 검증
+  - `test_calc_yongshin_includes_yeong_gyeong_ryeong_details` — 영격령 세부지표 포함 검증
+- 15개 shgj 테스트 통과 (core/shgj.py 90% 커버리지)
+- 41개 yongshin 테스트 통과 (core/yongshin.py 100% 커버리지)
+
+#### 기술적 개선
+
+- 오행 상생/상극 관계 완전성 검증
+- 모든 당령(갑을병정경신임계)에 대한 영격령 매핑 검증
+- JS 포팅 정확성 검증 (ryeongWord.js 기반)
+
+---
+
 ## [1.2.0] - 2026-03-10
 
 ### Added (SPEC-PROMPT-001: 사주 프롬프트 시스템 개선)
