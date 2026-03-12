@@ -10,13 +10,25 @@ import streamlit as st
 
 from app.services.content_loader import (
     YUKSIN_TO_GYOUK,
+    get_bestfriend_content,
     get_gusin_content,
+    get_gusin_gisin_content,
     get_gyouk_content,
+    get_hapchung_content,
     get_hisin_content,
     get_hisin_gisin_content,
     get_ilgan_content,
+    get_ilgan_hw_content,
+    get_ilgan_love_content,
+    get_jisok_content,
+    get_joonghwa_content,
+    get_light_question_content,
+    get_old_young_content,
+    get_sangsin_compliment_content,
     get_sangsin_content,
     get_salary_content,
+    get_shgj_gilhung_content,
+    get_hwakjang_content,
     get_yongsin_content,
 )
 
@@ -504,6 +516,222 @@ def _calc_gyouk_from_result(result: dict[str, Any]) -> str | None:
     return None
 
 
+def render_tab_relationship(result: dict[str, Any]) -> None:
+    """Tab 7: 관계 분석 - 합충, 화월, 연애, 베프 (SPEC-CONTENT-003 Phase 2)."""
+    st.subheader("관계 분석 (Relationship Analysis)")
+
+    # 1. 합충 관계 콘텐츠
+    hapchung_list = result.get("hapchung") or []
+    if hapchung_list:
+        # 가장 중요한 관계 유형 추출 (첫 번째 항목)
+        primary_relation = hapchung_list[0] if hapchung_list else {}
+        relation_type = primary_relation.get("relation_type", "")
+        if relation_type:
+            hapchung_content = get_hapchung_content(relation_type)
+            if hapchung_content:
+                st.markdown("#### 🔗 합충 관계 (合沖關係)")
+                with st.expander(f"합충 관계 해석: {relation_type}", expanded=False):
+                    title = hapchung_content.get("title", "")
+                    if title:
+                        st.markdown(f"**{title}**")
+                    contents_list = hapchung_content.get("contentsList", [])
+                    if contents_list:
+                        for item in contents_list:
+                            subtitle = item.get("subtitle", "")
+                            if subtitle:
+                                st.markdown(f"**{subtitle}**")
+                            contents = item.get("contents", "")
+                            if contents:
+                                st.write(contents.replace("\\n", "\n"))
+    else:
+        st.info("합충 관계 데이터가 없습니다.")
+
+    st.markdown("---")
+
+    # 2. 일간 화월 콘텐츠
+    day_pillar = result.get("day_pillar", {})
+    month_pillar = result.get("month_pillar", {})
+    if isinstance(day_pillar, dict):
+        ilgan = day_pillar.get("gan", "")
+        month_ji = month_pillar.get("ji", "") if isinstance(month_pillar, dict) else ""
+    else:
+        ilgan = getattr(day_pillar, "gan", "")
+        month_ji = getattr(month_pillar, "ji", "") if month_pillar else ""
+
+    if ilgan and month_ji:
+        ilgan_hw = get_ilgan_hw_content(ilgan, month_ji)
+        if ilgan_hw:
+            st.markdown("#### 💕 일간 화월 (日間火月)")
+            with st.expander("일간 화월 관계 해석", expanded=False):
+                title = ilgan_hw.get("title", "")
+                if title:
+                    st.markdown(f"**{title}**")
+                contents_list = ilgan_hw.get("contentsList", [])
+                if contents_list:
+                    for item in contents_list:
+                        subtitle = item.get("subtitle", "")
+                        if subtitle:
+                            st.markdown(f"**{subtitle}**")
+                        contents = item.get("contents", "")
+                        if contents:
+                            st.write(contents.replace("\\n", "\n"))
+    else:
+        st.info("일간 화월 데이터가 없습니다.")
+
+    st.markdown("---")
+
+    # 3. 일간 연애 콘텐츠
+    if ilgan:
+        ilgan_love = get_ilgan_love_content(ilgan)
+        if ilgan_love:
+            st.markdown("#### 💖 일간 연애 (日間戀愛)")
+            with st.expander("일간 연애 스타일 해석", expanded=False):
+                title = ilgan_love.get("title", "")
+                if title:
+                    st.markdown(f"**{title}**")
+                contents_list = ilgan_love.get("contentsList", [])
+                if contents_list:
+                    for item in contents_list:
+                        subtitle = item.get("subtitle", "")
+                        if subtitle:
+                            st.markdown(f"**{subtitle}**")
+                        contents = item.get("contents", "")
+                        if contents:
+                            st.write(contents.replace("\\n", "\n"))
+    else:
+        st.info("일간 연애 데이터가 없습니다.")
+
+    st.markdown("---")
+
+    # 4. 베프 유형 콘텐츠 (십성 기반)
+    yuksin_list = result.get("yuksin_list", [])
+    if yuksin_list:
+        # 월지 십성 찾기
+        month_ji_yuksin = None
+        for item in yuksin_list:
+            if item.get("target") == "월지":
+                month_ji_yuksin = item.get("yuksin")
+                break
+
+        if month_ji_yuksin:
+            bestfriend = get_bestfriend_content(month_ji_yuksin)
+            if bestfriend:
+                st.markdown("#### 👥 베프 유형 (Best Friend)")
+                with st.expander(f"베프 유형: {month_ji_yuksin}", expanded=False):
+                    title = bestfriend.get("title", "")
+                    if title:
+                        st.markdown(f"**{title}**")
+                    contents_list = bestfriend.get("contentsList", [])
+                    if contents_list:
+                        for item in contents_list:
+                            subtitle = item.get("subtitle", "")
+                            if subtitle:
+                                st.markdown(f"**{subtitle}**")
+                            contents = item.get("contents", "")
+                            if contents:
+                                st.write(contents.replace("\\n", "\n"))
+    else:
+        st.info("베프 유형 데이터가 없습니다.")
+
+
+def render_tab_light_question(result: dict[str, Any]) -> None:
+    """Tab 8: 경운 안내 - 노소 유형, 경운 질문 (SPEC-CONTENT-003 Phase 3)."""
+    st.subheader("경운 안내 (Fortune Guidance)")
+
+    # 1. 노소 유형 콘텐츠
+    day_pillar = result.get("day_pillar", {})
+    month_pillar = result.get("month_pillar", {})
+    if isinstance(day_pillar, dict):
+        ilgan = day_pillar.get("gan", "")
+        month_ji = month_pillar.get("ji", "") if isinstance(month_pillar, dict) else ""
+    else:
+        ilgan = getattr(day_pillar, "gan", "")
+        month_ji = getattr(month_pillar, "ji", "") if month_pillar else ""
+
+    if ilgan and month_ji:
+        old_young = get_old_young_content(ilgan, month_ji)
+        if old_young:
+            st.markdown("#### 👴👶 노소 유형 (老少類型)")
+            with st.expander("노소 관계 유형 해석", expanded=False):
+                title = old_young.get("title", "")
+                if title:
+                    st.markdown(f"**{title}**")
+                contents_list = old_young.get("contentsList", [])
+                if contents_list:
+                    for item in contents_list:
+                        subtitle = item.get("subtitle", "")
+                        if subtitle:
+                            st.markdown(f"**{subtitle}**")
+                        contents = item.get("contents", "")
+                        if contents:
+                            st.write(contents.replace("\\n", "\n"))
+    else:
+        st.info("노소 유형 데이터가 없습니다.")
+
+    st.markdown("---")
+
+    # 2. 경운 질문 콘텐츠 (상화/설화 기반)
+    shgj = result.get("shgj")
+    if shgj is not None and not isinstance(shgj, dict):
+        if hasattr(shgj, "model_dump"):
+            shgj = shgj.model_dump()
+        elif hasattr(shgj, "dict"):
+            shgj = shgj.dict()
+
+    if shgj:
+        sanghwa = shgj.get("sanghwa")
+        sulhwa = shgj.get("sulhwa")
+        gyouk_name = _calc_gyouk_from_result(result)
+
+        # 경운 질문 로드 (여러 질문 가능)
+        st.markdown("#### 💡 경운 질문 ( 경運質問)")
+
+        if gyouk_name:
+            # q1: 기본 질문
+            light_q1 = get_light_question_content("q1", gyouk_name, sanghwa, sulhwa)
+            if light_q1:
+                with st.expander("질문 1: 기본 경운 확인", expanded=False):
+                    contents_list = light_q1.get("contentsList", [])
+                    if contents_list:
+                        for item in contents_list:
+                            subtitle = item.get("subtitle", "")
+                            if subtitle:
+                                st.markdown(f"**{subtitle}**")
+                            contents = item.get("contents", "")
+                            if contents:
+                                st.write(contents.replace("\\n", "\n"))
+
+            # q7: 중재 질문
+            light_q7 = get_light_question_content("q7", "jungJe", sanghwa, sulhwa)
+            if light_q7:
+                with st.expander("질문 7: 중재 경운 확인", expanded=False):
+                    contents_list = light_q7.get("contentsList", [])
+                    if contents_list:
+                        for item in contents_list:
+                            subtitle = item.get("subtitle", "")
+                            if subtitle:
+                                st.markdown(f"**{subtitle}**")
+                            contents = item.get("contents", "")
+                            if contents:
+                                st.write(contents.replace("\\n", "\n"))
+
+            # q8: 식신 질문
+            light_q8 = get_light_question_content("q8", "siksin", sanghwa, sulhwa)
+            if light_q8:
+                with st.expander("질문 8: 식신 경운 확인", expanded=False):
+                    contents_list = light_q8.get("contentsList", [])
+                    if contents_list:
+                        for item in contents_list:
+                            subtitle = item.get("subtitle", "")
+                            if subtitle:
+                                st.markdown(f"**{subtitle}**")
+                            contents = item.get("contents", "")
+                            if contents:
+                                st.write(contents.replace("\\n", "\n"))
+    else:
+        st.info("경운 질문 데이터가 없습니다.")
+
+
 def render_tab_identity(result: dict[str, Any]) -> None:
     """Tab 6: 나의 정체성 - 일간 카드 | 격국 카드 | 용신 카드 (3-컬럼)."""
     st.subheader("나의 정체성 분석")
@@ -651,7 +879,7 @@ def render_tab_identity(result: dict[str, Any]) -> None:
             else:
                 st.json(salary_content)
 
-    # 신격(Shgj) 섹션
+    # 신격(Shgj) 섹션 - 확장
     shgj = result.get("shgj")
     if shgj is not None and not isinstance(shgj, dict):
         if hasattr(shgj, "model_dump"):
@@ -661,15 +889,38 @@ def render_tab_identity(result: dict[str, Any]) -> None:
 
     if shgj:
         st.markdown("---")
-        st.subheader("신격 (Shgj)")
+        st.subheader("신격 (Shgj) - 심화 분석")
+
+        # 신격 핵심 지표 (6개)
         col1, col2, col3 = st.columns(3)
         with col1:
             st.metric("상신", shgj.get("sangsin") or "-")
         with col2:
             st.metric("구신", shgj.get("gusin") or "-")
         with col3:
-            # 3번째 컬럼은 예비용 또는 추가 정보용
             st.metric("국국분", shgj.get("gukgubun") or "-")
+
+        # 신격 관계 지표
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            st.metric("상화", shgj.get("sanghwa") or "-")
+        with col2:
+            st.metric("설화", shgj.get("sulhwa") or "-")
+        with col3:
+            st.metric("길흉", shgj.get("gilhung") or "-")
+
+        # 영격령 지표 (3개)
+        st.markdown("#### 영격령 (靈格令)")
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            jisok = shgj.get("jisok")
+            st.metric("지속", jisok or "-")
+        with col2:
+            joonghwa = shgj.get("joonghwa")
+            st.metric("중화", joonghwa or "-")
+        with col3:
+            hwakjang = shgj.get("hwakjang")
+            st.metric("확장", hwakjang or "-")
 
         # 상신 상세 설명
         sangsin = shgj.get("sangsin")
@@ -689,6 +940,24 @@ def render_tab_identity(result: dict[str, Any]) -> None:
                     if contents:
                         st.write(contents.replace("\\n", "\n"))
 
+            # 상신 보완 콘텐츠 (SPEC-CONTENT-003 Phase 1)
+            sangsin_compliment = get_sangsin_compliment_content(sangsin)
+            if sangsin_compliment:
+                st.markdown("##### 🌟 상신 보완 해석")
+                with st.expander("상신 보완 설명 보기", expanded=False):
+                    title = sangsin_compliment.get("title", "")
+                    if title:
+                        st.markdown(f"**{title}**")
+                    contents_list = sangsin_compliment.get("contentsList", [])
+                    if contents_list:
+                        for item in contents_list:
+                            subtitle = item.get("subtitle", "")
+                            if subtitle:
+                                st.markdown(f"**{subtitle}**")
+                            contents = item.get("contents", "")
+                            if contents:
+                                st.write(contents.replace("\\n", "\n"))
+
         # 구신 상세 설명
         gusin = shgj.get("gusin")
         if gusin:
@@ -706,6 +975,94 @@ def render_tab_identity(result: dict[str, Any]) -> None:
                     contents = gusin_content.get("contents", "")
                     if contents:
                         st.write(contents.replace("\\n", "\n"))
+
+            # 구신 기신 콘텐츠 (SPEC-CONTENT-003 Phase 1)
+            gusin_gisin = get_gusin_gisin_content(gusin)
+            if gusin_gisin:
+                st.markdown("##### ⚠️ 구신 기신 해석")
+                with st.expander("구신 기신 설명 보기", expanded=False):
+                    title = gusin_gisin.get("title", "")
+                    if title:
+                        st.markdown(f"**{title}**")
+                    contents_list = gusin_gisin.get("contentsList", [])
+                    if contents_list:
+                        for item in contents_list:
+                            subtitle = item.get("subtitle", "")
+                            if subtitle:
+                                st.markdown(f"**{subtitle}**")
+                            contents = item.get("contents", "")
+                            if contents:
+                                st.write(contents.replace("\\n", "\n"))
+
+        # 영격령 설명 콘텐츠 (SPEC-CONTENT-003 Phase 1)
+        if jisok:
+            jisok_content = get_jisok_content(jisok)
+            if jisok_content:
+                st.markdown("---")
+                st.markdown("##### 📖 지속(持續) 상세 설명")
+                with st.expander("지속 설명 보기", expanded=False):
+                    title = jisok_content.get("title", "")
+                    if title:
+                        st.markdown(f"**{title}**")
+                    subtitle = jisok_content.get("subtitle", "")
+                    if subtitle:
+                        st.caption(subtitle)
+                    contents = jisok_content.get("contents", "")
+                    if contents:
+                        st.write(contents.replace("\\n", "\n"))
+
+        if joonghwa:
+            joonghwa_content = get_joonghwa_content(joonghwa)
+            if joonghwa_content:
+                st.markdown("##### 📖 중화(中和) 상세 설명")
+                with st.expander("중화 설명 보기", expanded=False):
+                    title = joonghwa_content.get("title", "")
+                    if title:
+                        st.markdown(f"**{title}**")
+                    subtitle = joonghwa_content.get("subtitle", "")
+                    if subtitle:
+                        st.caption(subtitle)
+                    contents = joonghwa_content.get("contents", "")
+                    if contents:
+                        st.write(contents.replace("\\n", "\n"))
+
+        if hwakjang:
+            hwakjang_content = get_hwakjang_content(hwakjang)
+            if hwakjang_content:
+                st.markdown("##### 📖 확장(擴張) 상세 설명")
+                with st.expander("확장 설명 보기", expanded=False):
+                    title = hwakjang_content.get("title", "")
+                    if title:
+                        st.markdown(f"**{title}**")
+                    subtitle = hwakjang_content.get("subtitle", "")
+                    if subtitle:
+                        st.caption(subtitle)
+                    contents = hwakjang_content.get("contents", "")
+                    if contents:
+                        st.write(contents.replace("\\n", "\n"))
+
+        # 신격 길흉 콘텐츠 (SPEC-CONTENT-002 Phase 2)
+        gyouk_name = _calc_gyouk_from_result(result)
+        if gyouk_name and shgj:
+            # 길흉 판정 로직 (예시 - 실제 로직은 shgj 결과에 따름)
+            is_gil = shgj.get("gilhung", "").startswith("길") if shgj.get("gilhung") else False
+            shgj_gilhung = get_shgj_gilhung_content(gyouk_name, is_gil)
+            if shgj_gilhung:
+                st.markdown("---")
+                st.markdown("##### 🔮 신격 길흉 해석")
+                with st.expander("신격 길흉 상세 보기", expanded=False):
+                    title = shgj_gilhung.get("title", "")
+                    if title:
+                        st.markdown(f"**{title}**")
+                    contents_list = shgj_gilhung.get("contentsList", [])
+                    if contents_list:
+                        for item in contents_list:
+                            subtitle = item.get("subtitle", "")
+                            if subtitle:
+                                st.markdown(f"**{subtitle}**")
+                            contents = item.get("contents", "")
+                            if contents:
+                                st.write(contents.replace("\\n", "\n"))
 
 
 def render_tab_interpret(result: dict[str, Any]) -> None:
@@ -779,7 +1136,7 @@ def main() -> None:
 
     if st.session_state["saju_result"]:
         result = st.session_state["saju_result"]
-        tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(
+        tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs(
             [
                 "📜 사주 원국",
                 "⭐ 십성 분석",
@@ -787,6 +1144,8 @@ def main() -> None:
                 "📊 세부 지표",
                 "🤖 AI 해석",
                 "🌟 나의 정체성",
+                "👥 관계 분석",
+                "💡 경운 안내",
             ]
         )
         with tab1:
@@ -801,6 +1160,10 @@ def main() -> None:
             render_tab_interpret(result)
         with tab6:
             render_tab_identity(result)
+        with tab7:
+            render_tab_relationship(result)
+        with tab8:
+            render_tab_light_question(result)
     else:
         st.info("👈 왼쪽 사이드바에서 정보를 입력하고 '사주 계산' 버튼을 클릭하세요.")
 
