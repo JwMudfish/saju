@@ -39,20 +39,18 @@ GAN_TO_ILGAN: dict[str, str] = {
 # GAN_TO_ILGAN 역방향 조회: "갑목일간" -> "갑"
 _ILGAN_TO_GAN: dict[str, str] = {v: k for k, v in GAN_TO_ILGAN.items()}
 
-_BASE_DIR = pathlib.Path(__file__).parent.parent.parent
-_ILGAN_PATH = _BASE_DIR / "manse_ori" / "testResult" / "contents_ilgan.json"
-_YONGSIN_PATH = _BASE_DIR / "manse_ori" / "testResult" / "contents_yongsin.json"
-_GYOUK_PATH = _BASE_DIR / "manse_ori" / "testResult" / "contents_gyouk.json"
-_HISIN_BASE = _BASE_DIR / "manse_ori" / "testResult" / "contents_Hisin10"
-_HISIN_GISIN_PATH = (
-    _BASE_DIR / "manse_ori" / "testResult" / "contents_hisin_gisin.json"
-)
-_SALARY_PATH = _BASE_DIR / "manse_ori" / "testResult" / "contents_salary.json"
-_SANGSIN_PATH = _BASE_DIR / "manse_ori" / "testResult" / "contents_sangsin.json"
-_GUSIN_PATH = _BASE_DIR / "manse_ori" / "testResult" / "contents_gusin.json"
-_SHGJ_GILHUNG_BASE = (
-    _BASE_DIR / "manse_ori" / "testResult" / "contents_shgjGilHung"
-)
+_BASE_DIR = pathlib.Path(__file__).resolve().parents[2]
+_RESOURCES_BASE = _BASE_DIR / "resources" / "testResult"
+
+_ILGAN_PATH = _RESOURCES_BASE / "contents_ilgan.json"
+_YONGSIN_PATH = _RESOURCES_BASE / "contents_yongsin.json"
+_GYOUK_PATH = _RESOURCES_BASE / "contents_gyouk.json"
+_HISIN_BASE = _RESOURCES_BASE / "contents_Hisin10"
+_HISIN_GISIN_PATH = _RESOURCES_BASE / "contents_hisin_gisin.json"
+_SALARY_PATH = _RESOURCES_BASE / "contents_salary.json"
+_SANGSIN_PATH = _RESOURCES_BASE / "contents_sangsin.json"
+_GUSIN_PATH = _RESOURCES_BASE / "contents_gusin.json"
+_SHGJ_GILHUNG_BASE = _RESOURCES_BASE / "contents_shgjGilHung"
 
 # 당령 -> Hisin10 디렉토리명 매핑 테이블
 _DANG_RYEONG_TO_HISIN10_DIR: dict[str, str] = {
