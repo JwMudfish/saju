@@ -87,7 +87,7 @@ class TestDeunCalc:
     def test_ac002_1984_male_deun_list(self) -> None:
         """AC-002: 1984-04-15 10:00 남성 대운 10개.
 
-        순행 대운 (manse_ori monthPillarLand.js 기준):
+        순행 대운 (manse monthPillarLand.js 기준):
         월지: 1월=축, 2월=인, 3월=묘, 4월=진, 5월=사, 6월=오, ...
         - 기사 (7세), 경오 (17세), 신미 (27세), 임신 (37세), 계유 (47세)
         - 갑술 (57세), 을해 (67세), 병자 (77세), 정축 (87세), 무인 (97세)
@@ -180,7 +180,7 @@ class TestCalcDeunFull:
     def test_ac002_full_deun_info(self) -> None:
         """AC-002: 전체 대운 정보 계산.
 
-        manse_ori 기준: 기사(7세)가 첫 대운
+        manse 기준: 기사(7세)가 첫 대운
         """
         from core.deun import calc_deun_full
         from core.models.domain import GanJi

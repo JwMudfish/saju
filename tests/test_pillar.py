@@ -86,7 +86,7 @@ class TestDayPillar:
     """일주 계산 테스트."""
 
     def test_1984_04_15_day_pillar(self) -> None:
-        """AC-001: 1984-04-15 일주는 기묘 (manse_ori 확인)."""
+        """AC-001: 1984-04-15 일주는 기묘 (manse 확인)."""
         from core.models.domain import GanJi
         from core.pillar import calc_day_pillar
 
@@ -94,7 +94,7 @@ class TestDayPillar:
         assert result == GanJi(gan="기", ji="묘")
 
     def test_1900_01_02_day_pillar(self) -> None:
-        """1900-01-02 일주는 갑술 (manse_ori 확인)."""
+        """1900-01-02 일주는 갑술 (manse 확인)."""
         from core.models.domain import GanJi
         from core.pillar import calc_day_pillar
 
@@ -136,7 +136,7 @@ class TestHourPillar:
     def test_hour_ji_for_various_times(self) -> None:
         """각 시간대별 지지 검증.
 
-        manse_ori hourPillarLand.js 기준:
+        manse hourPillarLand.js 기준:
         - 자시: 23:30 ~ 01:29 (index 0)
         - 축시: 01:30 ~ 03:29 (index 1)
         - 인시: 03:30 ~ 05:29 (index 2)
@@ -172,7 +172,7 @@ class TestFourPillarsIntegration:
     def test_ac001_basic_four_pillars_1984(self) -> None:
         """AC-001: 1984-04-15 10:00 남성 사주 계산.
 
-        manse_ori 실제 계산 결과:
+        manse 실제 계산 결과:
         - 년주: 갑자 (갑(4=갑)자(4=자))
         - 월주: 무진 (갑기년 4월)
         - 일주: 기묘 (totalNumber 545, sky[5]='기', land[5]='묘')

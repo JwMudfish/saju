@@ -185,7 +185,7 @@ def _find_gusin(yongsin_ohang: str, all_stems: list[str]) -> str | None:
 def _find_sanghwa(yongsin_ohang: str, all_stems: list[str]) -> str | None:
     """상화(용신을 생하는 천간 중 사주팔자/육신에 존재하는 것)를 찾습니다.
 
-    Based on manse_ori gungShgj/gil.js sanghwa().
+    Based on manse gungShgj/gil.js sanghwa().
 
     상화는 용신을 생하는 천간(나를 생하는 것) 중,
     사주팔자 또는 육신에 실제로 존재하는 천간입니다.
@@ -223,7 +223,7 @@ def _find_sanghwa(yongsin_ohang: str, all_stems: list[str]) -> str | None:
 def _find_sulhwa(yongsin_ohang: str, all_stems: list[str]) -> str | None:
     """설화(용신을 극하는 천간 중 사주팔자/육신에 존재하는 것)를 찾습니다.
 
-    Based on manse_ori gungShgj/gil.js sulhwa().
+    Based on manse gungShgj/gil.js sulhwa().
 
     설화는 용신을 극하는 천간(나를 극하는 것) 중,
     사주팔자 또는 육신에 실제로 존재하는 천간입니다.

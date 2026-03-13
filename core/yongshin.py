@@ -1,12 +1,12 @@
 """Yongshin (용신, Dominant Stem) calculation module.
 
-In manse_ori, 'yongsin' corresponds to 'dang_ryeong' (당령), which is the
+In manse, 'yongsin' corresponds to 'dang_ryeong' (당령), which is the
 dominant heavenly stem derived from the month branch (월지) based on whether
 the birth time falls before or after the mid-solar-term (중기, junggi).
 
 The mid-solar-term (중기) data uses gubun=2 entries from julgi.json.
 
-Logic based on manse_ori manse/ryeong/ryeong.js smallJunggi() / bigJunggi().
+Logic based on manse manse/ryeong/ryeong.js smallJunggi() / bigJunggi().
 """
 
 from __future__ import annotations
@@ -20,7 +20,7 @@ from core.models.domain import YongshinResult
 _JULGI_PATH = pathlib.Path(__file__).parent.parent / "data" / "julgi.json"
 
 # 당령 테이블 - smallJunggi (중기 이전)
-# Based on manse_ori manse/ryeong/ryeong.js smallJunggi()
+# Based on manse manse/ryeong/ryeong.js smallJunggi()
 _SMALL_JUNGGI_TABLE: dict[str, str] = {
     "인": "갑",
     "묘": "갑",
@@ -37,7 +37,7 @@ _SMALL_JUNGGI_TABLE: dict[str, str] = {
 }
 
 # 당령 테이블 - bigJunggi (중기 이후)
-# Based on manse_ori manse/ryeong/ryeong.js bigJunggi()
+# Based on manse manse/ryeong/ryeong.js bigJunggi()
 _BIG_JUNGGI_TABLE: dict[str, str] = {
     "인": "갑",
     "묘": "을",
@@ -54,7 +54,7 @@ _BIG_JUNGGI_TABLE: dict[str, str] = {
 }
 
 # 희신 테이블 - 당령 기준 길신 천간
-# Based on manse_ori manseUtil/ryeong/ryeongWord.js hisinCheck()
+# Based on manse manseUtil/ryeong/ryeongWord.js hisinCheck()
 _HEUISIN_TABLE: dict[str, str] = {
     "갑": "계",
     "을": "병",
@@ -135,7 +135,7 @@ def get_junggi_dt(year: int, month: int) -> datetime | None:
 def is_before_junggi(birth_dt: datetime, month: int, year: int) -> bool:
     """출생 시각이 중기(junggi) 이전인지 여부를 반환합니다.
 
-    manse_ori ryeong.ryeong() 로직:
+    manse ryeong.ryeong() 로직:
         if (myBirth.diff(moment(useRealJulib.junggi), 'minutes') <= 0) {
             result = smallJunggi();  // before junggi
         } else {
@@ -154,7 +154,7 @@ def is_before_junggi(birth_dt: datetime, month: int, year: int) -> bool:
     if junggi_dt is None:
         # Fallback: treat as before junggi if data unavailable
         return True
-    # manse_ori: diff <= 0 means birth <= junggi (before or at junggi)
+    # manse: diff <= 0 means birth <= junggi (before or at junggi)
     diff_minutes = (birth_dt - junggi_dt).total_seconds() / 60
     return diff_minutes <= 0
 
@@ -162,7 +162,7 @@ def is_before_junggi(birth_dt: datetime, month: int, year: int) -> bool:
 def calc_dang_ryeong(month_ji: str, is_before_junggi: bool) -> str:
     """월지와 중기 이전/이후 여부로 당령(dang_ryeong/yongsin)을 계산합니다.
 
-    Based on manse_ori manse/ryeong/ryeong.js smallJunggi() / bigJunggi().
+    Based on manse manse/ryeong/ryeong.js smallJunggi() / bigJunggi().
 
     Args:
         month_ji: 월지 문자 (인/묘/진/사/오/미/신/유/술/해/자/축)
@@ -180,7 +180,7 @@ def calc_dang_ryeong(month_ji: str, is_before_junggi: bool) -> str:
 def calc_heuisin(dang_ryeong: str) -> str:
     """당령으로부터 희신(길신)을 계산합니다.
 
-    Based on manse_ori manseUtil/ryeong/ryeongWord.js hisinCheck().
+    Based on manse manseUtil/ryeong/ryeongWord.js hisinCheck().
 
     Args:
         dang_ryeong: 당령 천간 문자 (갑/을/병/정/경/신/임/계)
@@ -231,7 +231,7 @@ def calc_yongshin(
 def _calc_junghwa(dang_ryeong: str) -> str:
     """중화(junghwa)를 계산합니다.
 
-    Based on manse_ori manseUtil/ryeong/ryeongWord.js junghwaCheck().
+    Based on manse manseUtil/ryeong/ryeongWord.js junghwaCheck().
 
     Args:
         dang_ryeong: 당령 천간 문자
@@ -245,7 +245,7 @@ def _calc_junghwa(dang_ryeong: str) -> str:
 def _calc_jisok(dang_ryeong: str) -> str:
     """지속(jisok)을 계산합니다.
 
-    Based on manse_ori manseUtil/ryeong/ryeongWord.js jisokCheck().
+    Based on manse manseUtil/ryeong/ryeongWord.js jisokCheck().
 
     Args:
         dang_ryeong: 당령 천간 문자
@@ -259,7 +259,7 @@ def _calc_jisok(dang_ryeong: str) -> str:
 def _calc_hwakjang(dang_ryeong: str) -> str:
     """확장(hwakjang)을 계산합니다.
 
-    Based on manse_ori manseUtil/ryeong/ryeongWord.js hwakjangCheck().
+    Based on manse manseUtil/ryeong/ryeongWord.js hwakjangCheck().
 
     Args:
         dang_ryeong: 당령 천간 문자

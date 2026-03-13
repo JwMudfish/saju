@@ -151,7 +151,7 @@ class TestBanghap:
         assert is_banghap("인", "묘") is True
         assert is_banghap("묘", "진") is True
         assert is_banghap("인", "진") is True
-        assert is_banghap("인", "인") is True  # manse_ori: 자기 자신도 포함
+        assert is_banghap("인", "인") is True  # manse: 자기 자신도 포함
 
     def test_nam_bang_banghap(self) -> None:
         """남방화 방합: 사오미."""

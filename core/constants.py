@@ -1,6 +1,6 @@
 """Core constants for saju calculation engine.
 
-Based on manse_ori reference implementation analysis.
+Based on manse reference implementation analysis.
 Korean terms are used for gan/ji/ohang names as per the original system.
 """
 
@@ -59,9 +59,9 @@ GAN_YANG: dict[str, bool] = {
     "계": False,
 }
 
-# 년주 천간 매핑 - manse_ori yearPillarSky.js 참조
+# 년주 천간 매핑 - manse yearPillarSky.js 참조
 # year % 10 -> 천간
-# manse_ori array: ["경", "신", "임", "계", "갑", "을", "병", "정", "무", "기"]
+# manse array: ["경", "신", "임", "계", "갑", "을", "병", "정", "무", "기"]
 YEAR_SKY_MAP: dict[int, str] = {
     0: "경",
     1: "신",
@@ -75,9 +75,9 @@ YEAR_SKY_MAP: dict[int, str] = {
     9: "기",
 }
 
-# 년주 지지 매핑 - manse_ori yearPillarLand.js 참조
+# 년주 지지 매핑 - manse yearPillarLand.js 참조
 # year % 12 -> 지지
-# manse_ori array: ["신", "유", "술", "해", "자", "축", "인", "묘", "진", "사", "오", "미"]
+# manse array: ["신", "유", "술", "해", "자", "축", "인", "묘", "진", "사", "오", "미"]
 YEAR_LAND_MAP: dict[int, str] = {
     0: "신",
     1: "유",
@@ -93,7 +93,7 @@ YEAR_LAND_MAP: dict[int, str] = {
     11: "미",
 }
 
-# 월주 지지 매핑 - manse_ori monthPillarLand.js 참조
+# 월주 지지 매핑 - manse monthPillarLand.js 참조
 # month (1=1월, 12=12월) -> 지지
 MONTH_LAND_MAP: dict[int, str] = {
     1: "축",
@@ -110,7 +110,7 @@ MONTH_LAND_MAP: dict[int, str] = {
     12: "자",
 }
 
-# 월주 천간 그룹별 시작 매핑 - manse_ori monthPillarSky.js 참조
+# 월주 천간 그룹별 시작 매핑 - manse monthPillarSky.js 참조
 # 갑기년 (year_sky 갑 or 기): 2월시작=병
 MONTH_SKY_GABGI: tuple[str, ...] = (
     "병",
@@ -187,7 +187,7 @@ MONTH_SKY_MUJE: tuple[str, ...] = (
     "을",
 )
 
-# 시주 천간 그룹별 매핑 - manse_ori hourPillarSky.js 참조
+# 시주 천간 그룹별 매핑 - manse hourPillarSky.js 참조
 # 갑기일: 자시=갑
 HOUR_SKY_GABGI: tuple[str, ...] = (
     "갑",
@@ -268,5 +268,5 @@ HOUR_SKY_MUJE: tuple[str, ...] = (
 # 각 시간대의 시작 시간 (HH:MM 기준, 23:30부터 자시 시작)
 HOUR_JI_ORDER: tuple[str, ...] = JI_LIST  # 자(0) 축(1) 인(2) ... 해(11)
 
-# 일주 계산용 월별 누적 일수 - manse_ori daypillar.js 참조
+# 일주 계산용 월별 누적 일수 - manse daypillar.js 참조
 DAY_MONTH_SUM: tuple[int, ...] = (0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334)

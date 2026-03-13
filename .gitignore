@@ -196,7 +196,6 @@ dist-ssr/
 # ===========================================
 # User Temporary & Local Reference Files
 # ===========================================
-docs/
 saju/
 pytest-of-kej/
 test_shgj_api_manual.py

@@ -18,7 +18,7 @@ from itertools import combinations
 
 from core.models.domain import HapchungRelation
 
-# 삼합 그룹 - manse_ori samhapWord.js getSamHap 기반
+# 삼합 그룹 - manse samhapWord.js getSamHap 기반
 # 인오술(화국), 해묘미(목국), 신자진(수국), 사유축(금국)
 _SAMHAP_GROUPS: list[frozenset[str]] = [
     frozenset({"인", "오", "술"}),  # 화국 (Fire)
@@ -27,7 +27,7 @@ _SAMHAP_GROUPS: list[frozenset[str]] = [
     frozenset({"사", "유", "축"}),  # 금국 (Metal)
 ]
 
-# 육합 쌍 - manse_ori samhapWord.js getYukhap 기반
+# 육합 쌍 - manse samhapWord.js getYukhap 기반
 # 자축합토, 인해합목, 묘술합화, 진유합금, 사신합수, 오미합토
 _YUKHAP_PAIRS: list[frozenset[str]] = [
     frozenset({"자", "축"}),
@@ -38,7 +38,7 @@ _YUKHAP_PAIRS: list[frozenset[str]] = [
     frozenset({"오", "미"}),
 ]
 
-# 충 쌍 - manse_ori samhapWord.js getChung 기반
+# 충 쌍 - manse samhapWord.js getChung 기반
 # 자오충, 축미충, 인신충, 묘유충, 진술충, 사해충
 _CHUNG_PAIRS: list[frozenset[str]] = [
     frozenset({"자", "오"}),
@@ -49,9 +49,9 @@ _CHUNG_PAIRS: list[frozenset[str]] = [
     frozenset({"사", "해"}),
 ]
 
-# 방합 그룹 - manse_ori samhapWord.js getbangHap 기반
+# 방합 그룹 - manse samhapWord.js getbangHap 기반
 # 인묘진(동방목), 사오미(남방화), 신유술(서방금), 해자축(북방수)
-# Note: 방합은 같은 그룹 내 자기 자신 포함 (manse_ori 기준)
+# Note: 방합은 같은 그룹 내 자기 자신 포함 (manse 기준)
 _BANGHAP_GROUPS: list[frozenset[str]] = [
     frozenset({"인", "묘", "진"}),  # 동방목 (East Wood)
     frozenset({"사", "오", "미"}),  # 남방화 (South Fire)
@@ -130,7 +130,7 @@ def is_chung(ji1: str, ji2: str) -> bool:
 def is_banghap(ji1: str, ji2: str) -> bool:
     """두 지지 간 방합(方合) 관계인지 확인합니다.
 
-    manse_ori 기준: 같은 방향 그룹 내라면 자기 자신 포함 성립.
+    manse 기준: 같은 방향 그룹 내라면 자기 자신 포함 성립.
 
     Args:
         ji1: 첫 번째 지지

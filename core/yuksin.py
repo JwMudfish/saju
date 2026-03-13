@@ -1,6 +1,6 @@
 """Yuksin (육신, Six Relations) calculation module.
 
-Based on manse_ori getYukSin.js.
+Based on manse getYukSin.js.
 Calculates the relationship (육신) between the day master (일간) and a target stem (천간).
 """
 
@@ -12,7 +12,7 @@ from core.ohang import get_gan_ohang, is_yang, ohang_relation
 def calc_yuksin(day_gan: str, target_gan: str) -> str:
     """일간 기준 대상 천간의 육신을 계산합니다.
 
-    manse_ori getYukSin.js yang/um 함수 기반.
+    manse getYukSin.js yang/um 함수 기반.
 
     육신 결정 로직:
     - 양일간: me+양=비견, me+음=겁재

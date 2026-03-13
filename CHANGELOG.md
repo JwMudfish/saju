@@ -7,6 +7,12 @@
 
 ---
 
+## [0.1.0] - 2026-03-12
+### Added
+- Refactored project structure: `manse_ori` directory moved to `resources/manse` and renamed for better organization.
+- Updated `ContentLoader` and related services to reflect new resource paths.
+- Cleaned up outdated documentation and comment references to `manse_ori`.
+
 ## [Unreleased]
 
 ### Added (SPEC-UI-005: Streamlit UI 확장 - 탭 구조 및 관계 분석)

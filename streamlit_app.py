@@ -492,6 +492,33 @@ def render_tab_detail(result: dict[str, Any]) -> None:
     _render_hapchung_section(hapchung_list)
 
 
+# 한글 격국명 -> 영문 코드 매핑 (q1_gyouk.json title 매칭용)
+_GYOUK_NAME_TO_CODE: dict[str, str] = {
+    "건록격": "gunlok",
+    "양인격": "yangin",
+    "상관격": "sangGuan",
+    "식신격": "siksin",
+    "정인격": "jungIn",
+    "편인격": "pyeonIn",
+    "정재격": "jungJe",
+    "편재격": "pyeonje",
+    "정관격": "jungGuan",
+    "편관격": "pyeonGuan",
+}
+
+# 용신(당령) -> 영문 코드 매핑 (q1_yongsin.json title 매칭용)
+_DANG_RYEONG_TO_CODE: dict[str, str] = {
+    "계": "yongsin_GyeSu",
+    "갑": "yongsin_GapMok",
+    "을": "yongsin_UlMok",
+    "병": "yongsin_ByeongHwa",
+    "정": "yongsin_JungHwa",
+    "경": "yongsin_GyeongGum",
+    "신": "yongsin_SinGum",
+    "임": "yongsin_Limsu",
+}
+
+
 def _calc_gyouk_from_result(result: dict[str, Any]) -> str | None:
     """사주 계산 결과에서 격국명을 도출한다.
 
@@ -687,47 +714,89 @@ def render_tab_light_question(result: dict[str, Any]) -> None:
         st.markdown("#### 💡 경운 질문 ( 경運質問)")
 
         if gyouk_name:
-            # q1: 기본 질문
-            light_q1 = get_light_question_content("q1", gyouk_name, sanghwa, sulhwa)
+            # q1: 기본 질문 (용신 유무에 따라)
+            yongshin = result.get("yongshin")  # API 응답에서 용신 정보 확인
+            q1_type = "yongsin" if yongshin else "gyouk"
+            light_q1 = get_light_question_content("q1", q1_type, sanghwa, sulhwa)
             if light_q1:
-                with st.expander("질문 1: 기본 경운 확인", expanded=False):
+                # Expander 타이틀에 용신/격국 정보 표시
+                if q1_type == "yongsin" and yongshin:
+                    dang_ryeong = yongshin.get("dang_ryeong", "") if isinstance(yongshin, dict) else ""
+                    expander_title = f"기본 경운 (용신: {dang_ryeong})"
+                else:
+                    expander_title = f"기본 경운 (격국: {gyouk_name})"
+
+                with st.expander(expander_title, expanded=False):
                     contents_list = light_q1.get("contentsList", [])
                     if contents_list:
-                        for item in contents_list:
-                            subtitle = item.get("subtitle", "")
-                            if subtitle:
-                                st.markdown(f"**{subtitle}**")
-                            contents = item.get("contents", "")
-                            if contents:
-                                st.write(contents.replace("\\n", "\n"))
+                        # 사용자의 용신/격국에 해당하는 항목만 필터링
+                        if q1_type == "yongsin" and yongshin:
+                            # 용신 기반: 당령(dang_ryeong)으로 필터링
+                            dang_ryeong = yongshin.get("dang_ryeong", "") if isinstance(yongshin, dict) else ""
+                            target_title = _DANG_RYEONG_TO_CODE.get(dang_ryeong)
+                            if target_title:
+                                for item in contents_list:
+                                    if item.get("title") == target_title:
+                                        contents = item.get("contents", "")
+                                        if contents:
+                                            st.write(contents.replace("\\n", "\n"))
+                                        break
+                        else:
+                            # 격국 기반: 격국명으로 필터링
+                            target_title = _GYOUK_NAME_TO_CODE.get(gyouk_name)
+                            if target_title:
+                                for item in contents_list:
+                                    if item.get("title") == target_title:
+                                        contents = item.get("contents", "")
+                                        if contents:
+                                            st.write(contents.replace("\\n", "\n"))
+                                        break
 
             # q7: 중재 질문
             light_q7 = get_light_question_content("q7", "jungJe", sanghwa, sulhwa)
             if light_q7:
-                with st.expander("질문 7: 중재 경운 확인", expanded=False):
+                with st.expander("중재 경운", expanded=False):
                     contents_list = light_q7.get("contentsList", [])
                     if contents_list:
-                        for item in contents_list:
-                            subtitle = item.get("subtitle", "")
-                            if subtitle:
-                                st.markdown(f"**{subtitle}**")
-                            contents = item.get("contents", "")
-                            if contents:
-                                st.write(contents.replace("\\n", "\n"))
+                        # sanghwa/sulhwa 조합에 해당하는 title만 필터링
+                        if sanghwa and sulhwa:
+                            title_mapping = {
+                                ("sengYes", "sulNo"): "sengHwaZeHwa",
+                                ("sengYes", "sulYes"): "sengHwaHapHwa",
+                                ("sengNo", "sulYes"): "sulHwaZeHwa",
+                                ("sengNo", "sulNo"): "sulHwaHapHwa"
+                            }
+                            target_title = title_mapping.get((sanghwa, sulhwa))
+                            if target_title:
+                                for item in contents_list:
+                                    if item.get("title") == target_title:
+                                        contents = item.get("contents", "")
+                                        if contents:
+                                            st.write(contents.replace("\\n", "\n"))
+                                        break
 
             # q8: 식신 질문
             light_q8 = get_light_question_content("q8", "siksin", sanghwa, sulhwa)
             if light_q8:
-                with st.expander("질문 8: 식신 경운 확인", expanded=False):
+                with st.expander("식신 경운", expanded=False):
                     contents_list = light_q8.get("contentsList", [])
                     if contents_list:
-                        for item in contents_list:
-                            subtitle = item.get("subtitle", "")
-                            if subtitle:
-                                st.markdown(f"**{subtitle}**")
-                            contents = item.get("contents", "")
-                            if contents:
-                                st.write(contents.replace("\\n", "\n"))
+                        # sanghwa/sulhwa 조합에 해당하는 title만 필터링
+                        if sanghwa and sulhwa:
+                            title_mapping = {
+                                ("sengYes", "sulNo"): "sengHwaZeHwa",
+                                ("sengYes", "sulYes"): "sengHwaHapHwa",
+                                ("sengNo", "sulYes"): "sulHwaZeHwa",
+                                ("sengNo", "sulNo"): "sulHwaHapHwa"
+                            }
+                            target_title = title_mapping.get((sanghwa, sulhwa))
+                            if target_title:
+                                for item in contents_list:
+                                    if item.get("title") == target_title:
+                                        contents = item.get("contents", "")
+                                        if contents:
+                                            st.write(contents.replace("\\n", "\n"))
+                                        break
     else:
         st.info("경운 질문 데이터가 없습니다.")
 
@@ -950,13 +1019,17 @@ def render_tab_identity(result: dict[str, Any]) -> None:
                         st.markdown(f"**{title}**")
                     contents_list = sangsin_compliment.get("contentsList", [])
                     if contents_list:
+                        # 상신 값에 해당하는 title만 필터링
+                        target_title = f"sangsin_compliment{sangsin}"
                         for item in contents_list:
-                            subtitle = item.get("subtitle", "")
-                            if subtitle:
-                                st.markdown(f"**{subtitle}**")
-                            contents = item.get("contents", "")
-                            if contents:
-                                st.write(contents.replace("\\n", "\n"))
+                            if item.get("title") == target_title:
+                                subtitle = item.get("subtitle", "")
+                                if subtitle:
+                                    st.markdown(f"**{subtitle}**")
+                                contents = item.get("contents", "")
+                                if contents:
+                                    st.write(contents.replace("\\n", "\n"))
+                                break
 
         # 구신 상세 설명
         gusin = shgj.get("gusin")
@@ -986,13 +1059,17 @@ def render_tab_identity(result: dict[str, Any]) -> None:
                         st.markdown(f"**{title}**")
                     contents_list = gusin_gisin.get("contentsList", [])
                     if contents_list:
+                        # gusin 값에 해당하는 title만 필터링
+                        target_title = f"gusin_gisingusin"
                         for item in contents_list:
-                            subtitle = item.get("subtitle", "")
-                            if subtitle:
-                                st.markdown(f"**{subtitle}**")
-                            contents = item.get("contents", "")
-                            if contents:
-                                st.write(contents.replace("\\n", "\n"))
+                            if item.get("title") == target_title:
+                                subtitle = item.get("subtitle", "")
+                                if subtitle:
+                                    st.markdown(f"**{subtitle}**")
+                                contents = item.get("contents", "")
+                                if contents:
+                                    st.write(contents.replace("\\n", "\n"))
+                                break
 
         # 영격령 설명 콘텐츠 (SPEC-CONTENT-003 Phase 1)
         if jisok:

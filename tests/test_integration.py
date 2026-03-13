@@ -1,7 +1,7 @@
 """Integration tests for the saju calculation engine.
 
 Covers SPEC-CORE-001 acceptance criteria (AC-001 through AC-007) and
-additional reference cases from manse_ori.
+additional reference cases from manse.
 """
 
 from __future__ import annotations
@@ -19,7 +19,7 @@ class TestAC001BasicFourPillars:
     And   hour_pillar == GanJi(gan="기", ji="사")
 
     Note: SPEC acceptance.md had incorrect expected values (병진/경술/무오).
-    Correct values verified against manse_ori JS logic:
+    Correct values verified against manse JS logic:
     - 월주: 갑년 4월 -> 갑기 그룹, idx_month=4, sky_idx=2 -> 무(戊) -> 무진
     - 일주: totalNumber 기반 계산 -> 기묘
     - 시주: 기일간 10시00분 -> 사시(09:30-11:29 idx=5) -> 기사
@@ -167,7 +167,7 @@ class TestAC004HiddenStems:
         assert result == HiddenStems(initial="계", middle="신", main="기")
 
     def test_hidden_stems_o(self) -> None:
-        """오(午) 지장간: 병-기-정. (manse_ori 기준)"""
+        """오(午) 지장간: 병-기-정. (manse 기준)"""
         from core.jijanggan import get_jijanggan
         from core.models.domain import HiddenStems
 
@@ -388,7 +388,7 @@ class TestFullPipelineIntegration:
     def test_1984_04_15_all_modules(self) -> None:
         """1984-04-15 전체 모듈 파이프라인 검증.
 
-        실제 계산값 (manse_ori 기준):
+        실제 계산값 (manse 기준):
         - 년주: 갑자, 월주: 무진, 일주: 기묘, 시주: 기사
         - 월지 진(辰) 지장간: 을-계-무
         - 육신 (일간 기 기준 년간 갑): 기(土) vs 갑(木) -> 木克土 정관
@@ -445,7 +445,7 @@ class TestFullPipelineIntegration:
         from core.pillar import calc_four_pillars
 
         # 레퍼런스 케이스 목록: (입력, 기대출력)
-        # 실제 manse_ori 계산값 기준
+        # 실제 manse 계산값 기준
         cases = [
             # (year, month, day, hour, gender): (year_pillar, month_pillar, day_pillar, hour_pillar)
             (

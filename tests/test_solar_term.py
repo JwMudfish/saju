@@ -93,6 +93,6 @@ class TestDetermineMonthForPillar:
         # 1984-01-01 - 입춘 이전이므로 1983년 12월
         birth_dt = datetime(1984, 1, 1, 0, 0)
         month, year = determine_month_for_pillar(birth_dt)
-        # 1월은 항상 이전 년도의 12월로 처리 (manse_ori 로직)
+        # 1월은 항상 이전 년도의 12월로 처리 (manse 로직)
         assert month == 12
         assert year == 1983

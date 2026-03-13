@@ -1,13 +1,13 @@
 """Tests for yongshin (용신, Dominant Stem) calculation module - RED phase.
 
-In manse_ori, yongsin is the 'dang_ryeong' (당령) which represents the
+In manse, yongsin is the 'dang_ryeong' (당령) which represents the
 dominant heavenly stem derived from the month branch (월지) based on
 whether the birth time falls before or after the mid-solar-term (중기, junggi).
 
 - Before mid-solar-term: smallJunggi result (initial/middle stem influence)
 - After mid-solar-term: bigJunggi result (main stem influence)
 
-The mapping (based on manse_ori manse/ryeong/ryeong.js):
+The mapping (based on manse manse/ryeong/ryeong.js):
   Month Ji | Before Junggi (small) | After Junggi (big)
   인(寅)   | 갑                    | 갑
   묘(卯)   | 갑                    | 을

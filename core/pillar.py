@@ -1,6 +1,6 @@
 """Pillar (사주 기둥) calculation module.
 
-Based on manse_ori pillar calculation logic.
+Based on manse pillar calculation logic.
 Calculates the four pillars (년주, 월주, 일주, 시주) for a given birth date.
 """
 
@@ -28,10 +28,10 @@ from core.models.request import SajuRequest
 from core.models.response import FourPillars
 from core.solar_term import determine_month_for_pillar
 
-# 일주 천간 배열 - manse_ori dayPillarSky.js
+# 일주 천간 배열 - manse dayPillarSky.js
 _DAY_SKY = ("갑", "을", "병", "정", "무", "기", "경", "신", "임", "계")
 
-# 일주 지지 배열 - manse_ori dayPillarLand.js
+# 일주 지지 배열 - manse dayPillarLand.js
 _DAY_LAND = ("술", "해", "자", "축", "인", "묘", "진", "사", "오", "미", "신", "유")
 
 
@@ -65,7 +65,7 @@ def calc_month_pillar(month: int, year_gan: str) -> GanJi:
     ji = MONTH_LAND_MAP[effective_month]
 
     # Month sky (천간) based on year_gan group
-    # manse_ori: if month==1, treat as 13 for index calculation
+    # manse: if month==1, treat as 13 for index calculation
     idx_month = month if month != 1 else 13
 
     # Index into sky arrays: starts at month 2 (index 0), so idx = idx_month - 2
@@ -90,7 +90,7 @@ def calc_month_pillar(month: int, year_gan: str) -> GanJi:
 def _get_hour_index(hour: int, minute: int) -> int:
     """시각으로부터 시간대 인덱스를 반환합니다.
 
-    manse_ori hourPillarLand.js 로직:
+    manse hourPillarLand.js 로직:
     - 자시: 23:30 ~ 01:29 (index 0)
     - 축시: 01:30 ~ 03:29 (index 1)
     - 인시: 03:30 ~ 05:29 (index 2)
@@ -177,7 +177,7 @@ def calc_hour_pillar(hour: int | None, minute: int | None, day_gan: str) -> GanJ
 def calc_day_pillar(day: int, year: int, month: int, hour: int | None, minute: int | None) -> GanJi:
     """일주를 계산합니다.
 
-    manse_ori daypillar.js 로직:
+    manse daypillar.js 로직:
     - totalNumber = (year-1900)*5 + floor((year-1900)/4) + monthSum[month-1] + day-1
     - 윤년 1/2월 보정: month in (1,2) and year%4==0 -> totalNumber -= 1
     - 23:30 이후 자시 보정: totalNumber += 1
@@ -235,7 +235,7 @@ def calc_four_pillars(request: SajuRequest) -> FourPillars:
 
     # Year pillar
     # If birth is before 입춘 in a new year, use previous year
-    # (manse_ori: month==1 or (2월 and before 절입) -> year-1)
+    # (manse: month==1 or (2월 and before 절입) -> year-1)
     pillar_year = effective_year
 
     year_pillar = calc_year_pillar(pillar_year)

@@ -91,7 +91,7 @@ class TestCalcYuksin:
         assert calc_yuksin("을", "갑") == "겁재"
 
     def test_yin_day_master_pyungwan_case(self) -> None:
-        """음일간 편관 테스트 - manse_ori 기준.
+        """음일간 편관 테스트 - manse 기준.
 
         AC-005: 병(양화)일간 기준:
         - 임(양수) -> 편관 (수극화, 같은 양)
