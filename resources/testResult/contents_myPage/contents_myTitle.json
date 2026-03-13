@@ -1,0 +1,76 @@
+{
+  "contentsList": [
+    {
+      "title": "jungGuan",
+      "contents": "원리원칙형"
+    },
+    {
+      "title": "jungJe",
+      "contents": "기회추구형"
+    },
+    {
+      "title": "jungIn",
+      "contents": "이론습득형"
+    },
+    {
+      "title": "siksin",
+      "contents": "능력개발형"
+    },
+    {
+      "title": "pyeonJe",
+      "contents": "성장도모형"
+    },
+    {
+      "title": "pyeonIn",
+      "contents": "이상주의형"
+    },
+    {
+      "title": "pyeonGuan",
+      "contents": "질서정리형"
+    },
+    {
+      "title": "sangGuan",
+      "contents": "혁신주의형"
+    },
+    {
+      "title": "yangIn",
+      "contents": "정의방어형"
+    },
+    {
+      "title": "gunLok",
+      "contents": "지식교육형"
+    },
+    {
+      "title": "gyeSu",
+      "contents": "전략가"
+    },
+    {
+      "title": "gabMok",
+      "contents": "교육자"
+    },
+    {
+      "title": "ulMok",
+      "contents": "인간스캐너"
+    },
+    {
+      "title": "bungHwa",
+      "contents": "리더"
+    },
+    {
+      "title": "jungHwa",
+      "contents": "연구원"
+    },
+    {
+      "title": "gyeongGum",
+      "contents": "전문가"
+    },
+    {
+      "title": "sinGum",
+      "contents": "코치"
+    },
+    {
+      "title": "limSu",
+      "contents": "협상가"
+    }
+  ]
+}

@@ -124,7 +124,7 @@ def get_solar_term_entry(year: int, month: int) -> datetime:
 def determine_month_for_pillar(birth_dt: datetime) -> tuple[int, int]:
     """절입 기준으로 월주 계산에 사용할 (월, 년)을 반환합니다.
 
-    manse_ori pillar.js 로직 참조:
+    manse pillar.js 로직 참조:
     - 1월생은 전년 12월로 처리 (입춘 이전 가능성)
     - 2월~12월은 해당 절입과 비교하여 결정
 
@@ -138,7 +138,7 @@ def determine_month_for_pillar(birth_dt: datetime) -> tuple[int, int]:
     month = birth_dt.month
 
     # January births are always treated as previous year December
-    # (per manse_ori logic: month 1 means year-1)
+    # (per manse logic: month 1 means year-1)
     if month == 1:
         return 12, year - 1
 

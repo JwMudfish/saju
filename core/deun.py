@@ -1,6 +1,6 @@
 """Deun (대운, Major Fortune Period) calculation module.
 
-Based on manse_ori deun.js.
+Based on manse deun.js.
 Calculates the direction (banghyang), starting age (deun_su),
 and the 10 major fortune periods for a given birth chart.
 """
@@ -25,7 +25,7 @@ def calc_deun_banghyang(
 ) -> str:
     """대운방향을 계산합니다.
 
-    manse_ori deun.js deunBanghyang 함수 기반:
+    manse deun.js deunBanghyang 함수 기반:
     - 남성 + 양년 = 순행
     - 남성 + 음년 = 역행
     - 여성 + 양년 = 역행
@@ -80,7 +80,7 @@ def _get_adjacent_solar_terms(birth_dt: datetime) -> tuple[datetime, datetime]:
 def calc_deun_su(birth_dt: datetime, banghyang: str) -> int:
     """대운수를 계산합니다.
 
-    manse_ori deun.js deunSu 함수 기반:
+    manse deun.js deunSu 함수 기반:
     - 순행: (다음 절입 - 출생) 분 / 4320, 반올림, 최소 1
     - 역행: (출생 - 현재 절입) 분 / 4320, 반올림, 최소 1
     - 3일(4320분) = 1년 기준
@@ -112,7 +112,7 @@ def calc_deun(
 ) -> list[DeunItem]:
     """대운 10개를 계산합니다.
 
-    manse_ori deun.js deun 함수 기반.
+    manse deun.js deun 함수 기반.
     월주 천간에서 순행/역행으로 10개 월주를 계산.
 
     Args:
@@ -127,7 +127,7 @@ def calc_deun(
     """
     current_julib, _ = _get_adjacent_solar_terms(birth_dt)
 
-    # manse_ori: 출생이 절입 이전이면 month - 1
+    # manse: 출생이 절입 이전이면 month - 1
     month = birth_month
     if birth_dt <= current_julib:
         month -= 1
@@ -137,7 +137,7 @@ def calc_deun(
     init_year = birth_year
     year_sky = YEAR_SKY_MAP[birth_year % 10]
 
-    # manse_ori 순행 초기년도 보정
+    # manse 순행 초기년도 보정
     if banghyang == "순행":
         if birth_month == 1:
             init_year -= 1

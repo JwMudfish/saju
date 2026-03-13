@@ -1,6 +1,6 @@
 """Jijanggan (지장간, Hidden Stems) calculation.
 
-Based on manse_ori getjijanggan.js.
+Based on manse getjijanggan.js.
 Maps each Earthly Branch to its three hidden stems.
 """
 
@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from core.models.domain import HiddenStems
 
-# 지장간 테이블 - manse_ori getjijanggan.js 참조
+# 지장간 테이블 - manse getjijanggan.js 참조
 # 형식: initial(여기), middle(중기, None이면 없음), main(정기)
 JIJANGGAN_TABLE: dict[str, HiddenStems] = {
     "자": HiddenStems(initial="임", middle=None, main="계"),

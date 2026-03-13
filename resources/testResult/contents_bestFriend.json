@@ -1,0 +1,509 @@
+{
+  "name": "contents_bestFriend",
+  "tag": "#친구관계#우리는 지인#우린 어색해",
+  "title": "친구와 나와의 관계는??",
+  "clickNum": 0,
+  "num": 22,
+  "contentsList": [
+    {
+      "title": "bestFriend_1",
+      "subtitle": "나정관격♡친구정관격",
+      "contents": "지인/그냥 아는 사람/49.9%"
+    },
+    {
+      "title": "bestFriend_2",
+      "subtitle": "나정관격♡친구편관격",
+      "contents": "애증/밉지만 자꾸 생각나는 친구관계/50.1%"
+    },
+    {
+      "title": "bestFriend_3",
+      "subtitle": "나정관격♡친구정인격",
+      "contents": "호감/함께하면 매순간 즐거운 관계/87%"
+    },
+    {
+      "title": "bestFriend_4",
+      "subtitle": "나정관격♡친구편인격",
+      "contents": "물주/난 항상 너의 편/'측정불가'"
+    },
+    {
+      "title": "bestFriend_5",
+      "subtitle": "나정관격♡친구정재격",
+      "contents": "베프/쿵하면 짝하는 영혼의 친구/120%"
+    },
+    {
+      "title": "bestFriend_6",
+      "subtitle": "나정관격♡친구편재격",
+      "contents": "지갑/필요할 때 연락하게 되는 친구/59.9%"
+    },
+    {
+      "title": "bestFriend_7",
+      "subtitle": "나정관격♡친구상관격",
+      "contents": "지인/그냥 아는 사람 /49.9%"
+    },
+    {
+      "title": "bestFriend_8",
+      "subtitle": "나정관격♡친구식신격",
+      "contents": "어색함/둘이서만 있기에는 불편한 관계/50%"
+    },
+    {
+      "title": "bestFriend_9",
+      "subtitle": "나정관격♡친구건록격",
+      "contents": "지인/그냥 아는 사람 /49.9%"
+    },
+    {
+      "title": "bestFriend_10",
+      "subtitle": "나정관격♡친구양인격",
+      "contents": "불통/너는 너고, 나는 나야! 소통을 포기한다/12%"
+    },
+    {
+      "title": "bestFriend_11",
+      "subtitle": "나편관격♡친구정관격",
+      "contents": "애증/밉지만 자꾸 생각나는 친구관계/50.1%"
+    },
+    {
+      "title": "bestFriend_12",
+      "subtitle": "나편관격♡친구편관격",
+      "contents": "내편아님/우리가 친구일까?/15%"
+    },
+    {
+      "title": "bestFriend_13",
+      "subtitle": "나편관격♡친구정인격",
+      "contents": "내편아님/우리가 친구일까?/15%"
+    },
+    {
+      "title": "bestFriend_14",
+      "subtitle": "나편관격♡친구편인격",
+      "contents": "호감/함께하면 매순간 즐거운 관계/87%"
+    },
+    {
+      "title": "bestFriend_15",
+      "subtitle": "나편관격♡친구정재격",
+      "contents": "내편아님/우리가 친구일까?/15%"
+    },
+    {
+      "title": "bestFriend_16",
+      "subtitle": "나편관격♡친구편재격",
+      "contents": "내편/믿고 의지가 되는 친구/100%"
+    },
+    {
+      "title": "bestFriend_17",
+      "subtitle": "나편관격♡친구상관격",
+      "contents": "내편아님/우리가 친구일까?/15%"
+    },
+    {
+      "title": "bestFriend_18",
+      "subtitle": "나편관격♡친구식신격",
+      "contents": "불통/너는 너고, 나는 나야! 소통을 포기한다/12%"
+    },
+    {
+      "title": "bestFriend_19",
+      "subtitle": "나편관격♡친구건록격",
+      "contents": "내편아님/우리가 친구일까?/15%"
+    },
+    {
+      "title": "bestFriend_20",
+      "subtitle": "나편관격♡친구양인격",
+      "contents": "어색함/둘이서만 있기에는 불편한 관계/50%"
+    },
+    {
+      "title": "bestFriend_21",
+      "subtitle": "나정인격♡친구정관격",
+      "contents": "베프/쿵하면 짝하는 영혼의 친구/120%"
+    },
+    {
+      "title": "bestFriend_22",
+      "subtitle": "나정인격♡친구편관격",
+      "contents": "지인/그냥 아는 사람 /49.9%"
+    },
+    {
+      "title": "bestFriend_23",
+      "subtitle": "나정인격♡친구정인격",
+      "contents": "지인/그냥 아는 사람 /49.9%"
+    },
+    {
+      "title": "bestFriend_24",
+      "subtitle": "나정인격♡친구편인격",
+      "contents": "애증/밉지만 자꾸 생각나는 친구관계/50.1%"
+    },
+    {
+      "title": "bestFriend_25",
+      "subtitle": "나정인격♡친구정재격",
+      "contents": "짠돌이/왠지 내가 계속 손해보는 느낌 /44%"
+    },
+    {
+      "title": "bestFriend_26",
+      "subtitle": "나정인격♡친구편재격",
+      "contents": "어색함/둘이서만 있기에는 불편한 관계 /50%"
+    },
+    {
+      "title": "bestFriend_27",
+      "subtitle": "나정인격♡친구상관격",
+      "contents": "불통/너는 너고, 나는 나야! 소통을 포기한다/12%"
+    },
+    {
+      "title": "bestFriend_28",
+      "subtitle": "나정인격♡친구식신격",
+      "contents": "지인/그냥 아는 사람 /49.9%"
+    },
+    {
+      "title": "bestFriend_29",
+      "subtitle": "나정인격♡친구건록격",
+      "contents": "물주/난 항상 너의 편/'측정불가'"
+    },
+    {
+      "title": "bestFriend_30",
+      "subtitle": "나정인격♡친구양인격",
+      "contents": "호감/함께하면 매순간 즐거운 관계/87%"
+    },
+    {
+      "title": "bestFriend_31",
+      "subtitle": "나편인격♡친구정관격",
+      "contents": "지인/그냥 아는 사람 /49.9%"
+    },
+    {
+      "title": "bestFriend_32",
+      "subtitle": "나편인격♡친구편관격",
+      "contents": "베프/쿵하면 짝하는 영혼의 친구/120%"
+    },
+    {
+      "title": "bestFriend_33",
+      "subtitle": "나편인격♡친구정인격",
+      "contents": "애증/밉지만 자꾸 생각나는 친구관계 / 50.1%"
+    },
+    {
+      "title": "bestFriend_34",
+      "subtitle": "나편인격♡친구편인격",
+      "contents": "지인/그냥 아는 사람 /49.9%"
+    },
+    {
+      "title": "bestFriend_35",
+      "subtitle": "나편인격♡친구정재격",
+      "contents": "어색함/둘이서만 있기에는 불편한 관계/50%"
+    },
+    {
+      "title": "bestFriend_36",
+      "subtitle": "나편인격♡친구편재격",
+      "contents": "지갑/필요할 때 연락하게 되는 친구/59.9%"
+    },
+    {
+      "title": "bestFriend_37",
+      "subtitle": "나편인격♡친구상관격",
+      "contents": "지인/그냥 아는 사람 /49.9%"
+    },
+    {
+      "title": "bestFriend_38",
+      "subtitle": "나편인격♡친구식신격",
+      "contents": "불통/너는 너고, 나는 나야! 소통을 포기한다/12%"
+    },
+    {
+      "title": "bestFriend_39",
+      "subtitle": "나편인격♡친구건록격",
+      "contents": "호감/함께하면 매순간 즐거운 관계/87%"
+    },
+    {
+      "title": "bestFriend_40",
+      "subtitle": "나편인격♡친구양인격",
+      "contents": "물주/난 항상 너의 편/'측정불가'"
+    },
+    {
+      "title": "bestFriend_41",
+      "subtitle": "나정재격♡친구정관격",
+      "contents": "호감/함께하면 매순간 즐거운 관계/87%"
+    },
+    {
+      "title": "bestFriend_42",
+      "subtitle": "나정재격♡친구편관격",
+      "contents": "물주/난 항상 너의 편/'측정불가'"
+    },
+    {
+      "title": "bestFriend_43",
+      "subtitle": "나정재격♡친구정인격",
+      "contents": "불통/너는 너고, 나는 나야! 소통을 포기한다/12%"
+    },
+    {
+      "title": "bestFriend_44",
+      "subtitle": "나정재격♡친구편인격",
+      "contents": "지인/그냥 아는 사람 /49.9%"
+    },
+    {
+      "title": "bestFriend_45",
+      "subtitle": "나정재격♡친구정재격",
+      "contents": "짠돌이/왠지 내가 계속 손해보는 느낌 /44%"
+    },
+    {
+      "title": "bestFriend_46",
+      "subtitle": "나정재격♡친구편재격",
+      "contents": "애증/밉지만 자꾸 생각나는 친구관계/50.1%"
+    },
+    {
+      "title": "bestFriend_47",
+      "subtitle": "나정재격♡친구상관격",
+      "contents": "베프/쿵하면 짝하는 영혼의 친구/120%"
+    },
+    {
+      "title": "bestFriend_48",
+      "subtitle": "나정재격♡친구식신격",
+      "contents": "지인/그냥 아는 사람 /49.9%"
+    },
+    {
+      "title": "bestFriend_49",
+      "subtitle": "나정재격♡친구건록격",
+      "contents": "지인/그냥 아는 사람 /49.9%"
+    },
+    {
+      "title": "bestFriend_50",
+      "subtitle": "나정재격♡친구양인격",
+      "contents": "어색함/둘이서만 있기에는 불편한 관계/50%"
+    },
+    {
+      "title": "bestFriend_51",
+      "subtitle": "나편재격♡친구정관격",
+      "contents": "물주/난 항상 너의 편 /'측정불가'"
+    },
+    {
+      "title": "bestFriend_52",
+      "subtitle": "나편재격♡친구편관격",
+      "contents": "호감/함께하면 매순간 즐거운 관계/87%"
+    },
+    {
+      "title": "bestFriend_53",
+      "subtitle": "나편재격♡친구정인격",
+      "contents": "지인/그냥 아는 사람 /49.9%"
+    },
+    {
+      "title": "bestFriend_54",
+      "subtitle": "나편재격♡친구편인격",
+      "contents": "불통/너는 너고, 나는 나야! 소통을 포기한다/12%"
+    },
+    {
+      "title": "bestFriend_55",
+      "subtitle": "나편재격♡친구정재격",
+      "contents": "애증/밉지만 자꾸 생각나는 친구관계/50.1%"
+    },
+    {
+      "title": "bestFriend_56",
+      "subtitle": "나편재격♡친구편재격",
+      "contents": "지갑/필요할 때 연락하게 되는 친구/59.9%"
+    },
+    {
+      "title": "bestFriend_57",
+      "subtitle": "나편재격♡친구상관격",
+      "contents": "지인/그냥 아는 사람 /49.9%"
+    },
+    {
+      "title": "bestFriend_58",
+      "subtitle": "나편재격♡친구식신격",
+      "contents": "베프/쿵하면 짝하는 영혼의 친구/120%"
+    },
+    {
+      "title": "bestFriend_59",
+      "subtitle": "나편재격♡친구건록격",
+      "contents": "어색함/둘이서만 있기에는 불편한 관계/50%"
+    },
+    {
+      "title": "bestFriend_60",
+      "subtitle": "나편재격♡친구양인격",
+      "contents": "지인/그냥 아는 사람 /49.9%"
+    },
+    {
+      "title": "bestFriend_61",
+      "subtitle": "나상관격♡친구정관격",
+      "contents": "호구/내가 뭘해도 OK하는 친구/73%"
+    },
+    {
+      "title": "bestFriend_62",
+      "subtitle": "나상관격♡친구편관격",
+      "contents": "호구/내가 뭘해도 OK하는 친구/73%"
+    },
+    {
+      "title": "bestFriend_63",
+      "subtitle": "나상관격♡친구정인격",
+      "contents": "불통/너는 너고, 나는 나야! 소통을 포기한다 /12%"
+    },
+    {
+      "title": "bestFriend_64",
+      "subtitle": "나상관격♡친구편인격",
+      "contents": "호구/내가 뭘해도 OK하는 친구/73%"
+    },
+    {
+      "title": "bestFriend_65",
+      "subtitle": "나상관격♡친구정재격",
+      "contents": "호감/함께하면 매순간 즐거운 관계/87%"
+    },
+    {
+      "title": "bestFriend_66",
+      "subtitle": "나상관격♡친구편재격",
+      "contents": "어색함/둘이서만 있기에는 불편한 관계/50%"
+    },
+    {
+      "title": "bestFriend_67",
+      "subtitle": "나상관격♡친구상관격",
+      "contents": "호구/내가 뭘해도 OK하는 친구/73%"
+    },
+    {
+      "title": "bestFriend_68",
+      "subtitle": "나상관격♡친구식신격",
+      "contents": "애증/밉지만 자꾸 생각나는 친구관계/50.1%"
+    },
+    {
+      "title": "bestFriend_69",
+      "subtitle": "나상관격♡친구건록격",
+      "contents": "베프/쿵하면 짝하는 영혼의 친구/120%"
+    },
+    {
+      "title": "bestFriend_70",
+      "subtitle": "나상관격♡친구양인격",
+      "contents": "호구/내가 뭘해도 OK하는 친구/73%"
+    },
+    {
+      "title": "bestFriend_71",
+      "subtitle": "나식신격♡친구정관격",
+      "contents": "지인/그냥 아는 사람 /49.9%"
+    },
+    {
+      "title": "bestFriend_72",
+      "subtitle": "나식신격♡친구편관격",
+      "contents": "불통/너는 너고, 나는 나야! 소통을 포기한다/12%"
+    },
+    {
+      "title": "bestFriend_73",
+      "subtitle": "나식신격♡친구정인격",
+      "contents": "어색함/둘이서만 있기에는 불편한 관계/50%"
+    },
+    {
+      "title": "bestFriend_74",
+      "subtitle": "나식신격♡친구편인격",
+      "contents": "지인/그냥 아는 사람 /49.9%"
+    },
+    {
+      "title": "bestFriend_75",
+      "subtitle": "나식신격♡친구정재격",
+      "contents": "짠돌이/왠지 내가 계속 손해보는 느낌 /44%"
+    },
+    {
+      "title": "bestFriend_76",
+      "subtitle": "나식신격♡친구편재격",
+      "contents": "호감/함께하면 매순간 즐거운 관계/87%"
+    },
+    {
+      "title": "bestFriend_77",
+      "subtitle": "나식신격♡친구상관격",
+      "contents": "애증/밉지만 자꾸 생각나는 친구관계/50.1%"
+    },
+    {
+      "title": "bestFriend_78",
+      "subtitle": "나식신격♡친구식신격",
+      "contents": "지인/그냥 아는 사람 /49.9%"
+    },
+    {
+      "title": "bestFriend_79",
+      "subtitle": "나식신격♡친구건록격",
+      "contents": "베프/쿵하면 짝하는 영혼의 친구/120%"
+    },
+    {
+      "title": "bestFriend_80",
+      "subtitle": "나식신격♡친구양인격",
+      "contents": "지인/그냥 아는 사람 /49.9%"
+    },
+    {
+      "title": "bestFriend_81",
+      "subtitle": "나건록격♡친구정관격",
+      "contents": "베프/쿵하면 짝하는 영혼의 친구/120%"
+    },
+    {
+      "title": "bestFriend_82",
+      "subtitle": "나건록격♡친구편관격",
+      "contents": "불통/ 너는 너고, 나는 나야! 소통을 포기한다/12%"
+    },
+    {
+      "title": "bestFriend_83",
+      "subtitle": "나건록격♡친구정인격",
+      "contents": "어색함/둘이서만 있기에는 불편한 관계/50%"
+    },
+    {
+      "title": "bestFriend_84",
+      "subtitle": "나건록격♡친구편인격",
+      "contents": "불통/ 너는 너고, 나는 나야! 소통을 포기한다/12%"
+    },
+    {
+      "title": "bestFriend_85",
+      "subtitle": "나건록격♡친구정재격",
+      "contents": "불통/ 너는 너고, 나는 나야! 소통을 포기한다/12%"
+    },
+    {
+      "title": "bestFriend_86",
+      "subtitle": "나건록격♡친구편재격",
+      "contents": "불통/ 너는 너고, 나는 나야! 소통을 포기한다/12%"
+    },
+    {
+      "title": "bestFriend_87",
+      "subtitle": "나건록격♡친구상관격",
+      "contents": "호감/함께하면 매순간 즐거운 관계/87%"
+    },
+    {
+      "title": "bestFriend_88",
+      "subtitle": "나건록격♡친구식신격",
+      "contents": "불통/ 너는 너고, 나는 나야! 소통을 포기한다/12%"
+    },
+    {
+      "title": "bestFriend_89",
+      "subtitle": "나건록격♡친구건록격",
+      "contents": "애증/밉지만 자꾸 생각나는 친구관계/50.1%"
+    },
+    {
+      "title": "bestFriend_90",
+      "subtitle": "나건록격♡친구양인격",
+      "contents": "애증/밉지만 자꾸 생각나는 친구관계/50.1%"
+    },
+    {
+      "title": "bestFriend_91",
+      "subtitle": "나양인격♡친구정관격",
+      "contents": "불통/너는 너고, 나는 나야! 소통을 포기한다/12%"
+    },
+    {
+      "title": "bestFriend_92",
+      "subtitle": "나양인격♡친구편관격",
+      "contents": "베프/쿵하면 짝하는 영혼의 친구/120%"
+    },
+    {
+      "title": "bestFriend_93",
+      "subtitle": "나양인격♡친구정인격",
+      "contents": "불통/너는 너고, 나는 나야! 소통을 포기한다/12%"
+    },
+    {
+      "title": "bestFriend_94",
+      "subtitle": "나양인격♡친구편인격",
+      "contents": "어색함/둘이서만 있기에는 불편한 관계/50%"
+    },
+    {
+      "title": "bestFriend_95",
+      "subtitle": "나양인격♡친구정재격",
+      "contents": "불통/너는 너고, 나는 나야! 소통을 포기한다/12%"
+    },
+    {
+      "title": "bestFriend_96",
+      "subtitle": "나양인격♡친구편재격",
+      "contents": "불통/너는 너고, 나는 나야! 소통을 포기한다/12%"
+    },
+    {
+      "title": "bestFriend_97",
+      "subtitle": "나양인격♡친구상관격",
+      "contents": "불통/너는 너고, 나는 나야! 소통을 포기한다/12%"
+    },
+    {
+      "title": "bestFriend_98",
+      "subtitle": "나양인격♡친구식신격",
+      "contents": "호감/함께하면 매순간 즐거운 관계/87%"
+    },
+    {
+      "title": "bestFriend_99",
+      "subtitle": "나양인격♡친구건록격",
+      "contents": "애증/밉지만 자꾸 생각나는 친구관계/50.1%"
+    },
+    {
+      "title": "bestFriend_100",
+      "subtitle": "나양인격♡친구양인격",
+      "contents": "애증/밉지만 자꾸 생각나는 친구관계/50.1%"
+    }
+  ]
+}

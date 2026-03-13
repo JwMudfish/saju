@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Literal
+from typing import Literal, cast
 
+from app.services.content_loader import YUKSIN_TO_GYOUK
 from core.deun import calc_deun_full, calc_sewun
 from core.exceptions import SajuError
 from core.hapchung import calc_pillar_hapchung
@@ -12,6 +13,7 @@ from core.models.domain import (
     HiddenStems,
     OHangRatio,
     PillarMeaning,
+    ShgjResult,
     ShinsalItem,
     SibiUnsungItem,
     YuksinItem,
@@ -20,6 +22,7 @@ from core.models.request import SajuRequest
 from core.models.response import FourPillars, SajuResult
 from core.ohang import get_gan_ohang, get_ji_ohang
 from core.pillar import calc_four_pillars
+from core.shgj import calc_shgj
 from core.shinsal import calc_shinsal
 from core.sibiunsung import calc_all_sibiunsung
 from core.yongshin import calc_yongshin
@@ -120,6 +123,15 @@ class SajuService:
             pillar_meanings = self._calc_pillar_meanings(pillars)
             hapchung = self._calc_hapchung(pillars)
 
+            # 신격(Shgj) 계산
+            gyouk_name = self._calc_gyouk_name(yuksin_list)
+            shgj_result = self._calc_shgj(
+                pillars=pillars,
+                gyouk_name=gyouk_name,
+                yuksin_list=yuksin_list,
+                yongshin_result=yongshin_result,
+            )
+
             return SajuResult(
                 year_pillar=pillars.year_pillar,
                 month_pillar=pillars.month_pillar,
@@ -135,6 +147,7 @@ class SajuService:
                 pillar_meanings=pillar_meanings,
                 hapchung=hapchung,
                 yongshin=yongshin_result,
+                shgj=cast("ShgjResult | None", shgj_result),
             )
         except SajuError as e:
             raise ValueError(str(e)) from e
@@ -271,3 +284,84 @@ class SajuService:
         if pillars.hour_pillar is not None:
             pillar_list.append(("hour", pillars.hour_pillar.ji))
         return calc_pillar_hapchung(pillar_list)
+
+    def _calc_gyouk_name(self, yuksin_list: list[YuksinItem]) -> str | None:
+        """육신 리스트에서 격국명을 계산한다.
+
+        Args:
+            yuksin_list: 육신 데이터 리스트
+
+        Returns:
+            격국명 (예: "정관격") 또는 None
+        """
+        if not yuksin_list:
+            return None
+
+        for item in yuksin_list:
+            if item.target == "월지":
+                return YUKSIN_TO_GYOUK.get(item.yuksin)
+
+        return None
+
+    def _calc_shgj(
+        self,
+        pillars: FourPillars,
+        gyouk_name: str | None,
+        yuksin_list: list[YuksinItem],
+        yongshin_result: object | None,  # YongshinResult but avoiding circular import
+    ) -> object | None:  # ShgjResult | None
+        """신격(Shgj)을 계산한다.
+
+        Args:
+            pillars: 사주팔자
+            gyouk_name: 격국명
+            yuksin_list: 육신 데이터 리스트
+            yongshin_result: 용신 계산 결과
+
+        Returns:
+            ShgjResult 또는 None (계산 실패 시)
+        """
+        if yongshin_result is None:
+            return None
+
+        dang_ryeong = getattr(yongshin_result, "dang_ryeong", None)
+        if dang_ryeong is None:
+            return None
+
+        try:
+            return calc_shgj(
+                pillars=pillars,
+                gyouk_name=gyouk_name or "",
+                yuksin_list=yuksin_list,
+                dang_ryeong=dang_ryeong,
+            )
+        except Exception:
+            # 신격 계산 실패 시 메인 계산 보호
+            return None
+
+    def _determine_hapchung_type(self, hapchung: list[HapchungRelation]) -> str:
+        """합충 관계 목록에서 콘텐츠 유형을 결정한다.
+
+        우선순위:
+        1. samhapYes - 삼합이 있을 때
+        2. banghapYes - 방합이 있을 때 (삼합 없음)
+        3. onlyChung - 충만 있을 때 (삼합, 방합 없음)
+        4. no - 합충이 없을 때
+
+        Args:
+            hapchung: 합충 관계 목록
+
+        Returns:
+            합충 콘텐츠 유형 ('samhapYes', 'banghapYes', 'onlyChung', 'no')
+        """
+        has_samhap = any(item.relation_type == "삼합" for item in hapchung)
+        has_banghap = any(item.relation_type == "방합" for item in hapchung)
+        has_chung = any(item.relation_type == "충" for item in hapchung)
+
+        if has_samhap:
+            return "samhapYes"
+        if has_banghap:
+            return "banghapYes"
+        if has_chung:
+            return "onlyChung"
+        return "no"

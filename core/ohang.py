@@ -1,6 +1,6 @@
 """Ohang (오행, Five Elements) calculation functions.
 
-Based on manse_ori getSangSengSangGuk.js and umYang/oHang.js.
+Based on manse getSangSengSangGuk.js and umYang/oHang.js.
 """
 
 from __future__ import annotations
@@ -47,7 +47,7 @@ def is_yang(gan: str) -> bool:
 def ohang_relation(base_ohang: str, target_ohang: str) -> str:
     """두 오행 사이의 상생상극 관계를 반환합니다.
 
-    Based on manse_ori getSangSengSangGuk.js sssg function.
+    Based on manse getSangSengSangGuk.js sssg function.
 
     Relation types:
         - "me": 같은 오행 (비화)

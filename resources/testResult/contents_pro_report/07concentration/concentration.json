@@ -1,0 +1,29 @@
+{
+  "contentsList": [
+    {
+      "title": "Multi-tasking1",
+      "subtitle": "희신O, 천간에 기신2개 이상",
+      "contents": "전문성 부족・비주류에 집중・쓸데 없는 곳에 투자・비효율적・어중이 떠중이・얕고 넓은 지식의 바다"
+    },
+    {
+      "title": "Multi-tasking2",
+      "subtitle": "희신X, 천간에 기신1개 이상",
+      "contents": "다양성・맥가이버・내가 다 할 수 있어・못해도 평균 이상・진정한 멀티테스커・효율성 높음・월권 가능성 200%・결국 혼자 다 함"
+    },
+    {
+      "title": "concentraiton1",
+      "subtitle": "희신O, 천간에 기신X",
+      "contents": "주어진 일 완수・다른 분야에 신경 안 씀・내 할 일만 잘하자・한결 같음・성실함"
+    },
+    {
+      "title": "noconcentration1",
+      "subtitle": "희신X, 천간에 기신X",
+      "contents": "내가 무엇을 잘하는지 모름・하나의 분야에 집중이 안 됨・일머리가 없음・일의 순서를 정하기가 어려움"
+    },
+    {
+      "title": "noconcentration2",
+      "subtitle": "아무공식에도 해당하지 않음.",
+      "contents": "딴 생각이 많음・방향을 잘 잃어버림・단기 집중・기분 전환 필요・좋아하는 것에만 집중"
+    }
+  ]
+}

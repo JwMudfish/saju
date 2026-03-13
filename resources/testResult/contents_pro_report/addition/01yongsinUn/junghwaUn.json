@@ -1,0 +1,54 @@
+{
+    "contentsList": [
+      {
+        "title": "heuisinYesGyeong",
+        "subtitle": "희신O, 경금용신",
+        "contents": "꾸준하게・쌓아온 것들이 효과를 발하는 시기・지난 세월에 얻은 깨달음을 내 것으로 만들기・반복 연습 중요"
+      },
+      {
+        "title": "heuisinYesJung",
+        "subtitle": "희신O, 정화용신",
+        "contents": "꾸준하게・쌓아온 것들이 효과를 발하는 시기・경험 쌓기・생각만으로는 하기 어려움"
+      },
+      {
+        "title": "heuisinYesGyeGap",
+        "subtitle": "희신O, 계수용신 / 갑목용신",
+        "contents": "꾸준하게・쌓아온 것들이 효과를 발하는 시기・계획 점검・살짝 테스트 해보기"
+      },
+      {
+        "title": "heuisinYesUlByeong",
+        "subtitle": "희신O, 을목용신 / 병화용신",
+        "contents": "꾸준하게・쌓아온 것들이 효과를 발하는 시기・복습・배운 것을 되새김・연습해야 내 것이 되는 운"
+      },
+      {
+        "title": "heuisinYesSinLim",
+        "subtitle": "희신O, 신금용신 / 임수용신",
+        "contents": "꾸준하게・쌓아온 것들이 효과를 발하는 시기・숨겨진 재능 이끌어내기・배운 것 써먹기"
+      },  {
+        "title": "heuisinNoGyeong",
+        "subtitle": "희신X, 경금용신",
+        "contents": "불확실한 것을 자꾸만 확인하게 됨・테스트하는 시기・간보다가 놓칠 수 있음 주의・조사하기・말보다 행동으로・반복 연습 중요"
+      },
+      {
+        "title": "heuisinNoJung",
+        "subtitle": "희신X, 정화용신",
+        "contents": "불확실한 것을 자꾸만 확인하게 됨・테스트하는 시기・간보다가 놓칠 수 있음 주의・조사하기・경험 쌓기・욕 먹는 것을 겁내지 말기・당당하게"
+      },
+      {
+        "title": "heuisinNoGyeGap",
+        "subtitle": "희신X, 계수용신 / 갑목용신",
+        "contents": "불확실한 것을 자꾸만 확인하게 됨・테스트하는 시기・간보다가 놓칠 수 있음 주의・조사하기・계획 점검・살짝 테스트 해보기"
+      },
+      {
+        "title": "heuisinNoUlByeong",
+        "subtitle": "희신X, 을목용신 / 병화용신",
+        "contents": "불확실한 것을 자꾸만 확인하게 됨・테스트하는 시기・간보다가 놓칠 수 있음 주의・조사하기・섣부른 예측 조심・시장조사 필수"
+      },
+      {
+        "title": "heuisinNoSinLim",
+        "subtitle": "희신X, 신금용신 / 임수용신",
+        "contents": "불확실한 것을 자꾸만 확인하게 됨・테스트하는 시기・간보다가 놓칠 수 있음 주의・조사하기・섣부른 예측 조심・시장조사 필수"
+      }
+    ]
+  }
+  

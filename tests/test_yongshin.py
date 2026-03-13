@@ -1,13 +1,13 @@
 """Tests for yongshin (용신, Dominant Stem) calculation module - RED phase.
 
-In manse_ori, yongsin is the 'dang_ryeong' (당령) which represents the
+In manse, yongsin is the 'dang_ryeong' (당령) which represents the
 dominant heavenly stem derived from the month branch (월지) based on
 whether the birth time falls before or after the mid-solar-term (중기, junggi).
 
 - Before mid-solar-term: smallJunggi result (initial/middle stem influence)
 - After mid-solar-term: bigJunggi result (main stem influence)
 
-The mapping (based on manse_ori manse/ryeong/ryeong.js):
+The mapping (based on manse manse/ryeong/ryeong.js):
   Month Ji | Before Junggi (small) | After Junggi (big)
   인(寅)   | 갑                    | 갑
   묘(卯)   | 갑                    | 을
@@ -288,6 +288,60 @@ class TestCalcYongshin:
 
         result = calc_dang_ryeong(month_ji="자", is_before_junggi=False)
         assert result == "계"
+
+
+class TestYeongGyeongRyeongDetails:
+    """영격령 세부지표(junghwa, jisok, hwakjang) 계산 테스트."""
+
+    def test_gab_dang_ryeong_junghwa(self) -> None:
+        """당령 갑 -> 중화 기."""
+        from core.yongshin import _calc_junghwa
+
+        assert _calc_junghwa("갑") == "기"
+
+    def test_eul_dang_ryeong_junghwa(self) -> None:
+        """당령 을 -> 중화 무."""
+        from core.yongshin import _calc_junghwa
+
+        assert _calc_junghwa("을") == "무"
+
+    def test_byeong_dang_ryeong_junghwa(self) -> None:
+        """당령 병 -> 중화 무."""
+        from core.yongshin import _calc_junghwa
+
+        assert _calc_junghwa("병") == "무"
+
+    def test_gab_dang_ryeong_jisok(self) -> None:
+        """당령 갑 -> 지속 신."""
+        from core.yongshin import _calc_jisok
+
+        assert _calc_jisok("갑") == "신"
+
+    def test_eul_dang_ryeong_jisok(self) -> None:
+        """당령 을 -> 지속 계."""
+        from core.yongshin import _calc_jisok
+
+        assert _calc_jisok("을") == "계"
+
+    def test_gab_dang_ryeong_hwakjang(self) -> None:
+        """당령 갑 -> 확장 병."""
+        from core.yongshin import _calc_hwakjang
+
+        assert _calc_hwakjang("갑") == "병"
+
+    def test_calc_yongshin_includes_yeong_gyeong_ryeong_details(self) -> None:
+        """calc_yongshin은 영격령 세부지표를 포함해야 한다."""
+        from core.yongshin import calc_yongshin
+
+        birth_dt = datetime(1984, 4, 15, 10, 0, 0)
+        result = calc_yongshin(birth_dt=birth_dt, month_ji="진", month=4, year=1984)
+
+        # 당령 을 -> 중화 무, 지속 계, 확장 경
+        assert result.junghwa == "무"
+        assert result.jisok == "계"
+        assert result.hwakjang == "경"
+        # 사령은 아직 구현되지 않음
+        assert result.saryeong is None
 
 
 class TestAllMonthJiMapping:

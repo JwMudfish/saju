@@ -6,13 +6,16 @@ Python 순수 계산으로 구현한 사주팔자(四柱八字) 엔진입니다.
 
 - 순수 Python 3.11+ 구현
 - uv 기반 빠른 패키지 관리
-- 95%+ 테스트 커버리지
+- 94%+ 테스트 커버리지 (650개)
 - 태음력 변환 지원
 - 완전한 타입 안전성 (mypy strict mode)
 - 십이운성·신살·세운 계산 지원
+- 신격(상신/구신) 계算 지원
 - 합충형해파(合沖刑害破) 사기둥 쌍 분석 지원
 - 합충형해파 분석 UI (합충형해파 관계 테이블, 강조 표시)
-- 일간 캐릭터 카드 + 용신 재능 해설 + 격국 캐릭터 카드 UI (ContentLoader 서비스)
+- 일간·격국·용신 캐릭터 카드 + 희신 콘텐츠 UI (ContentLoader 서비스)
+- 신격(상신/구신) 지표 UI + 길흉 콘텐츠
+- **개선된 AI 해석 프롬프트 시스템** (ContentLoader 연동, 핵심 판단 요약, 질문 우선순위)
 - 6탭 Streamlit 대시보드 (원국·십성·운·세부지표·AI 해석·나의 정체성)
 - 기능별 개별 REST API 엔드포인트: `/saju/pillars`, `/saju/analysis`, `/saju/fortune`, `/saju/identity`
 
@@ -216,6 +219,7 @@ saju/
 ├── core/              # 핵심 계산 모듈
 │   ├── calendar.py    # 태음력 변환
 │   ├── pillar.py      # 사주 기둥 계산
+│   ├── shgj.py        # 신격(상신/구신) 계산
 │   ├── deun.py        # 대운·세운 계산
 │   ├── sibiunsung.py  # 십이운성 계산
 │   ├── shinsal.py     # 신살 판별
@@ -227,11 +231,13 @@ saju/
 │   ├── services/      # 비즈니스 로직
 │   │   ├── saju_service.py       # 사주 계산
 │   │   ├── interpretation_service.py  # AI 해석 (OpenAI)
-│   │   ├── content_loader.py     # JSON 콘텐츠 로더 (일간/용신/격국 카드)
-│   │   └── prompt_builder.py     # 해석 프롬프트 생성
+│   │   ├── content_loader.py     # JSON 콘텐츠 로더 (일간/용신/격국/신격 카드)
+│   │   └── prompt_builder.py     # 해석 프롬프트 생성 (ContentLoader 연동, 핵심 판단 요약, 질문 우선순위)
 │   └── main.py        # 애플리케이션 팩토리
-├── tests/             # 테스트 스위트 (501개, 95%+ 커버리지)
+├── tests/             # 테스트 스위트 (650개, 94%+ 커버리지)
+│   ├── core/          # 코어 모듈 테스트
 │   ├── services/      # 서비스 계층 단위 테스트
+│   └── integration/   # E2E 통합 테스트
 ├── pyproject.toml     # 프로젝트 설정 (hatchling)
 └── uv.lock            # 의존성 잠금 파일
 ```
@@ -247,6 +253,49 @@ saju/
 MIT License
 
 ## 변경 사항
+
+### v1.2.0 (SPEC-PROMPT-001)
+
+- **프롬프트 빌더 전면 개편** (`app/services/prompt_builder.py`)
+  - ContentLoader 연동: 일간, 격국, 용신, 희신 콘텐츠 자동 주입
+  - 핵심 판단 요약 섹션: 신강약, 오행 균형, 핵심 십신 분석
+  - 질문 우선순위 시스템: 카테고리별 키워드 분류 (직업, 연애, 재물, 건강)
+  - 개선된 프롬프트 구조: 명리학 콘텐츠 + 핵심 판단 요약 + 사용자 질문 섹션
+- LLM 해석 품질 향상: 구조화된 콘텐츠와 판단 요약을 통한 전문적인 해석 제공
+- 테스트 650개 (+29개), 커버리지 94%
+
+### v1.1.0 (SPEC-CONTENT-002)
+
+- `core/shgj.py` 신격(Shgj) 계산 모듈 추가
+  - 상신(Sangsin) 계산: 용신을 돕는 천간 도출
+  - 구신(Gusin) 계산: 용신을 극하는 천간 도출
+  - 오행 상생상극 기반 알고리즘 구현
+- `core/yongshin.py` 영격령 세부지표 필드 확장
+  - 사령(Saryeong), 중화(Junghwa), 지속(Jisok), 확장(Hwakjang)
+  - Optional 필드로 하위 호환성 유지
+- `ContentLoader` 상신/구신/길흉 컨텐츠 로딩 지원
+  - `get_sangsin_content()`, `get_gusin_content()` 메서드 추가
+  - `get_shgj_gilhung_content()` 길흉 분류 컨텐츠 추가
+- `/saju/identity` API 응답에 신격 지표 추가
+  - `shgj`, `sangsin_content`, `gusin_content`, `shgj_gilhung_content` 필드
+- Streamlit "나의 정체성" 탭에 신격 지표 UI 추가
+  - 상신/구신 설명 카드
+  - 길신/흉신 expander
+- 알고리즘 패리티 테스트 27개 추가 (`tests/core/test_shgj_parity.py`)
+- E2E 통합 테스트 10개 추가 (`tests/integration/test_shgj_integration.py`)
+- ContentLoader 테스트 29개 추가 (상신/구신/길흉)
+- 총 테스트: 515개 → 621개 (+106개), 커버리지 91%
+- MVP 범위: 상신/구신 계산 완료, 국국분/상화/설화는 None 반환 (추후 구현)
+
+### v1.0.0 (SPEC-CONTENT-001)
+
+- `ContentLoader` 서비스 희신/희기신/연봉 콘텐츠 로딩 지원 추가
+  - `get_hisin_content()`, `get_hisin_gisin_content()`, `get_salary_content()` 메서드 추가
+  - `_DANG_RYEONG_TO_HISIN10_DIR` 매핑: 8개 당령 → Hisin10 디렉토리명
+- `IdentityResponse`에 `hisin_content`, `hisin_gisin_content`, `salary_content` 필드 추가
+- `/saju/identity` API 응답에 희신/희기신/연봉 콘텐츠 포함
+- Streamlit "나의 정체성" 탭 희신 콘텐츠 카드 섹션 추가 (기존 3-컬럼 하단)
+- 테스트 515개 (+14개), 커버리지 94%
 
 ### v0.9.0 (SPEC-API-002)
 

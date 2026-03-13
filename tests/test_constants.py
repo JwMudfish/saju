@@ -123,10 +123,10 @@ class TestGanji60:
 
 
 class TestYearPillarMappings:
-    """년주 매핑 검증 - manse_ori 참조 구현 기반."""
+    """년주 매핑 검증 - manse 참조 구현 기반."""
 
     def test_year_1984_sky(self) -> None:
-        """1984 % 10 = 4 -> index 4 in manse_ori array ["경","신","임","계","갑","을","병","정","무","기"]."""
+        """1984 % 10 = 4 -> index 4 in manse array ["경","신","임","계","갑","을","병","정","무","기"]."""
         from core.constants import YEAR_SKY_MAP
 
         assert YEAR_SKY_MAP[1984 % 10] == "갑"

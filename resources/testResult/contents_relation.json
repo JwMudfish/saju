@@ -1,0 +1,509 @@
+{
+  "name": "contents_relation",
+  "tag": "#나의인연#연인과 나는#어떨까?",
+  "title": "나와 나의연인의 궁합은 어떨까?",
+  "clickNum": 0,
+  "num": 24,
+  "contentsList": [
+    {
+      "title": "relation_1",
+      "subtitle": "나식신격♡상대방정관격",
+      "contents": "천생연분/200%"
+    },
+    {
+      "title": "relation_2",
+      "subtitle": "나식신격♡상대방편관격",
+      "contents": "서로 매력 찾는중/87%"
+    },
+    {
+      "title": "relation_3",
+      "subtitle": "나식신격♡상대방정인격",
+      "contents": "가까이하기엔 먼 당신/42%"
+    },
+    {
+      "title": "relation_4",
+      "subtitle": "나식신격♡상대방편인격",
+      "contents": "가까이하기엔 먼 당신/42%"
+    },
+    {
+      "title": "relation_5",
+      "subtitle": "나식신격♡상대방정재격",
+      "contents": "애증의 관계/33.3%"
+    },
+    {
+      "title": "relation_6",
+      "subtitle": "나식신격♡상대방편재격",
+      "contents": "썸&쌈/50.3%"
+    },
+    {
+      "title": "relation_7",
+      "subtitle": "나식신격♡상대방식신격",
+      "contents": "동족혐오/측정불가"
+    },
+    {
+      "title": "relation_8",
+      "subtitle": "나식신격♡상대방상관격",
+      "contents": "서로 매력 찾는중/66%"
+    },
+    {
+      "title": "relation_9",
+      "subtitle": "나식신격♡상대방건록격",
+      "contents": "서로 매력 찾는중/66%"
+    },
+    {
+      "title": "relation_10",
+      "subtitle": "나식신격♡상대방양인격",
+      "contents": "썸&쌈/50.3%"
+    },
+    {
+      "title": "relation_11",
+      "subtitle": "나편인격♡상대방정관격",
+      "contents": "가까이하기엔 먼 당신/42%"
+    },
+    {
+      "title": "relation_12",
+      "subtitle": "나편인격♡상대방편관격",
+      "contents": "천생연분/200%"
+    },
+    {
+      "title": "relation_13",
+      "subtitle": "나편인격♡상대방정인격",
+      "contents": "서로 매력 찾는중/66%"
+    },
+    {
+      "title": "relation_14",
+      "subtitle": "나편인격♡상대방편인격",
+      "contents": "동족혐오/측정불가"
+    },
+    {
+      "title": "relation_15",
+      "subtitle": "나편인격♡상대방정재격",
+      "contents": "서로 매력 찾는중/66%"
+    },
+    {
+      "title": "relation_16",
+      "subtitle": "나편인격♡상대방편재격",
+      "contents": "애증의 관계/33.3%"
+    },
+    {
+      "title": "relation_17",
+      "subtitle": "나편인격♡상대방식신격",
+      "contents": "너는너, 나는나/0.5%"
+    },
+    {
+      "title": "relation_18",
+      "subtitle": "나편인격♡상대방상관격",
+      "contents": "천생연분/200%"
+    },
+    {
+      "title": "relation_19",
+      "subtitle": "나편인격♡상대방건록격",
+      "contents": "서로 매력 찾는중/66%"
+    },
+    {
+      "title": "relation_20",
+      "subtitle": "나편인격♡상대방양인격",
+      "contents": "가까이하기엔 먼 당신/42%"
+    },
+    {
+      "title": "relation_21",
+      "subtitle": "나정관격♡상대방정관격",
+      "contents": "동족혐오/측정불가"
+    },
+    {
+      "title": "relation_22",
+      "subtitle": "나정관격♡상대방편관격",
+      "contents": "서로 매력 찾는중/66%"
+    },
+    {
+      "title": "relation_23",
+      "subtitle": "나정관격♡상대방정인격",
+      "contents": "너는너, 나는나/0.5%"
+    },
+    {
+      "title": "relation_24",
+      "subtitle": "나정관격♡상대방편인격",
+      "contents": "가까이하기엔 먼 당신/42%"
+    },
+    {
+      "title": "relation_25",
+      "subtitle": "나정관격♡상대방정재격",
+      "contents": "천생연분/200%"
+    },
+    {
+      "title": "relation_26",
+      "subtitle": "나정관격♡상대방편재격",
+      "contents": "서로 매력 찾는중/66%"
+    },
+    {
+      "title": "relation_27",
+      "subtitle": "나정관격♡상대방식신격",
+      "contents": "천생연분/200%"
+    },
+    {
+      "title": "relation_28",
+      "subtitle": "나정관격♡상대방상관격",
+      "contents": "애증의 관계/33.3%"
+    },
+    {
+      "title": "relation_29",
+      "subtitle": "나정관격♡상대방건록격",
+      "contents": "천생연분/200%"
+    },
+    {
+      "title": "relation_30",
+      "subtitle": "나정관격♡상대방양인격",
+      "contents": "서로 매력 찾는중/66%"
+    },
+    {
+      "title": "relation_31",
+      "subtitle": "나정인격♡상대방정관격",
+      "contents": "가까이하기엔 먼 당신/42%"
+    },
+    {
+      "title": "relation_32",
+      "subtitle": "나정인격♡상대방편관격",
+      "contents": "서로 매력 찾는중/66%"
+    },
+    {
+      "title": "relation_33",
+      "subtitle": "나정인격♡상대방정인격",
+      "contents": "동족혐오/측정불가"
+    },
+    {
+      "title": "relation_34",
+      "subtitle": "나정인격♡상대방편인격",
+      "contents": "서로 매력 찾는중/66%"
+    },
+    {
+      "title": "relation_35",
+      "subtitle": "나정인격♡상대방정재격",
+      "contents": "천생연분/200%"
+    },
+    {
+      "title": "relation_36",
+      "subtitle": "나정인격♡상대방편재격",
+      "contents": "애증의 관계/33.3%"
+    },
+    {
+      "title": "relation_37",
+      "subtitle": "나정인격♡상대방식신격",
+      "contents": "천생연분/200%"
+    },
+    {
+      "title": "relation_38",
+      "subtitle": "나정인격♡상대방상관격",
+      "contents": "천생연분/200%"
+    },
+    {
+      "title": "relation_39",
+      "subtitle": "나정인격♡상대방건록격",
+      "contents": "가까이하기엔 먼 당신/42%"
+    },
+    {
+      "title": "relation_40",
+      "subtitle": "나정인격♡상대방양인격",
+      "contents": "서로 매력 찾는중/66%"
+    },
+    {
+      "title": "relation_41",
+      "subtitle": "나정재격♡상대방정관격",
+      "contents": "밀당ing/79.7%"
+    },
+    {
+      "title": "relation_42",
+      "subtitle": "나정재격♡상대방편관격",
+      "contents": "서로 매력 찾는중/66%"
+    },
+    {
+      "title": "relation_43",
+      "subtitle": "나정재격♡상대방정인격",
+      "contents": "애증의 관계/33.3%"
+    },
+    {
+      "title": "relation_44",
+      "subtitle": "나정재격♡상대방편인격",
+      "contents": "천생연분/200%"
+    },
+    {
+      "title": "relation_45",
+      "subtitle": "나정재격♡상대방정재격",
+      "contents": "동족혐오/측정불가"
+    },
+    {
+      "title": "relation_46",
+      "subtitle": "나정재격♡상대방편재격",
+      "contents": "서로 매력 찾는중/66%"
+    },
+    {
+      "title": "relation_47",
+      "subtitle": "나정재격♡상대방식신격",
+      "contents": "애증의 관계/33.3%"
+    },
+    {
+      "title": "relation_48",
+      "subtitle": "나정재격♡상대방상관격",
+      "contents": "천생연분/200%"
+    },
+    {
+      "title": "relation_49",
+      "subtitle": "나정재격♡상대방건록격",
+      "contents": "천생연분/200%"
+    },
+    {
+      "title": "relation_50",
+      "subtitle": "나정재격♡상대방양인격",
+      "contents": "서로 매력 찾는중/66%"
+    },
+    {
+      "title": "relation_51",
+      "subtitle": "나편재격♡상대방정관격",
+      "contents": "서로 매력 찾는중/66%"
+    },
+    {
+      "title": "relation_52",
+      "subtitle": "나편재격♡상대방편관격",
+      "contents": "가까이하기엔 먼 당신/42%"
+    },
+    {
+      "title": "relation_53",
+      "subtitle": "나편재격♡상대방정인격",
+      "contents": "천생연분/200%"
+    },
+    {
+      "title": "relation_54",
+      "subtitle": "나편재격♡상대방편인격",
+      "contents": "애증의 관계/33.3%"
+    },
+    {
+      "title": "relation_55",
+      "subtitle": "나편재격♡상대방정재격",
+      "contents": "서로 매력 찾는중/66%"
+    },
+    {
+      "title": "relation_56",
+      "subtitle": "나편재격♡상대방편재격",
+      "contents": "동족혐오/측정불가"
+    },
+    {
+      "title": "relation_57",
+      "subtitle": "나편재격♡상대방식신격",
+      "contents": "아낌없이주는나무/87%"
+    },
+    {
+      "title": "relation_58",
+      "subtitle": "나편재격♡상대방상관격",
+      "contents": "서로 매력 찾는중/66%"
+    },
+    {
+      "title": "relation_59",
+      "subtitle": "나편재격♡상대방건록격",
+      "contents": "서로 매력 찾는중/66%"
+    },
+    {
+      "title": "relation_60",
+      "subtitle": "나편재격♡상대방양인격",
+      "contents": "천생연분/200%"
+    },
+    {
+      "title": "relation_61",
+      "subtitle": "나편관격♡상대방정관격",
+      "contents": "서로 매력 찾는중/66%"
+    },
+    {
+      "title": "relation_62",
+      "subtitle": "나편관격♡상대방편관격",
+      "contents": "동족혐오/측정불가"
+    },
+    {
+      "title": "relation_63",
+      "subtitle": "나편관격♡상대방정인격",
+      "contents": "서로 매력 찾는중/66%"
+    },
+    {
+      "title": "relation_64",
+      "subtitle": "나편관격♡상대방편인격",
+      "contents": "천생연분/200%"
+    },
+    {
+      "title": "relation_65",
+      "subtitle": "나편관격♡상대방정재격",
+      "contents": "서로 매력 찾는중/66%"
+    },
+    {
+      "title": "relation_66",
+      "subtitle": "나편관격♡상대방편재격",
+      "contents": "천생연분/200%"
+    },
+    {
+      "title": "relation_67",
+      "subtitle": "나편관격♡상대방식신격",
+      "contents": "밀당ing/79.7%"
+    },
+    {
+      "title": "relation_68",
+      "subtitle": "나편관격♡상대방상관격",
+      "contents": "천생연분/200%"
+    },
+    {
+      "title": "relation_69",
+      "subtitle": "나편관격♡상대방건록격",
+      "contents": "서로 매력 찾는중/66%"
+    },
+    {
+      "title": "relation_70",
+      "subtitle": "나편관격♡상대방양인격",
+      "contents": "애증의 관계/33.3%"
+    },
+    {
+      "title": "relation_71",
+      "subtitle": "나상관격♡상대방정관격",
+      "contents": "애증의 관계/33.3%"
+    },
+    {
+      "title": "relation_72",
+      "subtitle": "나상관격♡상대방편관격",
+      "contents": "천생연분/200%"
+    },
+    {
+      "title": "relation_73",
+      "subtitle": "나상관격♡상대방정인격",
+      "contents": "가까이하기엔 먼 당신/42%"
+    },
+    {
+      "title": "relation_74",
+      "subtitle": "나상관격♡상대방편인격",
+      "contents": "상대 탐색중/63%"
+    },
+    {
+      "title": "relation_75",
+      "subtitle": "나상관격♡상대방정재격",
+      "contents": "애증의 관계/33.3%"
+    },
+    {
+      "title": "relation_76",
+      "subtitle": "나상관격♡상대방편재격",
+      "contents": "상대 탐색중/63%"
+    },
+    {
+      "title": "relation_77",
+      "subtitle": "나상관격♡상대방식신격",
+      "contents": "상대 탐색중/63%"
+    },
+    {
+      "title": "relation_78",
+      "subtitle": "나상관격♡상대방상관격",
+      "contents": "상대 탐색중/63%"
+    },
+    {
+      "title": "relation_79",
+      "subtitle": "나상관격♡상대방건록격",
+      "contents": "상대 탐색중/63%"
+    },
+    {
+      "title": "relation_80",
+      "subtitle": "나상관격♡상대방양인격",
+      "contents": "상대 탐색중/63%"
+    },
+    {
+      "title": "relation_81",
+      "subtitle": "나건록격♡상대방정관격",
+      "contents": "가까이하기엔 먼 당신/42%"
+    },
+    {
+      "title": "relation_82",
+      "subtitle": "나건록격♡상대방편관격",
+      "contents": "상대 탐색중/63%"
+    },
+    {
+      "title": "relation_83",
+      "subtitle": "나건록격♡상대방정인격",
+      "contents": "천생연분/200%"
+    },
+    {
+      "title": "relation_84",
+      "subtitle": "나건록격♡상대방편인격",
+      "contents": "상대 탐색중/63%"
+    },
+    {
+      "title": "relation_85",
+      "subtitle": "나건록격♡상대방정재격",
+      "contents": "상대 탐색중/63%"
+    },
+    {
+      "title": "relation_86",
+      "subtitle": "나건록격♡상대방편재격",
+      "contents": "상대 탐색중/63%"
+    },
+    {
+      "title": "relation_87",
+      "subtitle": "나건록격♡상대방식신격",
+      "contents": "가까이하기엔 먼 당신/42%"
+    },
+    {
+      "title": "relation_88",
+      "subtitle": "나건록격♡상대방상관격",
+      "contents": "너는너, 나는나/0.5%"
+    },
+    {
+      "title": "relation_89",
+      "subtitle": "나건록격♡상대방건록격",
+      "contents": "애증의 관계/33.3%"
+    },
+    {
+      "title": "relation_90",
+      "subtitle": "나건록격♡상대방양인격",
+      "contents": "상대 탐색중/63%"
+    },
+    {
+      "title": "relation_91",
+      "subtitle": "나양인격♡상대방정관격",
+      "contents": "상대 탐색중/63%"
+    },
+    {
+      "title": "relation_92",
+      "subtitle": "나양인격♡상대방편관격",
+      "contents": "가까이하기엔 먼 당신/42%"
+    },
+    {
+      "title": "relation_93",
+      "subtitle": "나양인격♡상대방정인격",
+      "contents": "상대 탐색중/63%"
+    },
+    {
+      "title": "relation_94",
+      "subtitle": "나양인격♡상대방편인격",
+      "contents": "가까이하기엔 먼 당신/42%"
+    },
+    {
+      "title": "relation_95",
+      "subtitle": "나양인격♡상대방정재격",
+      "contents": "상대 탐색중/63%"
+    },
+    {
+      "title": "relation_96",
+      "subtitle": "나양인격♡상대방편재격",
+      "contents": "상대 탐색중/63%"
+    },
+    {
+      "title": "relation_97",
+      "subtitle": "나양인격♡상대방식신격",
+      "contents": "상대 탐색중/63%"
+    },
+    {
+      "title": "relation_98",
+      "subtitle": "나양인격♡상대방상관격",
+      "contents": "천생연분/200%"
+    },
+    {
+      "title": "relation_99",
+      "subtitle": "나양인격♡상대방건록격",
+      "contents": "너는너, 나는나/0.5%"
+    },
+    {
+      "title": "relation_100",
+      "subtitle": "나양인격♡상대방양인격",
+      "contents": "애증의 관계/33.3%"
+    }
+  ]
+}

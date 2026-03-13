@@ -1,0 +1,24 @@
+{
+  "contentsList": [
+    {
+      "title": "goals",
+      "subtitle": "목표형",
+      "contents": "해야 하는 일이 명확・노력한 만큼 돌려받음・동기가 있음"
+    },
+    {
+      "title": "plans",
+      "subtitle": "계획형",
+      "contents": "계획이 다 있었음 ・ 하지만 행동력 부족 ・ 주변의 도움이 절실"
+    },
+    {
+      "title": "development",
+      "subtitle": "발전형",
+      "contents": "어라? 이게 되네? ・ 사실 나도 내가 잘하는지 모름 ・ 시간이 지나면 성과가 나옴"
+    },
+    {
+      "title": "effort",
+      "subtitle": "아무것도 해당하지 않음",
+      "contents": "남들보다 많은 노력 ・ 시간 투자가 필요 ・ 때로는 운이 필요함 ・ 준비해두면 다 써먹음 "
+    }
+  ]
+}

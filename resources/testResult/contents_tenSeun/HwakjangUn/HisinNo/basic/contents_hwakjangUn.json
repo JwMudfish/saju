@@ -1,0 +1,24 @@
+{
+  "contentsList": [
+    {
+      "title": "basic",
+      "contents": "기초용신의 글입니다"
+    },
+    {
+      "title": "jisokYes",
+      "contents": "나는 지속성이 있어요 지속성이 있는글을 적을꺼예요"
+    },
+    {
+      "title": "jisokHwakJangYes",
+      "contents": "나는 지속성과 확장성이 있어요 지속성과 확장성이 있는글을 적을꺼예요"
+    },
+    {
+      "title": "HwakJangYes",
+      "contents": "나는 확장성이 있어요  확장성이 있는글을 적을꺼예요"
+    },
+    {
+      "title": "jisokHwakJangNo",
+      "contents": "나는 지속성과 확장성 둘다 없어요  지속성과 확장성 둘다 없는글을 적을꺼예요"
+    }
+  ]
+}

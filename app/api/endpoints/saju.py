@@ -8,9 +8,26 @@ from pydantic import BaseModel, Field
 from app.api.deps import get_interpretation_service, get_saju_service
 from app.services.content_loader import (
     YUKSIN_TO_GYOUK,
+    get_bestfriend_content,
+    get_gusin_content,
     get_gyouk_content,
+    get_hapchung_content,
+    get_hisin_content,
+    get_hisin_gisin_content,
     get_ilgan_content,
+    get_ilgan_hw_content,
+    get_ilgan_love_content,
+    get_jisok_content,
+    get_joonghwa_content,
+    get_hwakjang_content,
+    get_light_question_content,
+    get_old_young_content,
+    get_sangsin_compliment_content,
+    get_salary_content,
+    get_sangsin_content,
+    get_shgj_gilhung_content,
     get_yongsin_content,
+    get_gusin_gisin_content,
 )
 from app.services.interpretation_service import InterpretationService
 from app.services.saju_service import SajuService
@@ -22,6 +39,7 @@ from core.models.response import (
     PillarsResponse,
     SajuResult,
 )
+from core.shgj import calc_shgj
 
 router = APIRouter(prefix="/api/v1", tags=["Saju"])
 
@@ -220,9 +238,114 @@ async def get_identity(
     # 콘텐츠 로딩 (실패 시 None, HTTP 200 유지)
     ilgan_content = get_ilgan_content(day_gan)
     gyouk_content = get_gyouk_content(gyouk_name) if gyouk_name else None
-    yongsin_content = (
-        get_yongsin_content(result.yongshin.dang_ryeong) if result.yongshin else None
-    )
+    dang_ryeong = result.yongshin.dang_ryeong if result.yongshin else None
+    yongsin_content = get_yongsin_content(dang_ryeong) if dang_ryeong else None
+    hisin_content = get_hisin_content(dang_ryeong) if dang_ryeong else None
+    hisin_gisin_content = get_hisin_gisin_content()
+    salary_content = get_salary_content()
+
+    # TASK-003: 신격(Shgj) 계산 및 컨텐츠 로드
+    shgj_result = None
+    sangsin_content = None
+    gusin_content = None
+    shgj_gilhung_content = None
+
+    # shgj 계산 (용신, 육신, 격국이 모두 있을 때)
+    if (
+        dang_ryeong
+        and result.yuksin_list
+        and gyouk_name
+    ):
+        try:
+            # FourPillars 구성
+            from core.models.response import FourPillars as FourPillarsModel
+            pillars = FourPillarsModel(
+                year_pillar=result.year_pillar,
+                month_pillar=result.month_pillar,
+                day_pillar=result.day_pillar,
+                hour_pillar=result.hour_pillar,
+            )
+
+            shgj_result = calc_shgj(
+                pillars=pillars,
+                gyouk_name=gyouk_name,
+                yuksin_list=result.yuksin_list,
+                dang_ryeong=dang_ryeong,
+            )
+
+            # 상신/구신 컨텐츠 로드
+            if shgj_result.sangsin:
+                sangsin_content = get_sangsin_content(shgj_result.sangsin)
+            if shgj_result.gusin:
+                gusin_content = get_gusin_content(shgj_result.gusin)
+
+            # 길흉 컨텐츠 로드 (격국 기반)
+            if gyouk_name:
+                # MVP: 길신 컨텐츠만 로드 (향후 확장 가능)
+                shgj_gilhung_content = get_shgj_gilhung_content(gyouk_name, is_gil=True)
+
+        except Exception:
+            # shgj 계산 실패 시 기존 동작 유지 (None 반환)
+            shgj_result = None
+
+    # Phase 1: 영격령 세부지표 컨텐츠 로드
+    sangsin_compliment_content = None
+    gusin_gisin_content = None
+    jisok_content = None
+    joonghwa_content = None
+    hwakjang_content = None
+
+    # 상신 보완 컨텐츠 로드
+    if shgj_result and shgj_result.sangsin:
+        sangsin_compliment_content = get_sangsin_compliment_content(shgj_result.sangsin)
+
+    # 구신 기신 컨텐츠 로드
+    if shgj_result and shgj_result.gusin:
+        gusin_gisin_content = get_gusin_gisin_content(shgj_result.gusin)
+
+    # 영격령 세부지표 컨텐츠 로드
+    # jisok, joonghwa, hwakjang 필드는 ShgjResult에서 직접 가져옴
+    if shgj_result and shgj_result.jisok:
+        jisok_content = get_jisok_content(shgj_result.jisok)
+    if shgj_result and shgj_result.joonghwa:
+        joonghwa_content = get_joonghwa_content(shgj_result.joonghwa)
+    if shgj_result and shgj_result.hwakjang:
+        hwakjang_content = get_hwakjang_content(shgj_result.hwakjang)
+
+    # Phase 2: 합충 관계, 일간 화월, 일간 연애, 베프 유형 컨텐츠 로드
+    hapchung_content = None
+    ilgan_hw_content = None
+    ilgan_love_content = None
+    bestfriend_content = None
+
+    # 합충 관계 컨텐츠 로드
+    if result.hapchung:
+        hapchung_type = service._determine_hapchung_type(result.hapchung)
+        hapchung_content = get_hapchung_content(hapchung_type)
+
+    # 일간 화월 컨텐츠 로드 (일간 + 월지)
+    month_ji = result.month_pillar.ji
+    ilgan_hw_content = get_ilgan_hw_content(day_gan, month_ji)
+
+    # 일간 연애 컨텐츠 로드
+    ilgan_love_content = get_ilgan_love_content(day_gan)
+
+    # 베프 유형 컨텐츠 로드 (육신 기반 - 임시로 일간 사용)
+    # 향후 정책 결정 후 세부 로직 구현 필요
+    bestfriend_content = get_bestfriend_content(day_gan)
+
+    # Phase 3: 노소 유형, 경운 질문 컨텐츠 로드
+    old_young_content = None
+    light_question_content = None
+
+    # 노소 유형 컨텐츠 로드 (일간 + 월지)
+    month_ji = result.month_pillar.ji
+    old_young_content = get_old_young_content(day_gan, month_ji)
+
+    # 경운 질문 컨텐츠 로드 (q1: 용신 기반)
+    # MVP: q1 용신 기반 질문만 로드
+    if dang_ryeong:
+        light_question_content = get_light_question_content('q1', 'yongsin')
 
     return IdentityResponse(
         day_gan=day_gan,
@@ -231,4 +354,22 @@ async def get_identity(
         ilgan_content=ilgan_content,
         gyouk_content=gyouk_content,
         yongsin_content=yongsin_content,
+        hisin_content=hisin_content,
+        hisin_gisin_content=hisin_gisin_content,
+        salary_content=salary_content,
+        shgj=shgj_result,
+        sangsin_content=sangsin_content,
+        gusin_content=gusin_content,
+        shgj_gilhung_content=shgj_gilhung_content,
+        sangsin_compliment_content=sangsin_compliment_content,
+        gusin_gisin_content=gusin_gisin_content,
+        jisok_content=jisok_content,
+        joonghwa_content=joonghwa_content,
+        hwakjang_content=hwakjang_content,
+        hapchung_content=hapchung_content,
+        ilgan_hw_content=ilgan_hw_content,
+        ilgan_love_content=ilgan_love_content,
+        bestfriend_content=bestfriend_content,
+        old_young_content=old_young_content,
+        light_question_content=light_question_content,
     )
