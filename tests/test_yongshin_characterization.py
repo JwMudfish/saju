@@ -33,11 +33,11 @@ class TestYeonggeungryeongDetailedMetricsCharacterization:
         assert result.dang_ryeong == "을"
         assert result.heuisin == "병"
 
-        # New fields return None (MVP behavior)
+        # New fields: some implemented, saryeong still None
         assert result.saryeong is None, "saryeong should be None in MVP"
-        assert result.junghwa is None, "junghwa should be None in MVP"
-        assert result.jisok is None, "jisok should be None in MVP"
-        assert result.hwakjang is None, "hwakjang should be None in MVP"
+        assert result.junghwa is not None
+        assert result.jisok is not None
+        assert result.hwakjang is not None
 
     def test_calc_yongshin_has_new_fields(self) -> None:
         """YongshinResult는 영격령 세부지표 필드를 가져야 한다."""
@@ -84,8 +84,8 @@ class TestYeonggeungryeongDetailedMetricsCharacterization:
                 f"heuisin should be {expected_heui} for dang_ryeong={expected_dang}"
             )
 
-            # New fields are None (MVP)
+            # New fields: some implemented, saryeong still None
             assert result.saryeong is None
-            assert result.junghwa is None
-            assert result.jisok is None
-            assert result.hwakjang is None
+            assert result.junghwa is not None
+            assert result.jisok is not None
+            assert result.hwakjang is not None

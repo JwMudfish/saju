@@ -66,9 +66,9 @@ class TestShgjIntegration:
         )
 
         assert result.shgj is not None
-        # MVP: 상화/설화/국국분 미구현
-        assert result.shgj.sanghwa is None
-        assert result.shgj.sulhwa is None
+        # 상화/설화는 구현됨, 국국분은 여전히 None
+        assert result.shgj.sanghwa is None or isinstance(result.shgj.sanghwa, str)
+        assert result.shgj.sulhwa is None or isinstance(result.shgj.sulhwa, str)
         assert result.shgj.gukgubun is None
 
     def test_shgj_calculated_without_hour(self, service: SajuService) -> None:
