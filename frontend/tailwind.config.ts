@@ -8,7 +8,7 @@ const config: Config = {
     extend: {
       colors: {
         primary: '#800020',
-        'accent-gold': '#C5A059',
+        'accent-gold': '#E8C547',
         'background-light': '#f8f5f6',
         'background-dark': '#230f14',
       },

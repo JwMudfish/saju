@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { StepBirthInfo } from '@/components/onboarding/StepBirthInfo'
 import { ErrorToast } from '@/components/common/ErrorToast'
+import { Spinner } from '@/components/ui/Spinner'
 import { useSajuApi } from '@/hooks/useSajuApi'
 import { useSajuStore } from '@/stores/sajuStore'
 import { GENDER_OPTIONS, ONBOARDING_TOTAL_STEPS } from '@/lib/constants'
@@ -209,9 +210,12 @@ export function OnboardingPage() {
     setStep(3)
   }
 
-  // Step 3 - 분석하기
+  // Step 3 - 분석하기 (30초 timeout AbortController 적용)
   async function handleConfirm() {
     if (!birthInfo) return
+
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 30000)
 
     const request: SajuRequest = {
       year: birthInfo.year as number,
@@ -226,8 +230,14 @@ export function OnboardingPage() {
     try {
       await analyzeSaju(request)
       navigate('/report')
-    } catch {
-      setError('사주 분석에 실패했습니다. 다시 시도해 주세요.')
+    } catch (err) {
+      if (err instanceof Error && err.name === 'AbortError') {
+        setError('요청 시간이 초과되었습니다. 다시 시도해 주세요.')
+      } else {
+        setError('사주 분석에 실패했습니다. 다시 시도해 주세요.')
+      }
+    } finally {
+      clearTimeout(timeoutId)
     }
   }
 
@@ -318,6 +328,18 @@ export function OnboardingPage() {
 
       {/* 에러 토스트 */}
       <ErrorToast />
+
+      {/* 분석 요청 중 전체 화면 Spinner overlay */}
+      {isLoading && (
+        <div
+          role="status"
+          aria-label="사주 분석 중"
+          className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-4 bg-black/50 backdrop-blur-sm"
+        >
+          <Spinner size="lg" className="text-white" />
+          <p className="text-white font-semibold text-base">사주를 분석하는 중입니다...</p>
+        </div>
+      )}
     </div>
   )
 }

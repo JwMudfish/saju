@@ -1,4 +1,7 @@
 // ChatBubble.tsx: 채팅 메시지 버블 컴포넌트 (레퍼런스 디자인 기반)
+import { useState } from 'react'
+import { Copy, Check, ThumbsUp, ThumbsDown } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import type { ChatMessage } from '@/services/types'
 
 interface ChatBubbleProps {
@@ -13,6 +16,19 @@ function formatTime(timestamp: number): string {
 
 export function ChatBubble({ message }: ChatBubbleProps) {
   const isUser = message.role === 'user'
+  const [copied, setCopied] = useState(false)
+  const [feedback, setFeedback] = useState<'like' | 'dislike' | null>(null)
+
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(message.content)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+
+  const handleFeedback = (type: 'like' | 'dislike') => {
+    setFeedback((prev) => (prev === type ? null : type))
+    // TODO: POST /api/v1/feedback when API is ready
+  }
 
   if (isUser) {
     // 사용자 메시지: 오른쪽 정렬
@@ -55,21 +71,49 @@ export function ChatBubble({ message }: ChatBubbleProps) {
           </p>
         </div>
 
-        {/* AI 메시지 액션 버튼 */}
-        <div className="flex gap-2 mt-1">
+        {/* AI 메시지 액션 버튼: copy + like + dislike */}
+        <div className="flex gap-1.5 mt-1">
+          {/* 복사 버튼 */}
           <button
             type="button"
-            className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-primary/5 hover:bg-primary/10 text-primary text-xs font-medium transition-colors"
+            onClick={() => void handleCopy()}
+            aria-label="메시지 복사"
+            className={cn(
+              'flex size-7 items-center justify-center rounded-full transition-colors',
+              'bg-primary/5 hover:bg-primary/15 text-primary/60 hover:text-primary',
+            )}
           >
-            <span className="material-symbols-outlined text-sm">thumb_up</span>
-            도움이 돼요
+            {copied ? <Check size={14} /> : <Copy size={14} />}
           </button>
+
+          {/* 좋아요 버튼 */}
           <button
             type="button"
-            className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-primary/5 hover:bg-primary/10 text-primary text-xs font-medium transition-colors"
+            onClick={() => handleFeedback('like')}
+            aria-label="좋아요"
+            className={cn(
+              'flex size-7 items-center justify-center rounded-full transition-colors',
+              feedback === 'like'
+                ? 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400'
+                : 'bg-primary/5 hover:bg-primary/15 text-primary/60 hover:text-primary',
+            )}
           >
-            <span className="material-symbols-outlined text-sm">share</span>
-            공유하기
+            <ThumbsUp size={14} />
+          </button>
+
+          {/* 싫어요 버튼 */}
+          <button
+            type="button"
+            onClick={() => handleFeedback('dislike')}
+            aria-label="싫어요"
+            className={cn(
+              'flex size-7 items-center justify-center rounded-full transition-colors',
+              feedback === 'dislike'
+                ? 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400'
+                : 'bg-primary/5 hover:bg-primary/15 text-primary/60 hover:text-primary',
+            )}
+          >
+            <ThumbsDown size={14} />
           </button>
         </div>
 

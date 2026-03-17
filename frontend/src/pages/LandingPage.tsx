@@ -1,5 +1,8 @@
 // LandingPage.tsx: 랜딩 페이지 - 레퍼런스 디자인 기반 재구현
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Button } from '@/components/ui/Button'
+import { Menu, X } from 'lucide-react'
 
 // 기능 카드 데이터
 const FEATURES = [
@@ -25,11 +28,13 @@ const FEATURES = [
 
 export function LandingPage() {
   const navigate = useNavigate()
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const NAV_ITEMS = ['홈', '기능', '이용 방법', '가격']
 
   return (
     <div className="relative flex min-h-screen w-full flex-col bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 overflow-x-hidden">
       {/* 네비게이션 헤더 */}
-      <header className="flex items-center justify-between border-b border-primary/10 px-6 py-4 lg:px-40">
+      <header className="flex items-center justify-between border-b border-primary/10 px-6 py-4 lg:px-40 relative">
         {/* 로고 */}
         <div className="flex items-center gap-3 text-primary">
           <div className="size-8 flex items-center justify-center bg-primary text-white rounded-lg">
@@ -42,7 +47,7 @@ export function LandingPage() {
         {/* 네비게이션 + CTA */}
         <div className="flex flex-1 justify-end items-center gap-8">
           <nav className="hidden md:flex items-center gap-9">
-            {['홈', '기능', '이용 방법', '가격'].map((item) => (
+            {NAV_ITEMS.map((item) => (
               <a
                 key={item}
                 href="#"
@@ -52,14 +57,54 @@ export function LandingPage() {
               </a>
             ))}
           </nav>
-          <button
-            type="button"
+          <Button
+            variant="primary"
+            size="md"
             onClick={() => navigate('/onboarding')}
-            className="flex min-w-[100px] cursor-pointer items-center justify-center rounded-lg h-10 px-5 bg-primary text-white text-sm font-bold transition-all hover:bg-primary/90"
+            className="hidden md:flex min-w-[100px]"
           >
             <span className="truncate">시작하기</span>
+          </Button>
+          {/* 모바일 햄버거 메뉴 버튼 */}
+          <button
+            type="button"
+            className="flex md:hidden size-10 items-center justify-center rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label={mobileMenuOpen ? '메뉴 닫기' : '메뉴 열기'}
+            aria-expanded={mobileMenuOpen}
+          >
+            {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
+
+        {/* 모바일 드롭다운 메뉴 */}
+        {mobileMenuOpen && (
+          <div className="absolute top-full left-0 right-0 z-50 bg-white dark:bg-slate-900 border-b border-primary/10 shadow-lg md:hidden">
+            <nav className="flex flex-col px-6 py-4 gap-4">
+              {NAV_ITEMS.map((item) => (
+                <a
+                  key={item}
+                  href="#"
+                  className="text-slate-700 dark:text-slate-300 text-sm font-medium hover:text-primary transition-colors py-2"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {item}
+                </a>
+              ))}
+              <Button
+                variant="primary"
+                size="md"
+                onClick={() => {
+                  setMobileMenuOpen(false)
+                  navigate('/onboarding')
+                }}
+                className="w-full mt-2"
+              >
+                시작하기
+              </Button>
+            </nav>
+          </div>
+        )}
       </header>
 
       <main className="flex flex-col flex-1">
@@ -84,19 +129,21 @@ export function LandingPage() {
               </div>
               {/* CTA 버튼 */}
               <div className="flex flex-wrap gap-4">
-                <button
-                  type="button"
+                <Button
+                  variant="primary"
+                  size="lg"
                   onClick={() => navigate('/onboarding')}
-                  className="flex min-w-[180px] cursor-pointer items-center justify-center rounded-lg h-14 px-8 bg-primary text-white text-base font-bold shadow-lg shadow-primary/20 transition-all hover:scale-[1.02]"
+                  className="min-w-[180px] shadow-lg shadow-primary/20 hover:scale-[1.02]"
                 >
                   <span className="truncate">지금 바로 사주 보기</span>
-                </button>
-                <button
-                  type="button"
-                  className="flex min-w-[180px] cursor-pointer items-center justify-center rounded-lg h-14 px-8 border-2 border-primary/20 bg-transparent text-primary text-base font-bold transition-all hover:bg-primary/5"
+                </Button>
+                <Button
+                  variant="secondary"
+                  size="lg"
+                  className="min-w-[180px]"
                 >
                   <span className="truncate">어떻게 작동하나요?</span>
-                </button>
+                </Button>
               </div>
             </div>
 
@@ -181,13 +228,14 @@ export function LandingPage() {
               </p>
             </div>
             <div className="relative z-10">
-              <button
-                type="button"
+              <Button
+                variant="ghost"
+                size="lg"
                 onClick={() => navigate('/onboarding')}
-                className="flex min-w-[200px] cursor-pointer items-center justify-center rounded-lg h-14 px-10 bg-white text-primary text-lg font-black transition-all hover:bg-slate-100 shadow-xl"
+                className="min-w-[200px] bg-white text-primary hover:bg-slate-100 shadow-xl font-black px-10"
               >
                 <span className="truncate">분석 시작하기</span>
-              </button>
+              </Button>
             </div>
           </div>
         </section>

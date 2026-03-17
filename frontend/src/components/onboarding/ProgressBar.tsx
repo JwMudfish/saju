@@ -9,7 +9,14 @@ export function ProgressBar({ currentStep }: ProgressBarProps) {
   const percent = Math.round((currentStep / ONBOARDING_TOTAL_STEPS) * 100)
 
   return (
-    <div className="w-full" role="progressbar" aria-valuenow={currentStep} aria-valuemax={ONBOARDING_TOTAL_STEPS}>
+    <div
+      className="w-full"
+      role="progressbar"
+      aria-valuenow={percent}
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-label="분석 진행률"
+    >
       <div className="flex justify-between text-xs text-gray-400 mb-1.5">
         <span>{currentStep} / {ONBOARDING_TOTAL_STEPS} 단계</span>
         <span>{percent}%</span>

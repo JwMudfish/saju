@@ -5,37 +5,13 @@ import { useSajuStore } from '@/stores/sajuStore'
 import { useChatStore } from '@/stores/chatStore'
 import { sendChatMessage } from '@/services/sajuApi'
 import { PillarGrid } from '@/components/report/PillarGrid'
+import { OhangBar } from '@/components/report/OhangBar'
+import { Button } from '@/components/ui/Button'
 import type { ChatMessage } from '@/services/types'
-
-// 오행 비율 진행 바 컴포넌트
-interface OhangBarProps {
-  label: string
-  value: number
-  colorClass: string
-  textColorClass: string
-}
-
-function OhangBar({ label, value, colorClass, textColorClass }: OhangBarProps) {
-  const percent = Math.round(value) // 백엔드가 이미 0-100 범위로 반환
-  return (
-    <div className="bg-white/80 dark:bg-slate-800/80 p-4 rounded-lg border border-primary/10">
-      <div className="flex justify-between items-center mb-2">
-        <span className="text-sm font-semibold">{label}</span>
-        <span className={['text-xs font-bold', textColorClass].join(' ')}>{percent}%</span>
-      </div>
-      <div className="w-full bg-slate-200 dark:bg-slate-700 h-1.5 rounded-full overflow-hidden">
-        <div
-          className={['h-full rounded-full', colorClass].join(' ')}
-          style={{ width: `${percent}%` }}
-        />
-      </div>
-    </div>
-  )
-}
 
 export function ReportPage() {
   const navigate = useNavigate()
-  const { result, _hydrated } = useSajuStore()
+  const { result, _hydrated, reset: resetStore } = useSajuStore()
   const { addMessage } = useChatStore()
   const [quickInput, setQuickInput] = useState('')
   const [isSending, setIsSending] = useState(false)
@@ -137,14 +113,14 @@ export function ReportPage() {
                 상담
               </button>
             </nav>
-            <button
-              type="button"
+            <Button
+              variant="primary"
+              size="md"
               onClick={() => navigate('/chat')}
-              className="bg-primary hover:bg-primary/90 text-white px-5 py-2.5 rounded-lg text-sm font-bold transition-all shadow-md shadow-primary/20 flex items-center gap-2"
             >
               <span className="material-symbols-outlined text-sm">auto_awesome</span>
               <span>AI 깊은 상담 시작하기</span>
-            </button>
+            </Button>
             {/* 사용자 아바타 */}
             <div className="size-10 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center">
               <span className="material-symbols-outlined text-primary text-lg">person</span>
@@ -195,14 +171,14 @@ export function ReportPage() {
                               {identity.gyouk_name}
                             </span>
                           )}
-                          {identity.ilgan_content['ilganDesciption'] && (
+                          {!!identity.ilgan_content['ilganDesciption'] && (
                             <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-bold border border-primary/20">
                               {String(identity.ilgan_content['ilganDesciption'])}
                             </span>
                           )}
                         </div>
                         {/* 해시태그 */}
-                        {identity.ilgan_content['subtitle'] && (
+                        {!!identity.ilgan_content['subtitle'] && (
                           <div className="flex flex-wrap gap-1.5 mb-3">
                             {String(identity.ilgan_content['subtitle'])
                               .split('/')
@@ -216,7 +192,7 @@ export function ReportPage() {
                           </div>
                         )}
                         {/* 본문 */}
-                        {identity.ilgan_content['contents'] && (
+                        {!!identity.ilgan_content['contents'] && (
                           <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed whitespace-pre-line">
                             {String(identity.ilgan_content['contents'])}
                           </p>
@@ -227,13 +203,13 @@ export function ReportPage() {
                     {/* 격국 카드 */}
                     {identity.gyouk_content && (
                       <div className="pt-4 border-t border-primary/5">
-                        {identity.gyouk_content['titleDescription'] && (
+                        {!!identity.gyouk_content['titleDescription'] && (
                           <p className="text-base font-bold text-slate-800 dark:text-slate-200 mb-2">
                             {String(identity.gyouk_content['titleDescription'])}
                           </p>
                         )}
                         {/* 긍정 태그 */}
-                        {identity.gyouk_content['tagZoryun'] && (
+                        {!!identity.gyouk_content['tagZoryun'] && (
                           <div className="flex flex-wrap gap-1.5 mb-3">
                             {String(identity.gyouk_content['tagZoryun'])
                               .split('#')
@@ -246,7 +222,7 @@ export function ReportPage() {
                               ))}
                           </div>
                         )}
-                        {identity.gyouk_content['contents'] && (
+                        {!!identity.gyouk_content['contents'] && (
                           <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed whitespace-pre-line">
                             {String(identity.gyouk_content['contents'])}
                           </p>
@@ -388,14 +364,28 @@ export function ReportPage() {
               </div>
 
               {/* 바로 AI 상담 버튼 */}
-              <button
-                type="button"
+              <Button
+                variant="primary"
+                size="lg"
                 onClick={() => navigate('/chat')}
-                className="w-full flex items-center justify-center gap-2 py-4 bg-primary text-white font-bold rounded-xl hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20"
+                className="w-full"
               >
                 <span className="material-symbols-outlined">auto_awesome</span>
                 AI와 깊은 상담 시작하기
-              </button>
+              </Button>
+
+              {/* 새로운 분석 시작 CTA */}
+              <Button
+                variant="secondary"
+                size="md"
+                onClick={() => {
+                  resetStore()
+                  navigate('/input')
+                }}
+                className="w-full"
+              >
+                새로운 분석 시작
+              </Button>
             </div>
           </div>
         </main>

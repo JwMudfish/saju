@@ -66,11 +66,19 @@ export function ChatPage() {
     }
   }
 
-  function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.key === 'Enter' && !e.shiftKey) {
+  // IME 입력 중(한국어 조합 중) Enter 키 처리 방지
+  function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
+    if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) {
       e.preventDefault()
       void handleSend(input)
     }
+  }
+
+  // textarea 자동 높이 조절
+  function handleTextareaInput(e: React.FormEvent<HTMLTextAreaElement>) {
+    const target = e.currentTarget
+    target.style.height = 'auto'
+    target.style.height = `${target.scrollHeight}px`
   }
 
   // localStorage 복원 전에는 렌더링 보류
@@ -159,20 +167,26 @@ export function ChatPage() {
 
       {/* 하단 액션 영역 */}
       <footer className="bg-white dark:bg-background-dark border-t border-primary/10 p-4 md:px-20 lg:px-40 space-y-4">
-        {/* 프리셋 질문 칩 */}
-        <div className="flex gap-2 overflow-x-auto pb-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-          {PRESET_QUESTIONS.map((q) => (
-            <button
-              key={q.id}
-              type="button"
-              onClick={() => void handleSend(q.label)}
-              disabled={isTyping}
-              className="flex h-9 flex-shrink-0 items-center justify-center gap-x-2 rounded-full border border-primary/20 bg-primary/5 px-4 hover:bg-primary/10 transition-colors disabled:opacity-50"
-            >
-              <span className="material-symbols-outlined text-sm text-primary">{q.icon}</span>
-              <p className="text-slate-700 dark:text-slate-200 text-xs font-semibold">{q.label}</p>
-            </button>
-          ))}
+        {/* 프리셋 질문 칩 - 좌우 스크롤 힌트 그라디언트 포함 */}
+        <div className="relative">
+          {/* 왼쪽 페이드 오버레이 */}
+          <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-white dark:from-background-dark to-transparent z-10" />
+          {/* 오른쪽 페이드 오버레이 */}
+          <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white dark:from-background-dark to-transparent z-10" />
+          <div className="flex gap-2 overflow-x-auto scroll-smooth pb-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+            {PRESET_QUESTIONS.map((q) => (
+              <button
+                key={q.id}
+                type="button"
+                onClick={() => void handleSend(q.label)}
+                disabled={isTyping}
+                className="flex h-9 flex-shrink-0 items-center justify-center gap-x-2 rounded-full border border-primary/20 bg-primary/5 px-4 hover:bg-primary/10 transition-colors disabled:opacity-50"
+              >
+                <span className="material-symbols-outlined text-sm text-primary">{q.icon}</span>
+                <p className="text-slate-700 dark:text-slate-200 text-xs font-semibold">{q.label}</p>
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* 입력창 */}
@@ -184,14 +198,15 @@ export function ChatPage() {
           >
             <span className="material-symbols-outlined">add_circle</span>
           </button>
-          <input
-            type="text"
+          <textarea
+            rows={1}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
+            onInput={handleTextareaInput}
             placeholder="사주 코치에게 무엇이든 물어보세요..."
             disabled={isTyping}
-            className="flex-1 bg-transparent border-none focus:ring-0 text-sm py-2 text-slate-700 dark:text-slate-200 placeholder-slate-400 focus:outline-none disabled:opacity-50"
+            className="flex-1 bg-transparent border-none focus:ring-0 text-sm py-2 text-slate-700 dark:text-slate-200 placeholder-slate-400 focus:outline-none disabled:opacity-50 resize-none overflow-hidden max-h-32"
           />
           <button
             type="button"

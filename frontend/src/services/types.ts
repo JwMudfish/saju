@@ -57,6 +57,7 @@ export interface SewunItem {
   year: number
   ganji: GanJi
   is_current: boolean
+  description?: string
 }
 
 // 백엔드 DeunItem: ganji 중첩 객체 구조
