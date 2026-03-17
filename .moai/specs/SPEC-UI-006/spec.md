@@ -1,7 +1,7 @@
 ---
 id: SPEC-UI-006
 version: "1.0.0"
-status: draft
+status: completed
 created: "2026-03-18"
 updated: "2026-03-18"
 author: jw
@@ -190,3 +190,62 @@ src/components/report/
 | REQ-UI006-014     | ChatBubble 복사 버튼               | Phase 2             | AC-007              |
 | REQ-UI006-015     | ChatBubble 좋아요/싫어요           | Phase 2             | AC-007              |
 | REQ-UI006-016     | ChatPage 입력 필드                 | Phase 2             | AC-007              |
+
+---
+
+## 7. Implementation Notes (구현 완료)
+
+SPEC-UI-006 구현이 2026-03-18에 완료되었습니다.
+
+### 생성된 컴포넌트
+
+**공유 UI 컴포넌트** (`src/components/ui/`):
+- `Button.tsx` — cva 기반, 4개 변형(primary, secondary, ghost, danger), 3개 크기(sm, md, lg), isLoading 상태 지원
+- `Input.tsx` — aria-invalid 지원, error/helperText props, 상태별 스타일
+- `Card.tsx` — cva 기반, variant/padding 지원, 일관된 컨테이너
+- `Spinner.tsx` — role="status", aria-label="로딩 중"
+- `ErrorMessage.tsx` — errorType(network/server/timeout), 한국어 메시지, 재시도 버튼
+- `Toast.tsx` — @radix-ui/react-toast 기반, useToast 훅
+
+**특수 컴포넌트** (`src/components/report/`):
+- `OhangBar.tsx` — ReportPage에서 추출된 오행 바 차트
+
+### 기능 개선 사항
+
+**Loading State**: LandingPage, InputPage, ChatPage에 로딩 인디케이터 추가
+**Error Recovery**: HTTP 오류별 분류된 에러 메시지 및 재시도 버튼 (REQ-UI006-002)
+**접근성**:
+- ProgressBar에 ARIA 속성 추가 (role="progressbar", aria-valuenow, aria-valuemin, aria-valuemax)
+- 아이콘 버튼에 aria-label 추가
+- 골드 색상 (#D4AF37) → #E8C547로 변경 (WCAG AA 대비율 충족)
+
+**모바일 반응형**:
+- LandingPage 모바일 내비게이션 헤더 (화면 < 768px)
+- OhangRatio 2열 → 1열 레이아웃 (화면 < 640px)
+- ChatPage 칩 리스트 스크롤 힌트
+
+**컴포넌트 일관성**:
+- 공유 UI 컴포넌트로 스타일 통일
+- 타이포그래피 계층 정리 (제목, 섹션, 본문, 캡션)
+- 버튼 그림자 스타일 통일
+
+**채팅 기능**:
+- ChatBubble 복사 버튼 (클립보드 복사 + 토스트)
+- 좋아요/싫어요 버튼 (로컬 상태 저장, 향후 API 연동)
+- Textarea IME-safe Enter 키 처리 (Shift+Enter = 줄바꿈)
+
+### 의존성
+
+- `class-variance-authority` — cva 기반 컴포넌트 스타일링
+- `clsx` — 조건부 className 결합
+- `tailwind-merge` — Tailwind 클래스 병합
+- `@radix-ui/react-toast` — Toast 컴포넌트
+- `lucide-react` — 아이콘 라이브러리
+
+### 테스트 완료
+
+39개 테스트, 7개 테스트 파일에서 모든 요구사항 검증 완료.
+
+### 커밋 해시
+
+구현 완료: commit `f9728bd`

@@ -15,6 +15,78 @@
 
 ## [Unreleased]
 
+### Added (SPEC-UI-006: React/TypeScript Frontend UX/UI 개선)
+
+#### 프론트엔드 UX/UI 개선
+
+**공유 UI 컴포넌트** (`src/components/ui/`):
+- `Button.tsx` — cva 기반 버튼, 4개 변형(primary, secondary, ghost, danger), 3개 크기(sm, md, lg), isLoading 상태
+- `Input.tsx` — aria-invalid 지원, error/helperText props, 상태별 스타일
+- `Card.tsx` — cva 기반, variant/padding 옵션, 일관된 컨테이너
+- `Spinner.tsx` — role="status", aria-label="로딩 중"로 접근성 완벽 구현
+- `ErrorMessage.tsx` — errorType(network/server/timeout), 한국어 메시지, 재시도 버튼
+- `Toast.tsx` — @radix-ui/react-toast 기반, useToast 훅
+
+**특수 컴포넌트**:
+- `src/components/report/OhangBar.tsx` — ReportPage에서 추출된 독립 오행 바 컴포넌트
+
+#### 페이지별 개선사항
+
+**LandingPage**:
+- 모바일 햄버거 내비게이션 (화면 < 768px)
+- 공유 Button 컴포넌트 적용
+
+**InputPage**:
+- Loading overlay with AbortController 30초 타임아웃
+- 로딩 상태 UI (Spinner)
+
+**ReportPage**:
+- "새로운 분석 시작" CTA 버튼 추가
+- OhangBar 컴포넌트 임포트 수정
+
+**ChatPage**:
+- Textarea IME-safe Enter 키 처리 (Shift+Enter = 줄바꿈)
+- Chat chip 리스트 스크롤 힌트
+
+**OnboardingPage**:
+- 로딩 오버레이 with AbortController 30초 타임아웃
+
+**ChatBubble**:
+- 복사/좋아요/싫어요 버튼 with aria-labels
+- 토스트 알림 피드백
+
+#### 접근성 개선
+
+- **ProgressBar**: role="progressbar", aria-valuemin, aria-valuenow, aria-valuemax 속성
+- **아이콘 버튼**: aria-label 추가 (한국어 설명)
+- **색상 대비**: 골드 색상 #D4AF37 → #E8C547로 변경 (WCAG AA 4.5:1 이상 대비율)
+
+#### 모바일 반응형
+
+- LandingPage 모바일 내비게이션 헤더
+- OhangRatio 2열 → 1열 레이아웃 (화면 < 640px)
+- ChatPage 칩 리스트 스크롤 가능 힌트
+
+#### 타입 및 서비스
+
+- `src/lib/utils.ts` — `cn()` 유틸리티 (clsx + tailwind-merge)
+- `src/services/types.ts` — SewunItem.description 필드 선택사항화
+
+#### 테스트
+
+- 39개 테스트 신규 추가 (7개 테스트 파일)
+- 모든 요구사항 REQ-UI006-001~016 검증 완료
+
+#### 의존성
+
+- `class-variance-authority` — cva 기반 컴포넌트
+- `clsx` — className 결합
+- `tailwind-merge` — Tailwind 클래스 병합
+- `@radix-ui/react-toast` — Toast 컴포넌트
+- `lucide-react` — 아이콘 라이브러리
+
+---
+
 ### Added (SPEC-UI-005: Streamlit UI 확장 - 탭 구조 및 관계 분석)
 
 #### 프론트엔드

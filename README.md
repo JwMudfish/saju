@@ -173,7 +173,109 @@ curl -X POST http://localhost:8000/api/v1/calendar/convert \
   }'
 ```
 
+## React 프론트엔드
+
+사주 프로젝트는 React 19 + TypeScript 기반의 모던 프론트엔드를 포함합니다.
+
+### 기술 스택
+
+- **프레임워크**: React 19 + TypeScript 5.9
+- **빌드 도구**: Vite
+- **스타일링**: Tailwind CSS
+- **상태 관리**: Zustand v5 (persist 미들웨어)
+- **UI 컴포넌트**: Radix UI, Lucide React
+- **HTTP 클라이언트**: axios
+
+### 주요 기능
+
+- **공유 UI 컴포넌트**: Button, Input, Card, Spinner, ErrorMessage, Toast (src/components/ui/)
+- **접근성**: WCAG 2.1 AA 수준 준수, ARIA 속성 완벽 구현
+- **반응형 디자인**: 모바일 우선, 768px 이하에서 햄버거 메뉴
+- **로딩 상태**: 모든 API 호출에 대한 시각적 피드백
+- **에러 복구**: HTTP 상태별 사용자 친화적 메시지 및 재시도 버튼
+- **AI 채팅 인터페이스**: 메시지 복사, 좋아요/싫어요, IME-safe 입력
+
+### 시작하기
+
+#### 프론트엔드 실행
+
+```bash
+# 프로젝트 루트에서 frontend 디렉토리로 이동
+cd frontend
+
+# 의존성 설치
+npm install
+
+# 개발 서버 시작
+npm run dev
+
+# 브라우저에서 http://localhost:5173 접속
+```
+
+#### 테스트 실행
+
+```bash
+# 전체 테스트
+npm test
+
+# 커버리지 포함
+npm test -- --coverage
+```
+
+#### 빌드
+
+```bash
+# 프로덕션 빌드
+npm run build
+
+# 빌드 결과 미리보기
+npm run preview
+```
+
+### 주요 페이지
+
+- **LandingPage** (`src/pages/LandingPage.tsx`): 홈 페이지, 사주 입력 안내
+- **InputPage** (`src/pages/InputPage.tsx`): 생년월일, 성별, 음력 여부 입력
+- **ReportPage** (`src/pages/ReportPage.tsx`): 사주 분석 결과 표시, 오행 바 차트
+- **ChatPage** (`src/pages/ChatPage.tsx`): AI 질문 인터페이스
+- **OnboardingPage** (`src/pages/OnboardingPage.tsx`): 사용자 입력 흐름
+
+### 컴포넌트 구조
+
+```
+src/
+├── components/
+│   ├── ui/                    # 공유 UI 컴포넌트
+│   │   ├── Button.tsx
+│   │   ├── Input.tsx
+│   │   ├── Card.tsx
+│   │   ├── Spinner.tsx
+│   │   ├── ErrorMessage.tsx
+│   │   └── Toast.tsx
+│   ├── report/
+│   │   └── OhangBar.tsx       # 오행 바 차트
+│   ├── chat/
+│   │   └── ChatBubble.tsx     # 채팅 메시지 버블
+│   └── ...
+├── pages/                      # 페이지 컴포넌트
+├── services/                   # API 서비스
+└── stores/                     # Zustand 상태 관리
+```
+
+### 백엔드 연동
+
+프론트엔드는 FastAPI 백엔드 (`/api/v1`) 와 통신합니다:
+
+```bash
+# 백엔드 서버 실행 (별도 터미널)
+uv run uvicorn app.main:app --reload --port 8000
+
+# 프론트엔드는 CORS 설정을 통해 http://localhost:8000 접속
+```
+
 ## 환경 변수 설정
+
+### 백엔드 (Python)
 
 OpenAI API를 사용하려면 API 키가 필요합니다:
 
@@ -183,6 +285,15 @@ cp .env.example .env
 ```
 
 API 키 없이도 기본 사주 계산 기능은 정상 동작합니다 (AI 해석만 제한됨).
+
+### 프론트엔드 (React)
+
+프론트엔드 환경 변수는 `.env` 파일에서 설정합니다:
+
+```bash
+# frontend/.env
+VITE_API_URL=http://localhost:8000
+```
 
 ## 개발
 

@@ -31,10 +31,12 @@ const TOAST_ICONS: Record<ToastType, string> = {
 type ToastListener = (toast: Omit<ToastItem, 'id'>) => void
 const listeners: ToastListener[] = []
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function showToast(toast: Omit<ToastItem, 'id'>) {
   listeners.forEach((listener) => listener(toast))
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useToast() {
   const toast = useCallback((message: string, type: ToastType = 'info', duration = 3000) => {
     showToast({ message, type, duration })
