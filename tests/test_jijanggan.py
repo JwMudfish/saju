@@ -61,12 +61,12 @@ class TestJijangganTable:
         assert result.main == "병"
 
     def test_o_hidden_stems(self) -> None:
-        """오(午) 지장간: 여기=병, 중기=기, 정기=정."""
+        """오(午) 지장간: 여기=병, 중기=없음, 정기=정 (manse 참조: 병, , 정)."""
         from core.jijanggan import get_jijanggan
 
         result = get_jijanggan("오")
         assert result.initial == "병"
-        assert result.middle == "기"
+        assert result.middle is None
         assert result.main == "정"
 
     def test_mi_hidden_stems(self) -> None:

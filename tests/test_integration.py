@@ -167,12 +167,12 @@ class TestAC004HiddenStems:
         assert result == HiddenStems(initial="계", middle="신", main="기")
 
     def test_hidden_stems_o(self) -> None:
-        """오(午) 지장간: 병-기-정. (manse 기준)"""
+        """오(午) 지장간: 병-없음-정. (manse 기준: 중기 없음)"""
         from core.jijanggan import get_jijanggan
         from core.models.domain import HiddenStems
 
         result = get_jijanggan("오")
-        assert result == HiddenStems(initial="병", middle="기", main="정")
+        assert result == HiddenStems(initial="병", middle=None, main="정")
 
     def test_hidden_stems_all_12_ji(self) -> None:
         """12지지 전체 지장간 매핑 테스트."""
