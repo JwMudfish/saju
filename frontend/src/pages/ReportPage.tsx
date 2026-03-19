@@ -306,7 +306,6 @@ export function ReportPage() {
                   {ohangItems
                     .filter((item) => item.value > 0)
                     .sort((a, b) => b.value - a.value)
-                    .slice(0, 3)
                     .map((item) => (
                       <OhangBar
                         key={item.label}
