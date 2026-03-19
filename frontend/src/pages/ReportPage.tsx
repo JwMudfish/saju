@@ -6,6 +6,7 @@ import { useChatStore } from '@/stores/chatStore'
 import { sendChatMessage } from '@/services/sajuApi'
 import { PillarGrid } from '@/components/report/PillarGrid'
 import { OhangBar } from '@/components/report/OhangBar'
+import { DetailAnalysisAccordion } from '@/components/report/DetailAnalysisAccordion'
 import { Button } from '@/components/ui/Button'
 import type { ChatMessage } from '@/services/types'
 
@@ -149,7 +150,7 @@ export function ReportPage() {
                   <span className="material-symbols-outlined text-accent-gold">calendar_month</span>
                   <h2 className="text-xl font-bold">내 만세력</h2>
                 </div>
-                <PillarGrid pillars={pillars} />
+                <PillarGrid pillars={pillars} yuksinList={pillars.yuksin_list} />
               </section>
 
               {/* 성향 요약 섹션 */}
@@ -292,6 +293,13 @@ export function ReportPage() {
                   </div>
                 </section>
               )}
+              {/* 심화 분석 아코디언 (지장간/십이운성/신살) */}
+              <DetailAnalysisAccordion
+                jijanggan={pillars.jijanggan}
+                sibiunsung={pillars.sibiunsung}
+                shinsal={pillars.shinsal}
+                hour_pillar={pillars.hour_pillar}
+              />
             </div>
 
             {/* 오른쪽 컬럼: 집중 분석 + 사용자 정보 */}

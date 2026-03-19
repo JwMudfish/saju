@@ -75,7 +75,7 @@ export interface DeunResult {
 export interface ShinsalItem {
   name: string
   trigger_ji: string
-  description?: string
+  description: string | null
 }
 
 export interface PillarMeaning {
@@ -102,7 +102,7 @@ export interface SajuResult {
   day_pillar: GanJi
   hour_pillar: GanJi | null
   deun: DeunResult | null
-  jijanggan: Record<string, HiddenStem[]> | null
+  jijanggan: Record<string, HiddenStem> | null
   yuksin_list: YuksinItem[] | null
   ohang_ratio: OHangRatio | null
   sibiunsung: SibiUnsungItem[] | null

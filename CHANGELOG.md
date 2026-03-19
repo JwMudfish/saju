@@ -22,6 +22,49 @@
   - CSS 클래스 방식 → `OHANG_STYLES`의 Tailwind 클래스(`bg-*`, `text-*`, `border-*`) 직접 적용으로 변경
   - 오행(목/화/토/금/수)별 배경색·텍스트색·테두리색이 만세력 카드에 올바르게 표시됨
 
+### Added (SPEC-UI-007: 리포트 페이지 심화 분석 섹션 추가)
+
+#### 만세력 그리드 십성(육신) 통합
+
+**PillarGrid 확장** (`src/components/report/PillarGrid.tsx`):
+- 기존 2행(천간/지지) 아래 십성 3행째 추가 (4기둥 × 5행 그리드)
+- 일간(일주 천간)은 `[일간]` 레이블로 강조 표시
+- 십성 5대 분류별 색상 적용: 비겁(slate), 식상(amber), 재성(green), 관성(blue), 인성(purple)
+- `YuksinCell` 서브컴포넌트 추가
+
+#### 심화 분석 아코디언
+
+**DetailAnalysisAccordion** (`src/components/report/DetailAnalysisAccordion.tsx`):
+- "심화 분석 펼치기 ▼ / 접기 ▲" 토글 버튼
+- 초기 상태: 접힘 (collapsed)
+- 지장간 / 십이운성 / 신살 3개 섹션 포함
+
+#### 신규 섹션 컴포넌트
+
+**JijangganSection** (`src/components/report/JijangganSection.tsx`):
+- 4기둥 지지의 지장간(여기/중기/정기) 표시
+- 중기(middle) null 시 생략
+- 각 간(干)에 오행 색상 적용
+
+**SibiUnsungSection** (`src/components/report/SibiUnsungSection.tsx`):
+- 4기둥 각각의 십이운성 단계명 표시
+- 강약 뱃지: 왕성(green) / 중립(yellow) / 쇠약(red)
+
+**ShinsalSection** (`src/components/report/ShinsalSection.tsx`):
+- 해당 사주의 신살 카드 목록 표시
+- 신살 없을 경우 "이 사주에는 주요 신살이 없습니다" 안내
+
+#### 타입 수정
+
+**types.ts** (`src/services/types.ts`):
+- `jijanggan: Record<string, HiddenStem[]>` → `Record<string, HiddenStem>` 타입 버그 수정
+- `ShinsalItem.description` 타입 `string | null`로 수정
+
+#### 테스트
+
+- 신규 테스트 파일 5개 추가 (`src/components/report/__tests__/`)
+- 총 72개 테스트 통과 (기존 39 + 신규 33)
+
 ### Added (SPEC-UI-006: React/TypeScript Frontend UX/UI 개선)
 
 #### 프론트엔드 UX/UI 개선
