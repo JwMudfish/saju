@@ -15,6 +15,13 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- **만세력 오행 색상 미표시 수정** (`frontend/src/components/report/PillarGrid.tsx`):
+  - `src/styles/index.css`의 `.element-wood` 등 커스텀 CSS 클래스가 `main.tsx`에 import되지 않아 색상이 적용되지 않던 문제 수정
+  - CSS 클래스 방식 → `OHANG_STYLES`의 Tailwind 클래스(`bg-*`, `text-*`, `border-*`) 직접 적용으로 변경
+  - 오행(목/화/토/금/수)별 배경색·텍스트색·테두리색이 만세력 카드에 올바르게 표시됨
+
 ### Added (SPEC-UI-006: React/TypeScript Frontend UX/UI 개선)
 
 #### 프론트엔드 UX/UI 개선

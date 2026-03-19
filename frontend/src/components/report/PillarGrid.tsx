@@ -25,11 +25,6 @@ function getJiOhang(ji: string): keyof typeof OHANG_STYLES {
   return (result as keyof typeof OHANG_STYLES) ?? '토'
 }
 
-// 오행별 element CSS 클래스명 반환
-function getElementClass(ohang: keyof typeof OHANG_STYLES): string {
-  return OHANG_STYLES[ohang]?.className ?? 'element-earth'
-}
-
 // 오행 한자 label (짧은 형식)
 function getOhangShortLabel(ohang: keyof typeof OHANG_STYLES): string {
   const map: Record<keyof typeof OHANG_STYLES, string> = {
@@ -50,21 +45,23 @@ interface PillarCellProps {
 }
 
 function PillarCell({ char, ohang, isDayPillarGan = false }: PillarCellProps) {
-  const elementClass = getElementClass(ohang)
+  const style = OHANG_STYLES[ohang]
   const shortLabel = getOhangShortLabel(ohang)
 
   return (
     <div
       className={[
-        elementClass,
-        'aspect-square rounded-lg flex flex-col items-center justify-center p-2 border border-slate-200',
+        style.bg,
+        style.text,
+        style.border,
+        'aspect-square rounded-lg flex flex-col items-center justify-center p-2 border',
         isDayPillarGan ? 'ring-2 ring-accent-gold ring-offset-2' : '',
       ]
         .filter(Boolean)
         .join(' ')}
     >
       <span className="text-2xl font-bold">{char}</span>
-      <span className="text-[10px] mt-1">{shortLabel}</span>
+      <span className="text-[10px] mt-1 opacity-70">{shortLabel}</span>
     </div>
   )
 }
