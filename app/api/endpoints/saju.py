@@ -10,24 +10,24 @@ from app.services.content_loader import (
     YUKSIN_TO_GYOUK,
     get_bestfriend_content,
     get_gusin_content,
+    get_gusin_gisin_content,
     get_gyouk_content,
     get_hapchung_content,
     get_hisin_content,
     get_hisin_gisin_content,
+    get_hwakjang_content,
     get_ilgan_content,
     get_ilgan_hw_content,
     get_ilgan_love_content,
     get_jisok_content,
     get_joonghwa_content,
-    get_hwakjang_content,
     get_light_question_content,
     get_old_young_content,
-    get_sangsin_compliment_content,
     get_salary_content,
+    get_sangsin_compliment_content,
     get_sangsin_content,
     get_shgj_gilhung_content,
     get_yongsin_content,
-    get_gusin_gisin_content,
 )
 from app.services.interpretation_service import InterpretationService
 from app.services.saju_service import SajuService
@@ -86,6 +86,10 @@ class InterpretRequest(BaseModel):
 
     saju_result: SajuResult
     user_context: str | None = Field(None, description="사용자 추가 질문")
+    birth_year: int | None = Field(None, description="출생 연도 (나이 계산용)")
+    birth_month: int | None = Field(None, description="출생 월")
+    birth_day: int | None = Field(None, description="출생 일")
+    gender: str | None = Field(None, description="성별 (male/female)")
 
 
 @router.post("/saju/interpret", response_model=InterpretResult)
@@ -99,7 +103,14 @@ async def interpret_saju(
     ANTHROPIC_API_KEY가 없으면 fallback 응답을 반환합니다.
     """
     try:
-        return await service.interpret(request.saju_result, request.user_context)
+        return await service.interpret(
+            request.saju_result,
+            request.user_context,
+            birth_year=request.birth_year,
+            birth_month=request.birth_month,
+            birth_day=request.birth_day,
+            gender=request.gender,
+        )
     except RuntimeError as e:
         raise HTTPException(status_code=502, detail=str(e)) from e
     except TimeoutError as e:

@@ -65,6 +65,7 @@ class InterpretResult(BaseModel):
     interpretation: str
     model: str
     is_fallback: bool
+    sewun_summaries: list[dict[str, int | str]] | None = None
 
 
 class PillarsResponse(BaseModel):
@@ -111,7 +112,8 @@ class IdentityResponse(BaseModel):
     sangsin_content: dict[str, Any] | None = None     # 상신 설명 콘텐츠 (sangsin content)
     gusin_content: dict[str, Any] | None = None       # 구신 설명 콘텐츠 (gusin content)
     shgj_gilhung_content: dict[str, Any] | None = None  # 신격 길흉 콘텐츠 (shgj gilhung content)
-    sangsin_compliment_content: dict[str, Any] | None = None  # 상신 보완 콘텐츠 (sangsin compliment content)
+    # 상신 보완 콘텐츠 (sangsin compliment content)
+    sangsin_compliment_content: dict[str, Any] | None = None
     gusin_gisin_content: dict[str, Any] | None = None  # 구신 기신 콘텐츠 (gusin gisin content)
     jisok_content: dict[str, Any] | None = None  # 지속 설명 콘텐츠 (jisok content)
     joonghwa_content: dict[str, Any] | None = None  # 중화 설명 콘텐츠 (joonghwa content)
@@ -123,4 +125,5 @@ class IdentityResponse(BaseModel):
     bestfriend_content: dict[str, Any] | None = None  # 베프 유형 콘텐츠 (bestfriend content)
     # Phase 3: 노소 유형, 경운 질문 콘텐츠
     old_young_content: dict[str, Any] | None = None  # 노소 유형 콘텐츠 (old young content)
-    light_question_content: dict[str, Any] | None = None  # 경운 질문 콘텐츠 (light question content)
+    # 경운 질문 콘텐츠 (light question content)
+    light_question_content: dict[str, Any] | None = None

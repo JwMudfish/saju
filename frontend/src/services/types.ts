@@ -12,12 +12,6 @@ export interface SajuRequest {
   is_leap_month: boolean
 }
 
-export interface ChatRequest {
-  message: string
-  session_id: string
-  context?: Record<string, unknown>
-}
-
 // ─── 도메인 타입 ─────────────────────────────────────────────
 
 export interface GanJi {
@@ -121,24 +115,36 @@ export interface IdentityResult {
   yongsin_content: Record<string, unknown> | null
 }
 
+// GPT-4o 명리학 해석 요청
+export interface InterpretRequest {
+  saju_result: SajuResult
+  user_context?: string
+  birth_year?: number
+  birth_month?: number
+  birth_day?: number
+  gender?: string
+}
+
+// 세운 연도별 요약
+export interface SewunYearSummary {
+  year: number
+  summary: string
+}
+
+// GPT-4o 명리학 해석 응답
+export interface InterpretResult {
+  interpretation: string
+  model: string
+  is_fallback: boolean
+  sewun_summaries?: SewunYearSummary[]
+}
+
 // 통합 사주 데이터 (화면 표시용)
 export interface SajuFullResult {
   request: SajuRequest
   pillars: SajuResult
   identity?: IdentityResult
-}
-
-// AI 채팅 응답
-export interface ChatMessage {
-  id: string
-  role: 'user' | 'assistant'
-  content: string
-  timestamp: number
-}
-
-export interface ChatResponse {
-  message: string
-  session_id: string
+  interpretation?: InterpretResult
 }
 
 // API 에러 응답

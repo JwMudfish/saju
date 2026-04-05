@@ -84,11 +84,11 @@ class TestBuildInterpretationPrompt:
         assert len(system_prompt) > 0
 
     def test_user_prompt_contains_section_wonkuk(self, full_saju_result: SajuResult) -> None:
-        """사용자 프롬프트에 사주 총평 섹션이 포함되어야 한다."""
+        """사용자 프롬프트에 사주 구조 진단 섹션이 포함되어야 한다."""
         from app.services.prompt_builder import build_interpretation_prompt
 
         _, user_prompt = build_interpretation_prompt(full_saju_result)
-        assert "사주 총평" in user_prompt
+        assert "사주 구조 진단" in user_prompt
 
     def test_user_prompt_contains_section_personality(self, full_saju_result: SajuResult) -> None:
         """사용자 프롬프트에 성격/기질 분석 섹션이 포함되어야 한다."""
@@ -275,6 +275,48 @@ class TestInterpretationService:
                 await service.interpret(minimal_saju_result)
 
     @pytest.mark.asyncio
+    async def test_empty_content_returns_fallback(self, minimal_saju_result: SajuResult) -> None:
+        """API가 빈 문자열을 반환하면 fallback 응답을 반환해야 한다."""
+        from app.services.interpretation_service import InterpretationService
+
+        mock_choice = MagicMock()
+        mock_choice.message.content = ""
+        mock_response = MagicMock()
+        mock_response.choices = [mock_choice]
+
+        with patch("openai.OpenAI") as mock_openai_cls:
+            mock_client = MagicMock()
+            mock_openai_cls.return_value = mock_client
+            mock_client.chat.completions.create.return_value = mock_response
+
+            service = InterpretationService(api_key="test-key")
+            result = await service.interpret(minimal_saju_result)
+
+        assert result.is_fallback is True
+        assert "응답을 생성하지 못했습니다" in result.interpretation
+
+    @pytest.mark.asyncio
+    async def test_none_content_returns_fallback(self, minimal_saju_result: SajuResult) -> None:
+        """API가 None을 반환하면 fallback 응답을 반환해야 한다."""
+        from app.services.interpretation_service import InterpretationService
+
+        mock_choice = MagicMock()
+        mock_choice.message.content = None
+        mock_response = MagicMock()
+        mock_response.choices = [mock_choice]
+
+        with patch("openai.OpenAI") as mock_openai_cls:
+            mock_client = MagicMock()
+            mock_openai_cls.return_value = mock_client
+            mock_client.chat.completions.create.return_value = mock_response
+
+            service = InterpretationService(api_key="test-key")
+            result = await service.interpret(minimal_saju_result)
+
+        assert result.is_fallback is True
+        assert "응답을 생성하지 못했습니다" in result.interpretation
+
+    @pytest.mark.asyncio
     async def test_interpret_result_model_name(self, full_saju_result: SajuResult) -> None:
         """결과의 model 필드가 올바른 모델명을 포함해야 한다."""
         from app.services.interpretation_service import (
@@ -296,3 +338,102 @@ class TestInterpretationService:
             result = await service.interpret(full_saju_result)
 
         assert result.model == INTERPRETATION_MODEL
+
+    @pytest.mark.asyncio
+    async def test_interpret_returns_sewun_summaries(self, full_saju_result: SajuResult) -> None:
+        """GPT 응답에 SEWUN_JSON 블록이 포함되면 sewun_summaries 필드가 반환되어야 한다."""
+        from app.services.interpretation_service import InterpretationService
+
+        gpt_content = (
+            "사주 해석 결과입니다.\n\n"
+            "<SEWUN_JSON>\n"
+            '{"year_summaries": [{"year": 2025, "summary": "올해 좋음"}, '
+            '{"year": 2026, "summary": "내년도 좋음"}]}\n'
+            "</SEWUN_JSON>"
+        )
+
+        mock_choice = MagicMock()
+        mock_choice.message.content = gpt_content
+        mock_response = MagicMock()
+        mock_response.choices = [mock_choice]
+
+        with patch("openai.OpenAI") as mock_openai_cls:
+            mock_client = MagicMock()
+            mock_openai_cls.return_value = mock_client
+            mock_client.chat.completions.create.return_value = mock_response
+
+            service = InterpretationService(api_key="test-key")
+            result = await service.interpret(full_saju_result)
+
+        assert result.is_fallback is False
+        assert result.sewun_summaries is not None
+        assert len(result.sewun_summaries) == 2
+        assert result.sewun_summaries[0]["year"] == 2025
+        assert "SEWUN_JSON" not in result.interpretation
+
+    @pytest.mark.asyncio
+    async def test_no_api_key_fallback_has_no_sewun_summaries(
+        self, minimal_saju_result: SajuResult
+    ) -> None:
+        """fallback 응답에서는 sewun_summaries가 None이어야 한다."""
+        from app.services.interpretation_service import InterpretationService
+
+        service = InterpretationService(api_key=None)
+        result = await service.interpret(minimal_saju_result)
+
+        assert result.is_fallback is True
+        assert result.sewun_summaries is None
+
+
+# ---------------------------------------------------------------------------
+# _extract_sewun_json 헬퍼 테스트
+# ---------------------------------------------------------------------------
+
+
+class TestExtractSewunJson:
+    """_extract_sewun_json() 함수 테스트."""
+
+    def test_extract_sewun_json_success(self) -> None:
+        """정상 JSON 추출 테스트."""
+        from app.services.interpretation_service import _extract_sewun_json
+
+        content = (
+            "사주 해석 본문입니다.\n\n"
+            "<SEWUN_JSON>\n"
+            '{"year_summaries": [{"year": 2025, "summary": "좋은 해"}, '
+            '{"year": 2026, "summary": "보통"}]}\n'
+            "</SEWUN_JSON>"
+        )
+        clean, summaries = _extract_sewun_json(content)
+
+        assert "SEWUN_JSON" not in clean
+        assert clean == "사주 해석 본문입니다."
+        assert summaries is not None
+        assert len(summaries) == 2
+        assert summaries[0]["year"] == 2025
+        assert summaries[0]["summary"] == "좋은 해"
+
+    def test_extract_sewun_json_missing(self) -> None:
+        """<SEWUN_JSON> 태그가 없으면 원본 content를 그대로 반환한다."""
+        from app.services.interpretation_service import _extract_sewun_json
+
+        content = "사주 해석 본문만 있습니다."
+        clean, summaries = _extract_sewun_json(content)
+
+        assert clean == content
+        assert summaries is None
+
+    def test_extract_sewun_json_invalid_json(self) -> None:
+        """잘못된 JSON이면 None을 반환한다."""
+        from app.services.interpretation_service import _extract_sewun_json
+
+        content = (
+            "사주 해석 본문입니다.\n\n"
+            "<SEWUN_JSON>\n"
+            "이것은 유효하지 않은 JSON입니다\n"
+            "</SEWUN_JSON>"
+        )
+        clean, summaries = _extract_sewun_json(content)
+
+        assert "SEWUN_JSON" not in clean
+        assert summaries is None

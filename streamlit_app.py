@@ -17,6 +17,7 @@ from app.services.content_loader import (
     get_hapchung_content,
     get_hisin_content,
     get_hisin_gisin_content,
+    get_hwakjang_content,
     get_ilgan_content,
     get_ilgan_hw_content,
     get_ilgan_love_content,
@@ -24,11 +25,10 @@ from app.services.content_loader import (
     get_joonghwa_content,
     get_light_question_content,
     get_old_young_content,
+    get_salary_content,
     get_sangsin_compliment_content,
     get_sangsin_content,
-    get_salary_content,
     get_shgj_gilhung_content,
-    get_hwakjang_content,
     get_yongsin_content,
 )
 
@@ -721,7 +721,9 @@ def render_tab_light_question(result: dict[str, Any]) -> None:
             if light_q1:
                 # Expander 타이틀에 용신/격국 정보 표시
                 if q1_type == "yongsin" and yongshin:
-                    dang_ryeong = yongshin.get("dang_ryeong", "") if isinstance(yongshin, dict) else ""
+                    dang_ryeong = (
+                        yongshin.get("dang_ryeong", "") if isinstance(yongshin, dict) else ""
+                    )
                     expander_title = f"기본 경운 (용신: {dang_ryeong})"
                 else:
                     expander_title = f"기본 경운 (격국: {gyouk_name})"
@@ -732,7 +734,11 @@ def render_tab_light_question(result: dict[str, Any]) -> None:
                         # 사용자의 용신/격국에 해당하는 항목만 필터링
                         if q1_type == "yongsin" and yongshin:
                             # 용신 기반: 당령(dang_ryeong)으로 필터링
-                            dang_ryeong = yongshin.get("dang_ryeong", "") if isinstance(yongshin, dict) else ""
+                            dang_ryeong = (
+                                yongshin.get("dang_ryeong", "")
+                                if isinstance(yongshin, dict)
+                                else ""
+                            )
                             target_title = _DANG_RYEONG_TO_CODE.get(dang_ryeong)
                             if target_title:
                                 for item in contents_list:
@@ -1060,7 +1066,7 @@ def render_tab_identity(result: dict[str, Any]) -> None:
                     contents_list = gusin_gisin.get("contentsList", [])
                     if contents_list:
                         # gusin 값에 해당하는 title만 필터링
-                        target_title = f"gusin_gisingusin"
+                        target_title = "gusin_gisingusin"
                         for item in contents_list:
                             if item.get("title") == target_title:
                                 subtitle = item.get("subtitle", "")

@@ -4,7 +4,6 @@ import { AppLayout } from '@/components/layout/AppLayout'
 import { LandingPage } from '@/pages/LandingPage'
 import { OnboardingPage } from '@/pages/OnboardingPage'
 import { ReportPage } from '@/pages/ReportPage'
-import { ChatPage } from '@/pages/ChatPage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 
 function App() {
@@ -18,7 +17,6 @@ function App() {
         {/* AppLayout을 감싸는 페이지 */}
         <Route element={<AppLayout />}>
           <Route path="/report" element={<ReportPage />} />
-          <Route path="/chat" element={<ChatPage />} />
         </Route>
 
         {/* 404 처리 */}

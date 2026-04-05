@@ -3,8 +3,8 @@ import type {
   SajuRequest,
   SajuResult,
   IdentityResult,
-  ChatRequest,
-  ChatResponse,
+  InterpretRequest,
+  InterpretResult,
   ApiError,
 } from './types'
 
@@ -74,9 +74,11 @@ export async function fetchIdentity(request: SajuRequest): Promise<IdentityResul
   return data
 }
 
-// AI 채팅
-export async function sendChatMessage(request: ChatRequest): Promise<ChatResponse> {
-  const { data } = await apiClient.post<ChatResponse>('/chat', request)
+// GPT-4o 명리학 해석 요청 (응답 10-30초 소요 가능)
+export async function fetchInterpretation(request: InterpretRequest): Promise<InterpretResult> {
+  const { data } = await apiClient.post<InterpretResult>('/saju/interpret', request, {
+    timeout: 60000, // GPT-4o 응답 대기시간 60초
+  })
   return data
 }
 

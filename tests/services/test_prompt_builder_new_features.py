@@ -13,12 +13,13 @@ import pytest
 from app.services.prompt_builder import (
     _build_core_summary_section,
     _build_myeongli_content_section,
+    _build_sewun_json_instruction,
     _build_user_question_section,
     _extract_question_category,
     _yuksin_to_gyouk,
     build_interpretation_prompt,
 )
-from core.models.domain import DeunItem, GanJi, OHangRatio, YuksinItem, YongshinResult
+from core.models.domain import DeunItem, GanJi, OHangRatio, SewunItem, YongshinResult, YuksinItem
 from core.models.response import DeunResult, SajuResult
 
 
@@ -281,24 +282,23 @@ class TestUserQuestionBuilding:
         """질문이 있으면 질문 섹션이 생성된다."""
         section = _build_user_question_section("직업 운은 어떨까요?")
 
-        assert "## 사용자 질문" in section
+        assert "## 사용자 현재 상황 및 요청" in section
         assert "직업 운은 어떨까요?" in section
 
     def test_question_section_includes_category(self) -> None:
         """질문 섹션에 카테고리가 포함된다."""
         section = _build_user_question_section("직업 운은 어떨까요?")
 
-        assert "**질문 카테고리**: 직업" in section
-        assert "**해석 가이드**:" in section
+        assert "**분류된 관심 영역**: 직업" in section
+        assert "**해석 우선순위**:" in section
         assert "'직업'" in section
-        assert "상세히 해석" in section
 
     def test_question_section_without_category(self) -> None:
-        """카테고리를 분류할 수 없으면 균형 해석 가이드가 포함된다."""
+        """카테고리를 분류할 수 없으면 사주 구조 연계 해석 가이드가 포함된다."""
         section = _build_user_question_section("운세가 어떨까요?")
 
-        assert "## 사용자 질문" in section
-        assert "균형 있게 해석" in section
+        assert "## 사용자 현재 상황 및 요청" in section
+        assert "사주 구조 분석과 직접 연결" in section
 
 
 class TestYuksinToGyoukConversion:
@@ -364,8 +364,8 @@ class TestIntegratedPromptBuilding:
         assert "## 사주 사기둥" in user_prompt
         assert "## 명리학 콘텐츠" in user_prompt
         assert "## 핵심 판단 요약" in user_prompt
-        assert "## 사용자 질문" in user_prompt
-        assert "## 해석 요청 사항" in user_prompt
+        assert "## 사용자 현재 상황 및 요청" in user_prompt
+        assert "## 해석 지침" in user_prompt
 
         # 명리학 콘텐츠 포함
         assert "### 일간: 경" in user_prompt
@@ -377,4 +377,67 @@ class TestIntegratedPromptBuilding:
         assert "**오행 분석**:" in user_prompt
 
         # 질문 카테고리 포함
-        assert "**질문 카테고리**: 직업" in user_prompt
+        assert "**분류된 관심 영역**: 직업" in user_prompt
+
+        # 세운 JSON 출력 지침 포함
+        assert "SEWUN_JSON" in user_prompt
+        assert "3년 흐름 JSON 출력" in user_prompt
+
+
+class TestSewunJsonInstruction:
+    """세운 3년 흐름 JSON 출력 지침 테스트."""
+
+    def test_sewun_json_instruction_in_prompt(self, sample_saju_result: SajuResult) -> None:
+        """프롬프트에 SEWUN_JSON 출력 지침이 포함되어야 한다."""
+        _, user_prompt = build_interpretation_prompt(sample_saju_result)
+
+        assert "<SEWUN_JSON>" in user_prompt
+        assert "</SEWUN_JSON>" in user_prompt
+        assert "3년 흐름 JSON 출력" in user_prompt
+        assert "year_summaries" in user_prompt
+
+    def test_sewun_json_instruction_uses_sewun_years(self) -> None:
+        """sewun 데이터가 있으면 해당 연도를 사용한다."""
+        saju_result = SajuResult(
+            year_pillar=GanJi(gan="갑", ji="자"),
+            month_pillar=GanJi(gan="을", ji="축"),
+            day_pillar=GanJi(gan="병", ji="인"),
+            sewun=[
+                SewunItem(year=2024, ganji=GanJi(gan="갑", ji="진")),
+                SewunItem(year=2025, ganji=GanJi(gan="을", ji="사"), is_current=True),
+                SewunItem(year=2026, ganji=GanJi(gan="병", ji="오")),
+            ],
+        )
+        instruction = _build_sewun_json_instruction(saju_result)
+
+        assert "2024" in instruction
+        assert "2025" in instruction
+        assert "2026" in instruction
+
+    def test_sewun_json_instruction_without_sewun_data(self) -> None:
+        """sewun 데이터가 없으면 현재 연도 기준으로 생성한다."""
+        from datetime import date
+
+        saju_result = SajuResult(
+            year_pillar=GanJi(gan="갑", ji="자"),
+            month_pillar=GanJi(gan="을", ji="축"),
+            day_pillar=GanJi(gan="병", ji="인"),
+        )
+        instruction = _build_sewun_json_instruction(saju_result)
+
+        today_year = date.today().year
+        assert str(today_year - 1) in instruction
+        assert str(today_year) in instruction
+        assert str(today_year + 1) in instruction
+
+    def test_sewun_json_instruction_contains_guidance(self) -> None:
+        """세운 JSON 지침에 용신/기신 관점 가이드가 포함된다."""
+        saju_result = SajuResult(
+            year_pillar=GanJi(gan="갑", ji="자"),
+            month_pillar=GanJi(gan="을", ji="축"),
+            day_pillar=GanJi(gan="병", ji="인"),
+        )
+        instruction = _build_sewun_json_instruction(saju_result)
+
+        assert "용신/기신" in instruction
+        assert "2문장" in instruction

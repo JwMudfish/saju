@@ -1,22 +1,15 @@
 // ReportPage.tsx: 사주 분석 결과 페이지 (레퍼런스 디자인 기반 - 2컬럼 레이아웃)
-import { useState, useRef } from 'react'
 import { useNavigate, Navigate } from 'react-router-dom'
 import { useSajuStore } from '@/stores/sajuStore'
-import { useChatStore } from '@/stores/chatStore'
-import { sendChatMessage } from '@/services/sajuApi'
 import { PillarGrid } from '@/components/report/PillarGrid'
 import { OhangBar } from '@/components/report/OhangBar'
 import { DetailAnalysisAccordion } from '@/components/report/DetailAnalysisAccordion'
+import { InterpretSection } from '@/components/report/InterpretSection'
 import { Button } from '@/components/ui/Button'
-import type { ChatMessage } from '@/services/types'
 
 export function ReportPage() {
   const navigate = useNavigate()
-  const { result, _hydrated, reset: resetStore } = useSajuStore()
-  const { addMessage } = useChatStore()
-  const [quickInput, setQuickInput] = useState('')
-  const [isSending, setIsSending] = useState(false)
-  const inputRef = useRef<HTMLInputElement>(null)
+  const { result, _hydrated, reset: resetStore, isInterpreting, interpretError, requestInterpretation } = useSajuStore()
 
   // localStorage 복원 전에는 렌더링 보류
   if (!_hydrated) return null
@@ -31,43 +24,6 @@ export function ReportPage() {
   // 생년월일 포맷
   const birthDateStr = `${request.year}.${String(request.month).padStart(2, '0')}.${String(request.day).padStart(2, '0')} (${request.is_lunar ? '음력' : '양력'})`
   const genderStr = request.gender === 'male' ? '남성' : '여성'
-
-  // 리포트에서 바로 AI에게 질문 전송
-  async function handleQuickAsk(text?: string) {
-    const question = (text ?? quickInput).trim()
-    if (!question || isSending) return
-
-    setQuickInput('')
-    setIsSending(true)
-
-    const userMessage: ChatMessage = {
-      id: `${Date.now()}-user`,
-      role: 'user',
-      content: question,
-      timestamp: Date.now(),
-    }
-    addMessage(userMessage)
-
-    try {
-      const response = await sendChatMessage({
-        message: question,
-        session_id: '',
-        context: { saju_result: result },
-      })
-      const aiMessage: ChatMessage = {
-        id: `${Date.now()}-ai`,
-        role: 'assistant',
-        content: response.message,
-        timestamp: Date.now(),
-      }
-      addMessage(aiMessage)
-      navigate('/chat')
-    } catch {
-      navigate('/chat')
-    } finally {
-      setIsSending(false)
-    }
-  }
 
   // 오행 비율 데이터 (백엔드 필드명: mok/hwa/to/geum/su)
   const ohangRatio = pillars.ohang_ratio
@@ -87,8 +43,21 @@ export function ReportPage() {
     .filter((s) => s.year >= currentYear - 1 && s.year <= currentYear + 1)
     .slice(0, 3)
 
+  // sewun_summaries: interpretation이 없을 때는 빈 배열
+  const yearSummaries = result.interpretation?.sewun_summaries ?? []
+
   const yearIcons = ['rocket_launch', 'payments', 'favorite']
   const yearAccents = [false, true, false]
+
+  // 핵심 키워드 3개 (subtitle을 '/'로 분리)
+  const keywords = identity?.ilgan_content?.['subtitle']
+    ? String(identity.ilgan_content['subtitle']).split('/').map((t) => t.trim()).filter(Boolean).slice(0, 3)
+    : []
+
+  // 성향 요약 첫 2문단
+  const summaryLines = identity?.ilgan_content?.['contents']
+    ? String(identity.ilgan_content['contents']).split('\n').filter(Boolean).slice(0, 2)
+    : []
 
   return (
     <div className="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
@@ -106,22 +75,7 @@ export function ReportPage() {
               <span className="text-primary border-b-2 border-primary pb-1 cursor-default">
                 리포트
               </span>
-              <button
-                type="button"
-                onClick={() => navigate('/chat')}
-                className="hover:text-primary transition-colors"
-              >
-                상담
-              </button>
             </nav>
-            <Button
-              variant="primary"
-              size="md"
-              onClick={() => navigate('/chat')}
-            >
-              <span className="material-symbols-outlined text-sm">auto_awesome</span>
-              <span>AI 깊은 상담 시작하기</span>
-            </Button>
             {/* 사용자 아바타 */}
             <div className="size-10 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center">
               <span className="material-symbols-outlined text-primary text-lg">person</span>
@@ -142,7 +96,7 @@ export function ReportPage() {
 
           {/* 2컬럼 그리드 */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            {/* 왼쪽 컬럼: 만세력 + 성향 요약 + 3년 흐름 */}
+            {/* 왼쪽 컬럼: 만세력 + 사주 요약 + 3년 흐름 */}
             <div className="lg:col-span-8 space-y-8">
               {/* 만세력 섹션 */}
               <section className="bg-white dark:bg-slate-900 rounded-xl p-6 shadow-sm border border-primary/10">
@@ -153,81 +107,54 @@ export function ReportPage() {
                 <PillarGrid pillars={pillars} yuksinList={pillars.yuksin_list} />
               </section>
 
-              {/* 성향 요약 섹션 */}
+              {/* 사주 요약 섹션 */}
               <section className="bg-white dark:bg-slate-900 rounded-xl p-6 shadow-sm border border-primary/10">
                 <div className="flex items-center gap-2 mb-6">
                   <span className="material-symbols-outlined text-accent-gold">psychology</span>
-                  <h2 className="text-xl font-bold">인생 성향 요약</h2>
+                  <h2 className="text-xl font-bold">사주 요약</h2>
                 </div>
 
-                {identity?.ilgan_content || identity?.gyouk_content ? (
-                  <div className="space-y-6">
-                    {/* 일간 카드 */}
-                    {identity.ilgan_content && (
-                      <div>
-                        {/* 헤더: 격국 뱃지 + 일간 타이틀 */}
-                        <div className="flex flex-wrap items-center gap-2 mb-3">
-                          {identity.gyouk_name && (
-                            <span className="px-3 py-1 bg-accent-gold/10 text-accent-gold rounded-full text-xs font-bold border border-accent-gold/20">
-                              {identity.gyouk_name}
-                            </span>
-                          )}
-                          {!!identity.ilgan_content['ilganDesciption'] && (
-                            <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-bold border border-primary/20">
-                              {String(identity.ilgan_content['ilganDesciption'])}
-                            </span>
-                          )}
-                        </div>
-                        {/* 해시태그 */}
-                        {!!identity.ilgan_content['subtitle'] && (
-                          <div className="flex flex-wrap gap-1.5 mb-3">
-                            {String(identity.ilgan_content['subtitle'])
-                              .split('/')
-                              .map((tag) => tag.trim())
-                              .filter(Boolean)
-                              .map((tag) => (
-                                <span key={tag} className="text-xs text-primary/70 font-medium">
-                                  {tag}
-                                </span>
-                              ))}
-                          </div>
-                        )}
-                        {/* 본문 */}
-                        {!!identity.ilgan_content['contents'] && (
-                          <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed whitespace-pre-line">
-                            {String(identity.ilgan_content['contents'])}
-                          </p>
-                        )}
+                {identity?.ilgan_content ? (
+                  <div className="space-y-4">
+                    {/* 핵심 키워드 (최상단) */}
+                    {keywords.length > 0 && (
+                      <div className="flex flex-wrap gap-2">
+                        {keywords.map((kw) => (
+                          <span
+                            key={kw}
+                            className="text-primary font-bold text-sm px-3 py-1.5 bg-primary/5 rounded-full border border-primary/15"
+                          >
+                            #{kw}
+                          </span>
+                        ))}
                       </div>
                     )}
 
-                    {/* 격국 카드 */}
-                    {identity.gyouk_content && (
-                      <div className="pt-4 border-t border-primary/5">
-                        {!!identity.gyouk_content['titleDescription'] && (
-                          <p className="text-base font-bold text-slate-800 dark:text-slate-200 mb-2">
-                            {String(identity.gyouk_content['titleDescription'])}
+                    {/* 뱃지 행: 격국 + 일간 설명 */}
+                    <div className="flex flex-wrap items-center gap-2">
+                      {identity.gyouk_name && (
+                        <span className="px-3 py-1 bg-accent-gold/10 text-accent-gold rounded-full text-xs font-bold border border-accent-gold/20">
+                          {identity.gyouk_name}
+                        </span>
+                      )}
+                      {!!identity.ilgan_content['ilganDesciption'] && (
+                        <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-bold border border-primary/20">
+                          {String(identity.ilgan_content['ilganDesciption'])}
+                        </span>
+                      )}
+                    </div>
+
+                    {/* 성향 요약 문장 (첫 2문단) */}
+                    {summaryLines.length > 0 && (
+                      <div className="space-y-2">
+                        {summaryLines.map((line, idx) => (
+                          <p
+                            key={idx}
+                            className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed"
+                          >
+                            {line}
                           </p>
-                        )}
-                        {/* 긍정 태그 */}
-                        {!!identity.gyouk_content['tagZoryun'] && (
-                          <div className="flex flex-wrap gap-1.5 mb-3">
-                            {String(identity.gyouk_content['tagZoryun'])
-                              .split('#')
-                              .map((t) => t.trim())
-                              .filter(Boolean)
-                              .map((t) => (
-                                <span key={t} className="text-xs bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 px-2 py-0.5 rounded-full border border-green-200 dark:border-green-800">
-                                  #{t}
-                                </span>
-                              ))}
-                          </div>
-                        )}
-                        {!!identity.gyouk_content['contents'] && (
-                          <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed whitespace-pre-line">
-                            {String(identity.gyouk_content['contents'])}
-                          </p>
-                        )}
+                        ))}
                       </div>
                     )}
                   </div>
@@ -238,6 +165,14 @@ export function ReportPage() {
                   </div>
                 )}
               </section>
+
+              {/* AI 명리 전문가 해석 섹션 */}
+              <InterpretSection
+                interpretation={result.interpretation}
+                isInterpreting={isInterpreting}
+                interpretError={interpretError}
+                onRequestInterpretation={(ctx) => void requestInterpretation(ctx)}
+              />
 
               {/* 3년 흐름 섹션 */}
               {sewunYears.length > 0 && (
@@ -250,6 +185,7 @@ export function ReportPage() {
                   <div className="relative flex flex-col md:flex-row justify-between gap-8 md:before:content-[''] md:before:block md:before:absolute md:before:top-6 md:before:left-0 md:before:w-full md:before:h-0.5 md:before:bg-primary/10 md:before:-z-0">
                     {sewunYears.map((sewun, idx) => {
                       const isAccent = yearAccents[idx] ?? false
+                      const yearlySummary = yearSummaries.find((s) => s.year === sewun.year)?.summary
                       return (
                         <div
                           key={sewun.year}
@@ -284,8 +220,8 @@ export function ReportPage() {
                           >
                             {sewun.year === currentYear ? '올해' : sewun.year > currentYear ? '내년' : '작년'}
                           </p>
-                          {sewun.description && (
-                            <p className="text-sm text-slate-500">{sewun.description}</p>
+                          {yearlySummary && (
+                            <p className="text-sm text-slate-500 leading-relaxed">{yearlySummary}</p>
                           )}
                         </div>
                       )
@@ -370,17 +306,6 @@ export function ReportPage() {
                 </div>
               </div>
 
-              {/* 바로 AI 상담 버튼 */}
-              <Button
-                variant="primary"
-                size="lg"
-                onClick={() => navigate('/chat')}
-                className="w-full"
-              >
-                <span className="material-symbols-outlined">auto_awesome</span>
-                AI와 깊은 상담 시작하기
-              </Button>
-
               {/* 새로운 분석 시작 CTA */}
               <Button
                 variant="secondary"
@@ -396,63 +321,6 @@ export function ReportPage() {
             </div>
           </div>
         </main>
-
-        {/* 하단 AI 질문 영역 */}
-        <footer className="mt-auto bg-white dark:bg-slate-900 border-t border-primary/10 p-6">
-          <div className="max-w-[800px] mx-auto space-y-4">
-            {/* 프리셋 질문 칩 */}
-            <div className="flex flex-wrap gap-2 justify-center mb-2">
-              {[
-                '올해 연애운은 어떤가요?',
-                '금전운을 높이는 개운법',
-                '주의해야 할 달은 언제인가요?',
-                '나와 잘 맞는 사주는?',
-              ].map((q) => (
-                <button
-                  key={q}
-                  type="button"
-                  onClick={() => void handleQuickAsk(q)}
-                  disabled={isSending}
-                  className="px-4 py-1.5 bg-background-light dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full text-xs font-medium hover:border-primary transition-colors disabled:opacity-50"
-                >
-                  {q}
-                </button>
-              ))}
-            </div>
-
-            <h3 className="text-center font-bold text-primary mb-2">AI에게 물어보기</h3>
-
-            {/* 입력창 */}
-            <div className="relative group">
-              <input
-                ref={inputRef}
-                type="text"
-                value={quickInput}
-                onChange={(e) => setQuickInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') void handleQuickAsk()
-                }}
-                placeholder="사주에 대해 궁금한 점을 더 물어보세요..."
-                disabled={isSending}
-                className="w-full bg-background-light dark:bg-slate-800 border-none rounded-xl py-4 pl-6 pr-14 focus:ring-2 focus:ring-primary/20 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 transition-all shadow-inner disabled:opacity-50"
-              />
-              <button
-                type="button"
-                onClick={() => void handleQuickAsk()}
-                disabled={!quickInput.trim() || isSending}
-                className="absolute right-3 top-1/2 -translate-y-1/2 size-10 bg-primary text-white rounded-lg flex items-center justify-center hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 disabled:opacity-40"
-                aria-label="전송"
-              >
-                <span className="material-symbols-outlined">send</span>
-              </button>
-            </div>
-
-            <p className="text-center text-[10px] text-slate-400">
-              AI 코치는 전통적인 사주 원칙과 일반적인 데이터를 바탕으로 통찰력을 제공합니다. 참고
-              및 엔터테인먼트 용도로만 사용하십시오.
-            </p>
-          </div>
-        </footer>
       </div>
     </div>
   )

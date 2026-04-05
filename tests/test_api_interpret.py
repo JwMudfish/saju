@@ -208,4 +208,57 @@ class TestInterpretEndpoint:
         assert response.status_code == 200
         data = response.json()
         assert "model" in data
-        assert data["model"] == "gpt-4o"
+        assert data["model"] == "gpt-5.2"
+
+    def test_response_has_sewun_summaries_field(
+        self, client: TestClient, minimal_saju_payload: dict
+    ) -> None:
+        """응답에 sewun_summaries 필드가 존재해야 한다 (None 허용)."""
+        with patch("app.api.deps.get_settings") as mock_settings:
+            settings = MagicMock()
+            settings.openai_api_key = None
+            mock_settings.return_value = settings
+
+            response = client.post("/api/v1/saju/interpret", json=minimal_saju_payload)
+
+        assert response.status_code == 200
+        data = response.json()
+        assert "sewun_summaries" in data
+        # fallback 시 None
+        assert data["sewun_summaries"] is None
+
+    def test_response_sewun_summaries_with_gpt(
+        self, client: TestClient, full_saju_payload: dict
+    ) -> None:
+        """GPT 응답에 SEWUN_JSON 블록이 있으면 sewun_summaries가 파싱되어야 한다."""
+        gpt_content = (
+            "사주 해석 결과입니다.\n\n"
+            "<SEWUN_JSON>\n"
+            '{"year_summaries": [{"year": 2025, "summary": "좋은 해"}, '
+            '{"year": 2026, "summary": "보통의 해"}]}\n'
+            "</SEWUN_JSON>"
+        )
+        mock_choice = MagicMock()
+        mock_choice.message.content = gpt_content
+        mock_response = MagicMock()
+        mock_response.choices = [mock_choice]
+
+        with (
+            patch("app.api.deps.get_settings") as mock_settings,
+            patch("openai.OpenAI") as mock_openai_cls,
+        ):
+            settings = MagicMock()
+            settings.openai_api_key = "test-key"
+            mock_settings.return_value = settings
+
+            mock_client = MagicMock()
+            mock_openai_cls.return_value = mock_client
+            mock_client.chat.completions.create.return_value = mock_response
+
+            response = client.post("/api/v1/saju/interpret", json=full_saju_payload)
+
+        assert response.status_code == 200
+        data = response.json()
+        assert data["sewun_summaries"] is not None
+        assert len(data["sewun_summaries"]) == 2
+        assert data["sewun_summaries"][0]["year"] == 2025
