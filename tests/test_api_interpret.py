@@ -224,8 +224,10 @@ class TestInterpretEndpoint:
         assert response.status_code == 200
         data = response.json()
         assert "sewun_summaries" in data
+        assert "saju_summary" in data
         # fallback 시 None
         assert data["sewun_summaries"] is None
+        assert data["saju_summary"] is None
 
     def test_response_sewun_summaries_with_gpt(
         self, client: TestClient, full_saju_payload: dict
@@ -262,3 +264,41 @@ class TestInterpretEndpoint:
         assert data["sewun_summaries"] is not None
         assert len(data["sewun_summaries"]) == 2
         assert data["sewun_summaries"][0]["year"] == 2025
+        # SAJU_SUMMARY 없는 응답이므로 saju_summary는 None
+        assert data["saju_summary"] is None
+
+    def test_response_saju_summary_with_gpt(
+        self, client: TestClient, full_saju_payload: dict
+    ) -> None:
+        """GPT 응답에 SAJU_SUMMARY 블록이 있으면 saju_summary가 파싱되어야 한다."""
+        gpt_content = (
+            "사주 해석 결과입니다.\n\n"
+            "<SAJU_SUMMARY>\n"
+            '{"keywords": ["추진력", "완벽주의", "직관력"], '
+            '"summary": "이 사주를 가진 사람은 강한 추진력을 가집니다."}\n'
+            "</SAJU_SUMMARY>"
+        )
+        mock_choice = MagicMock()
+        mock_choice.message.content = gpt_content
+        mock_response = MagicMock()
+        mock_response.choices = [mock_choice]
+
+        with (
+            patch("app.api.deps.get_settings") as mock_settings,
+            patch("openai.OpenAI") as mock_openai_cls,
+        ):
+            settings = MagicMock()
+            settings.openai_api_key = "test-key"
+            mock_settings.return_value = settings
+
+            mock_client = MagicMock()
+            mock_openai_cls.return_value = mock_client
+            mock_client.chat.completions.create.return_value = mock_response
+
+            response = client.post("/api/v1/saju/interpret", json=full_saju_payload)
+
+        assert response.status_code == 200
+        data = response.json()
+        assert data["saju_summary"] is not None
+        assert data["saju_summary"]["keywords"] == ["추진력", "완벽주의", "직관력"]
+        assert "추진력" in data["saju_summary"]["summary"]

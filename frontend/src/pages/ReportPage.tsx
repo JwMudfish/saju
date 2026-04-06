@@ -46,18 +46,10 @@ export function ReportPage() {
   // sewun_summaries: interpretation이 없을 때는 빈 배열
   const yearSummaries = result.interpretation?.sewun_summaries ?? []
 
-  const yearIcons = ['rocket_launch', 'payments', 'favorite']
   const yearAccents = [false, true, false]
 
-  // 핵심 키워드 3개 (subtitle을 '/'로 분리)
-  const keywords = identity?.ilgan_content?.['subtitle']
-    ? String(identity.ilgan_content['subtitle']).split('/').map((t) => t.trim()).filter(Boolean).slice(0, 3)
-    : []
-
-  // 성향 요약 첫 2문단
-  const summaryLines = identity?.ilgan_content?.['contents']
-    ? String(identity.ilgan_content['contents']).split('\n').filter(Boolean).slice(0, 2)
-    : []
+  // LLM 사주 요약
+  const sajuSummary = result.interpretation?.saju_summary
 
   return (
     <div className="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
@@ -114,12 +106,12 @@ export function ReportPage() {
                   <h2 className="text-xl font-bold">사주 요약</h2>
                 </div>
 
-                {identity?.ilgan_content ? (
+                {sajuSummary ? (
                   <div className="space-y-4">
-                    {/* 핵심 키워드 (최상단) */}
-                    {keywords.length > 0 && (
+                    {/* 핵심 키워드 칩 */}
+                    {sajuSummary.keywords.length > 0 && (
                       <div className="flex flex-wrap gap-2">
-                        {keywords.map((kw) => (
+                        {sajuSummary.keywords.map((kw) => (
                           <span
                             key={kw}
                             className="text-primary font-bold text-sm px-3 py-1.5 bg-primary/5 rounded-full border border-primary/15"
@@ -129,39 +121,23 @@ export function ReportPage() {
                         ))}
                       </div>
                     )}
-
-                    {/* 뱃지 행: 격국 + 일간 설명 */}
-                    <div className="flex flex-wrap items-center gap-2">
-                      {identity.gyouk_name && (
-                        <span className="px-3 py-1 bg-accent-gold/10 text-accent-gold rounded-full text-xs font-bold border border-accent-gold/20">
-                          {identity.gyouk_name}
-                        </span>
-                      )}
-                      {!!identity.ilgan_content['ilganDesciption'] && (
-                        <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-bold border border-primary/20">
-                          {String(identity.ilgan_content['ilganDesciption'])}
-                        </span>
-                      )}
-                    </div>
-
-                    {/* 성향 요약 문장 (첫 2문단) */}
-                    {summaryLines.length > 0 && (
-                      <div className="space-y-2">
-                        {summaryLines.map((line, idx) => (
-                          <p
-                            key={idx}
-                            className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed"
-                          >
-                            {line}
-                          </p>
-                        ))}
-                      </div>
-                    )}
+                    {/* 성향 요약 */}
+                    <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                      {sajuSummary.summary}
+                    </p>
                   </div>
-                ) : (
+                ) : result.interpretation ? (
                   <div className="flex flex-col items-center py-8 text-slate-400">
                     <span className="material-symbols-outlined text-4xl mb-2">psychology</span>
-                    <p className="text-sm">AI 상담을 통해 더 자세한 분석을 받아보세요</p>
+                    <p className="text-sm">요약 정보를 불러올 수 없습니다</p>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center py-8 text-slate-400 gap-2">
+                    <span className="material-symbols-outlined text-4xl mb-2">auto_awesome</span>
+                    <p className="text-sm text-center leading-relaxed">
+                      아래 <span className="text-primary font-medium">명리 전문가 해석 받기</span>를 통해
+                      <br />AI가 분석한 성향 요약을 확인하세요
+                    </p>
                   </div>
                 )}
               </section>
@@ -177,52 +153,72 @@ export function ReportPage() {
               {/* 3년 흐름 섹션 */}
               {sewunYears.length > 0 && (
                 <section className="bg-white dark:bg-slate-900 rounded-xl p-6 shadow-sm border border-primary/10">
-                  <div className="flex items-center gap-2 mb-8">
+                  <div className="flex items-center gap-2 mb-6">
                     <span className="material-symbols-outlined text-accent-gold">timeline</span>
                     <h2 className="text-xl font-bold">최근 3년 흐름</h2>
                   </div>
 
-                  <div className="relative flex flex-col md:flex-row justify-between gap-8 md:before:content-[''] md:before:block md:before:absolute md:before:top-6 md:before:left-0 md:before:w-full md:before:h-0.5 md:before:bg-primary/10 md:before:-z-0">
+                  <div className="relative pl-5 space-y-3">
+                    {/* 세로 타임라인 선 */}
+                    <div className="absolute left-[9px] top-2 bottom-2 w-0.5 bg-primary/10" />
+
                     {sewunYears.map((sewun, idx) => {
                       const isAccent = yearAccents[idx] ?? false
                       const yearlySummary = yearSummaries.find((s) => s.year === sewun.year)?.summary
+                      const yearLabel =
+                        sewun.year === currentYear
+                          ? '올해'
+                          : sewun.year > currentYear
+                            ? '내년'
+                            : '작년'
                       return (
-                        <div
-                          key={sewun.year}
-                          className={[
-                            'relative z-10 flex-1 bg-white dark:bg-slate-800 p-4 rounded-lg shadow-sm',
-                            isAccent
-                              ? 'border border-accent-gold/20 ring-1 ring-accent-gold/30'
-                              : 'border border-primary/5',
-                          ].join(' ')}
-                        >
+                        <div key={sewun.year} className="relative">
+                          {/* 타임라인 노드 */}
                           <div
                             className={[
-                              'size-12 rounded-full flex items-center justify-center mb-4 mx-auto md:mx-0',
+                              'absolute -left-5 top-4 size-[10px] rounded-full border-2',
                               isAccent
-                                ? 'bg-accent-gold/10 text-accent-gold'
-                                : 'bg-primary/10 text-primary',
+                                ? 'bg-accent-gold border-accent-gold'
+                                : 'bg-white dark:bg-slate-900 border-primary/30',
                             ].join(' ')}
-                          >
-                            <span className="material-symbols-outlined">
-                              {yearIcons[idx] ?? 'star'}
-                            </span>
-                          </div>
-                          <h3 className="font-bold text-lg mb-1">
-                            {sewun.year} ({sewun.ganji.gan}
-                            {sewun.ganji.ji}년)
-                          </h3>
-                          <p
+                          />
+                          {/* 카드 */}
+                          <div
                             className={[
-                              'text-xs font-bold mb-2',
-                              isAccent ? 'text-accent-gold' : 'text-primary',
+                              'rounded-lg p-4',
+                              isAccent
+                                ? 'bg-accent-gold/5 border border-accent-gold/20 ring-1 ring-accent-gold/20'
+                                : 'bg-slate-50 dark:bg-slate-800/60 border border-primary/5',
                             ].join(' ')}
                           >
-                            {sewun.year === currentYear ? '올해' : sewun.year > currentYear ? '내년' : '작년'}
-                          </p>
-                          {yearlySummary && (
-                            <p className="text-sm text-slate-500 leading-relaxed">{yearlySummary}</p>
-                          )}
+                            <div className="flex items-center gap-2 mb-2">
+                              <h3 className="font-bold text-base">
+                                {sewun.year}년{' '}
+                                <span className="text-slate-400 dark:text-slate-500 font-normal text-sm">
+                                  {sewun.ganji.gan}{sewun.ganji.ji}년
+                                </span>
+                              </h3>
+                              <span
+                                className={[
+                                  'text-xs font-bold px-2 py-0.5 rounded-full',
+                                  isAccent
+                                    ? 'bg-accent-gold/15 text-accent-gold'
+                                    : 'bg-primary/10 text-primary',
+                                ].join(' ')}
+                              >
+                                {yearLabel}
+                              </span>
+                            </div>
+                            {yearlySummary ? (
+                              <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                                {yearlySummary}
+                              </p>
+                            ) : (
+                              <p className="text-sm text-slate-400 italic">
+                                해석을 받으면 이 해의 흐름을 분석해드립니다.
+                              </p>
+                            )}
+                          </div>
                         </div>
                       )
                     })}

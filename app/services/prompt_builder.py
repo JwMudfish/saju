@@ -128,6 +128,9 @@ def build_interpretation_prompt(
     # 세운 3년 흐름 JSON 출력 지침 조립
     sewun_json_section = _build_sewun_json_instruction(saju_result)
 
+    # 사주 요약 JSON 출력 지침 조립
+    saju_summary_section = _build_saju_summary_instruction()
+
     user_prompt = (
         "다음 사주 데이터를 정통 명리학 관점에서 분석하십시오.\n\n"
         f"{personal_info_section}"
@@ -161,6 +164,7 @@ def build_interpretation_prompt(
         "\n- 근거 없는 길흉 선언 금지 — 반드시 어떤 십신·오행 관계에서 도출된 판단인지 명시"
         "\n- 위로성 멘트나 모호한 표현 금지 — 전문가의 냉철한 시각으로 분석하라"
         f"{sewun_json_section}"
+        f"{saju_summary_section}"
     )
 
     return _SYSTEM_PROMPT, user_prompt
@@ -526,6 +530,29 @@ def _build_sewun_json_instruction(saju_result: SajuResult) -> str:
         "\n</SEWUN_JSON>"
         "\n\n각 연도는 용신/기신 관점에서 그 해 세운이 유리한지 불리한지 "
         "2문장으로 작성하세요. 긍정/부정을 명확히 표현하세요."
+    )
+
+
+def _build_saju_summary_instruction() -> str:
+    """사주 요약 JSON 출력 지침을 구성한다.
+
+    Returns:
+        사주 요약 JSON 출력 지침 문자열
+    """
+    example_json = (
+        '{"keywords": ["추진력", "완벽주의", "직관력"], '
+        '"summary": "이 사주를 가진 사람의 핵심 성향 3-4문장. 일간/오행/십신 근거 포함."}'
+    )
+    return (
+        "\n\n---"
+        "\n\n## 사주 요약 JSON 출력 (필수)"
+        "\n\n응답 마지막에 반드시 아래 형식으로 사주 성향 요약을 포함하세요:"
+        "\n\n<SAJU_SUMMARY>"
+        f"\n{example_json}"
+        "\n</SAJU_SUMMARY>"
+        "\n\nkeywords: 이 사주를 대표하는 핵심 단어 정확히 3개 (한 단어 또는 짧은 구)."
+        "\nsummary: 이 사주 구조에서 나오는 성향, 강점, 주의점을 3-4문장으로."
+        " 어떤 일간/오행/십신 배치에서 도출된 특성인지 구체적으로 서술하세요."
     )
 
 

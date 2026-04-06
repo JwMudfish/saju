@@ -437,3 +437,56 @@ class TestExtractSewunJson:
 
         assert "SEWUN_JSON" not in clean
         assert summaries is None
+
+
+# ---------------------------------------------------------------------------
+# _extract_saju_summary 테스트
+# ---------------------------------------------------------------------------
+
+
+class TestExtractSajuSummary:
+    """_extract_saju_summary() 함수 테스트."""
+
+    def test_extract_saju_summary_success(self) -> None:
+        """정상 SAJU_SUMMARY JSON 추출 테스트."""
+        from app.services.interpretation_service import _extract_saju_summary
+
+        content = (
+            "사주 해석 본문입니다.\n\n"
+            "<SAJU_SUMMARY>\n"
+            '{"keywords": ["추진력", "완벽주의", "직관력"], '
+            '"summary": "이 사주를 가진 사람은 강한 추진력을 보입니다."}\n'
+            "</SAJU_SUMMARY>"
+        )
+        clean, summary = _extract_saju_summary(content)
+
+        assert "SAJU_SUMMARY" not in clean
+        assert clean == "사주 해석 본문입니다."
+        assert summary is not None
+        assert summary["keywords"] == ["추진력", "완벽주의", "직관력"]
+        assert "추진력" in summary["summary"]
+
+    def test_extract_saju_summary_missing(self) -> None:
+        """<SAJU_SUMMARY> 태그가 없으면 원본 content와 None을 반환한다."""
+        from app.services.interpretation_service import _extract_saju_summary
+
+        content = "사주 해석 본문만 있습니다."
+        clean, summary = _extract_saju_summary(content)
+
+        assert clean == content
+        assert summary is None
+
+    def test_extract_saju_summary_invalid_structure(self) -> None:
+        """keywords나 summary 필드가 누락된 JSON은 None을 반환한다."""
+        from app.services.interpretation_service import _extract_saju_summary
+
+        content = (
+            "사주 해석 본문입니다.\n\n"
+            "<SAJU_SUMMARY>\n"
+            '{"keywords": ["추진력"]}\n'
+            "</SAJU_SUMMARY>"
+        )
+        clean, summary = _extract_saju_summary(content)
+
+        assert "SAJU_SUMMARY" not in clean
+        assert summary is None

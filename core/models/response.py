@@ -66,6 +66,7 @@ class InterpretResult(BaseModel):
     model: str
     is_fallback: bool
     sewun_summaries: list[dict[str, int | str]] | None = None
+    saju_summary: dict[str, Any] | None = None
 
 
 class PillarsResponse(BaseModel):

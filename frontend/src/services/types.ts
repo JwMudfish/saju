@@ -131,12 +131,19 @@ export interface SewunYearSummary {
   summary: string
 }
 
+// 사주 성향 요약 (LLM 생성)
+export interface SajuSummaryResult {
+  keywords: string[]
+  summary: string
+}
+
 // GPT-4o 명리학 해석 응답
 export interface InterpretResult {
   interpretation: string
   model: string
   is_fallback: boolean
   sewun_summaries?: SewunYearSummary[]
+  saju_summary?: SajuSummaryResult
 }
 
 // 통합 사주 데이터 (화면 표시용)

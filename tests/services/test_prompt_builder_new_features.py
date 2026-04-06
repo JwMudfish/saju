@@ -13,6 +13,7 @@ import pytest
 from app.services.prompt_builder import (
     _build_core_summary_section,
     _build_myeongli_content_section,
+    _build_saju_summary_instruction,
     _build_sewun_json_instruction,
     _build_user_question_section,
     _extract_question_category,
@@ -441,3 +442,26 @@ class TestSewunJsonInstruction:
 
         assert "용신/기신" in instruction
         assert "2문장" in instruction
+
+
+class TestSajuSummaryInstruction:
+    """사주 요약 JSON 출력 지침 테스트."""
+
+    def test_saju_summary_instruction_in_prompt(self, sample_saju_result: SajuResult) -> None:
+        """프롬프트에 SAJU_SUMMARY 출력 지침이 포함되어야 한다."""
+        _, user_prompt = build_interpretation_prompt(sample_saju_result)
+
+        assert "<SAJU_SUMMARY>" in user_prompt
+        assert "</SAJU_SUMMARY>" in user_prompt
+        assert "사주 요약 JSON 출력" in user_prompt
+        assert "keywords" in user_prompt
+        assert "summary" in user_prompt
+
+    def test_saju_summary_instruction_contains_guidance(self) -> None:
+        """사주 요약 지침에 keywords/summary 가이드가 포함된다."""
+        instruction = _build_saju_summary_instruction()
+
+        assert "keywords" in instruction
+        assert "summary" in instruction
+        assert "3개" in instruction
+        assert "3-4문장" in instruction

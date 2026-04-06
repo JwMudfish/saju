@@ -5,6 +5,7 @@ from __future__ import annotations
 import asyncio
 import json
 import re
+from typing import Any
 
 import openai
 
@@ -12,6 +13,30 @@ from core.models.response import InterpretResult, SajuResult
 
 INTERPRETATION_MODEL = "gpt-5.2"
 _MAX_TOKENS = 2048
+
+
+def _extract_saju_summary(content: str) -> tuple[str, dict[str, Any] | None]:
+    """GPT 응답에서 <SAJU_SUMMARY> 블록을 추출한다.
+
+    Args:
+        content: GPT 응답 전체 텍스트
+
+    Returns:
+        (clean_content, saju_summary) 튜플.
+        태그가 없거나 파싱 실패 시 (원본 content, None) 반환.
+    """
+    pattern = r"<SAJU_SUMMARY>(.*?)</SAJU_SUMMARY>"
+    match = re.search(pattern, content, re.DOTALL)
+    if not match:
+        return content, None
+    clean_content = content[: match.start()].rstrip()
+    try:
+        data = json.loads(match.group(1).strip())
+        if isinstance(data.get("keywords"), list) and isinstance(data.get("summary"), str):
+            return clean_content, data
+        return clean_content, None
+    except (json.JSONDecodeError, AttributeError, TypeError):
+        return clean_content, None
 
 
 def _extract_sewun_json(content: str) -> tuple[str, list[dict[str, int | str]] | None]:
@@ -121,11 +146,13 @@ class InterpretationService:
                 is_fallback=True,
             )
 
-        interpretation, sewun_summaries = _extract_sewun_json(raw_content)
+        content, saju_summary = _extract_saju_summary(raw_content)
+        interpretation, sewun_summaries = _extract_sewun_json(content)
 
         return InterpretResult(
             interpretation=interpretation,
             model=INTERPRETATION_MODEL,
             is_fallback=False,
             sewun_summaries=sewun_summaries,
+            saju_summary=saju_summary,
         )
